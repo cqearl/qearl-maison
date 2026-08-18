@@ -398,13 +398,13 @@ body.owner-mode .glass:hover .dynamicOwnerTools{display:block}
 </section>
 
 <dialog id="login"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / owner entrance</span><button class="close" data-close="login">×</button></div><h2 style="font:italic 30px Georgia,serif">Private access ୨୧</h2><div class="field"><label>OWNER ID</label><input id="uid" autocomplete="username"></div><div class="field"><label>PASSWORD</label><input id="pwd" type="password" autocomplete="current-password"></div><button class="btn" id="loginbtn">enter owner mode</button><p class="small">当前预览仅演示 Owner / Visitor 状态；正式公开站需要服务端鉴权。</p></div></dialog>
-<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">保存</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
+<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><div class="cloudStatus">当前无 R2：现有图片正常展示；新增图片功能暂不开放。</div><input id="ni" type="file" accept="image/*" multiple hidden></div><div class="acts"><button class="btn" id="save">保存</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
 
 <dialog id="editBlockDialog"><div class="modal">
   <div class="mh"><span class="eyebrow">Qearl / edit block</span><button class="close" data-close="editBlockDialog">×</button></div>
   <h2 style="font:italic 30px Georgia,serif">Edit this detail.</h2>
   <div class="field" id="editTextField"><label>内容</label><textarea id="editBlockText"></textarea></div>
-  <div class="field" id="editImageField" hidden><label>替换图片</label><input id="editBlockImage" type="file" accept="image/*"></div>
+  <div class="field" id="editImageField" hidden><div class="cloudStatus">当前无 R2：暂不支持在线替换图片。</div><input id="editBlockImage" type="file" accept="image/*" hidden></div>
   <div class="acts">
     <button class="btn" id="editBlockSave">保存修改</button>
     <button class="btn" id="editBlockDelete">删除此项</button>
@@ -706,9 +706,7 @@ ownerUI();renderUsers();
   }
 
   async function uploadFile(file){
-    if(!file)return null;
-    const fd=new FormData(); fd.append('file',file);
-    return await api('/api/upload',{method:'POST',body:fd});
+    throw new Error("当前未启用云端图片上传");
   }
 
   // Replace demo login with real server authentication.
@@ -737,7 +735,7 @@ ownerUI();renderUsers();
     const target=document.getElementById('target').value;
     const title=document.getElementById('nt').value.trim();
     const text=document.getElementById('nx').value.trim();
-    const files=[...document.getElementById('ni').files];
+    const files=[...document.getElementById('ni').files]; if(files.length){alert('当前版本暂不支持在线上传新图片');return;}
     try{
       let page=target;
       if(target==='new'){
@@ -748,10 +746,6 @@ ownerUI();renderUsers();
         await api('/api/block',{method:'POST',body:JSON.stringify({page,type:'text',text:title,isHeading:true})});
       }
       if(text) await api('/api/block',{method:'POST',body:JSON.stringify({page,type:'text',text,isHeading:false})});
-      for(const f of files){
-        const up=await uploadFile(f);
-        await api('/api/block',{method:'POST',body:JSON.stringify({page,type:'image',imageKey:up.key,isHeading:false})});
-      }
       document.getElementById('nt').value=''; document.getElementById('nx').value=''; document.getElementById('ni').value='';
       document.getElementById('admin').close(); await refreshState(); toast('saved ♡');
     }catch(e){alert('保存失败：'+e.message)}
@@ -770,7 +764,7 @@ ownerUI();renderUsers();
       type:btn.dataset.blockType
     };
     editTextField.hidden=editing.type!=='text';
-    editImageField.hidden=editing.type!=='image';
+    editImageField.hidden=editing.type!=='image'; if(editing.type==='image'){alert('当前无 R2，暂不支持在线替换图片'); editing=null; return;}
     editBlockImage.value='';
     if(editing.type==='text'){
       if(editing.kind==='base'){

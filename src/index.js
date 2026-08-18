@@ -154,18 +154,6 @@ async function handlePage(request,env){
   return json({error:"Method not allowed"},405);
 }
 
-async function handleUpload(request,env){
-  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401);
-  if(!sameOrigin(request))return json({error:"Invalid origin"},403);
-  const fd=await request.formData(), file=fd.get("file");
-  const types={"image/jpeg":"jpg","image/png":"png","image/webp":"webp","image/gif":"gif"};
-  if(!file||typeof file==="string")return json({error:"Missing file"},400);
-  if(!types[file.type])return json({error:"Only JPG/PNG/WebP/GIF are allowed"},400);
-  if(file.size>10*1024*1024)return json({error:"Image is too large (max 10MB)"},400);
-  const key=`${crypto.randomUUID()}.${types[file.type]}`;
-  await env.MEDIA.put(key,file.stream(),{httpMetadata:{contentType:file.type}});
-  return json({ok:true,key,url:`/media/${key}`});
-}
 
 export default {
   async fetch(request,env){
@@ -188,13 +176,6 @@ export default {
       if(p==="/api/state" && request.method==="GET") return await handleState(env);
       if(p==="/api/block") return await handleBlock(request,env);
       if(p==="/api/page") return await handlePage(request,env);
-      if(p==="/api/upload" && request.method==="POST") return await handleUpload(request,env);
-      if(p.startsWith("/media/") && request.method==="GET"){
-        const key=decodeURIComponent(p.slice(7)), obj=await env.MEDIA.get(key);
-        if(!obj)return new Response("Not found",{status:404});
-        const h=new Headers(); obj.writeHttpMetadata(h); h.set("etag",obj.httpEtag); h.set("Cache-Control","public,max-age=31536000,immutable");
-        return new Response(obj.body,{headers:h});
-      }
       return env.ASSETS.fetch(request);
     }catch(e){
       console.error(e); return json({error:"Server error"},500);

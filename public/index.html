@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qearl atelier.</title>
+<style>
+:root{
+  --ink:#2e324d;--sub:#777c95;--deep:#24283d;--silver:#c7cbd7;
+  --line:rgba(86,92,121,.15);--white:rgba(255,255,255,.72);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:"Songti SC","STSong","PingFang SC",serif;
+  background:
+    radial-gradient(circle at 15% 5%,rgba(255,255,255,.99),transparent 27%),
+    radial-gradient(circle at 83% 12%,rgba(182,187,205,.28),transparent 31%),
+    radial-gradient(circle at 19% 77%,rgba(196,204,220,.33),transparent 29%),
+    radial-gradient(circle at 82% 78%,rgba(182,173,202,.17),transparent 29%),
+    linear-gradient(145deg,#fbfbfc,#eceef2 50%,#f7f6f8);
+  overflow-x:hidden
+}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E")}
+button,input,textarea,select{font:inherit}.wrap{width:min(1180px,calc(100% - 28px));margin:auto}
+nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);width:min(1140px,calc(100% - 28px));z-index:50;border:1px solid rgba(255,255,255,.72);border-radius:22px;background:rgba(255,255,255,.30);backdrop-filter:blur(28px) saturate(1.15);box-shadow:0 16px 50px rgba(48,53,82,.08),inset 0 1px 0 white}
+.navin{height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
+.brand{font:500 12px Georgia,serif;letter-spacing:.18em}
+.btn{border:1px solid rgba(255,255,255,.82);background:rgba(255,255,255,.42);border-radius:16px;padding:8px 12px;color:#62677e;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+.hero{min-height:620px;padding-top:150px;display:block;position:relative}
+.eyebrow{font:italic 11px Georgia,serif;letter-spacing:.17em;color:#8a8e9f;margin-bottom:18px}
+.hero h1{font:italic 400 clamp(72px,9vw,130px)/.74 "Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT",cursive;letter-spacing:-.045em;margin:0;color:#30344c}
+.hero h1 i{display:block;font-weight:400;color:#77738b;margin-left:.16em}
+.lead{font-size:13px;line-height:2;color:#73788e;max-width:560px;margin-top:31px}
+.stage{height:560px;position:relative}
+.blob{position:absolute;inset:32px 8px 36px 6px;border-radius:46% 54% 49% 51%/42% 39% 61% 58%;
+  border:1px solid rgba(255,255,255,.9);
+  background:
+    radial-gradient(circle at 22% 17%,rgba(255,255,255,.95),transparent 19%),
+    radial-gradient(circle at 73% 70%,rgba(190,181,210,.12),transparent 25%),
+    linear-gradient(145deg,rgba(255,255,255,.56),rgba(215,219,229,.15));
+  backdrop-filter:blur(32px) saturate(1.18);
+  box-shadow:inset 15px 18px 38px rgba(255,255,255,.84),inset -18px -20px 44px rgba(94,98,126,.06),0 38px 88px rgba(48,53,82,.13);
+  transform:rotate(-2deg)
+}
+.blob:before{content:"";position:absolute;left:11%;top:8%;width:48%;height:12%;border-radius:50%;background:linear-gradient(90deg,rgba(255,255,255,.94),transparent);filter:blur(5px);transform:rotate(-8deg)}
+.crest{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:3}
+.crest .q{font:italic 56px "Snell Roundhand","Apple Chancery",cursive;color:#5c6077}
+.crest .script{font:italic 400 clamp(58px,7vw,100px)/1 "Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT",cursive;color:#555a71;margin-top:8px}
+.crest small{font:9px Georgia,serif;letter-spacing:.24em;color:#898d9f;margin-top:13px}
+.pearl{position:absolute;border-radius:50%;background:radial-gradient(circle at 28% 23%,#fff,#eff1f4 46%,#aeb5c5);box-shadow:0 8px 22px rgba(57,62,91,.14);z-index:5}
+.p1{width:18px;height:18px;left:7%;top:25%}.p2{width:11px;height:11px;right:8%;top:29%}.p3{width:27px;height:27px;right:18%;bottom:7%}
+.locket{position:absolute;right:4%;top:37%;width:58px;height:72px;border:5px double rgba(105,109,132,.42);border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.33);backdrop-filter:blur(8px);font:italic 27px Georgia,serif;color:#6c7188;z-index:6}
+
+/* home sections: retain glass layout, remove screenshots / dot matrix / crude icons */
+.section{padding:72px 0}
+.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:28px}
+.head h2{font:italic 400 47px/1 "Snell Roundhand","Apple Chancery","URW Chancery L",cursive;margin:0;color:#35394f}
+.head span{font:italic 11px Georgia,serif;color:#8d91a3;letter-spacing:.12em}
+.showcase{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+.glass{
+  position:relative;overflow:hidden;min-height:260px;padding:26px;border:1px solid rgba(255,255,255,.72);
+  background:
+    radial-gradient(circle at 15% 12%,rgba(255,255,255,.76),transparent 30%),
+    linear-gradient(145deg,rgba(255,255,255,.42),rgba(218,222,232,.14));
+  backdrop-filter:blur(24px) saturate(1.12);
+  box-shadow:inset 0 1px 0 white,inset -10px -10px 30px rgba(93,99,127,.05),0 19px 52px rgba(48,53,82,.08);
+  border-radius:30px;cursor:pointer;transition:.3s cubic-bezier(.2,.8,.2,1)
+}
+.glass:hover{transform:translateY(-5px);box-shadow:inset 0 1px 0 white,0 28px 65px rgba(48,53,82,.13)}
+.glass:after{content:"";position:absolute;left:-30%;top:-65%;width:50%;height:220%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:rotate(22deg);transition:.55s}
+.glass:hover:after{left:115%}
+.big{grid-column:span 7}.mid{grid-column:span 5}.third{grid-column:span 4}
+.no{font:italic 11px Georgia,serif;color:#979bad;letter-spacing:.12em}
+.glass h3{font:400 25px/1.25 Georgia,"Songti SC",serif;margin:52px 0 10px;color:#3d435d}
+.glass p{max-width:430px;color:#7d8297;font-size:13px;line-height:1.8}
+.enter{position:absolute;left:26px;bottom:23px;font:italic 12px "Snell Roundhand","Apple Chancery",cursive;color:#7d8298}
+.custom{background:linear-gradient(145deg,rgba(224,222,231,.42),rgba(255,255,255,.28))}
+.custom .no{display:block;background:none;color:#979bad;padding:0;border-radius:0}
+.monogram{position:absolute;right:25px;top:21px;font:italic 28px "Snell Roundhand","Apple Chancery",cursive;color:rgba(103,104,130,.48)}
+.edgeLace{position:absolute;right:-26px;bottom:-26px;width:145px;height:145px;opacity:.13;background:radial-gradient(circle at 10px 10px,transparent 6px,#70768f 6.5px 7.5px,transparent 8px) 0 0/20px 20px;mask-image:radial-gradient(circle at center,#000,transparent 74%)}
+
+/* additions */
+.addbox{margin:45px 0 85px;padding:24px 0;border-top:1px solid rgba(89,95,121,.14)}
+.addbox h2{font:italic 32px "Snell Roundhand","Apple Chancery",cursive;margin:0 0 6px}
+.addbox p{font-size:12px;color:#898d9e}.usergrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:17px}
+.usercard{position:relative;padding:18px;border:1px solid rgba(255,255,255,.68);background:rgba(255,255,255,.31);backdrop-filter:blur(16px);border-radius:18px;cursor:pointer}.del{position:absolute;right:9px;top:7px;border:0;background:none;cursor:pointer}.add{display:none;margin-top:14px}
+footer{padding:28px 0 50px;border-top:1px solid rgba(89,95,121,.14);font-size:11px;color:#8d91a1}.foot{display:flex;justify-content:space-between}
+
+/* SUBPAGES — preserve source order exactly */
+.reader{position:fixed;inset:0;z-index:80;display:none;overflow:auto;background:
+radial-gradient(circle at 15% 6%,rgba(255,255,255,.98),transparent 28%),
+radial-gradient(circle at 84% 15%,rgba(188,192,206,.22),transparent 30%),
+linear-gradient(145deg,#f8f9fa,#eceef2 55%,#f7f6f8)}
+.reader.open{display:block}
+.rnav{position:sticky;top:0;z-index:5;background:rgba(249,250,252,.58);backdrop-filter:blur(24px);border-bottom:1px solid rgba(95,100,126,.13)}
+.rbar{height:62px;display:flex;align-items:center;justify-content:space-between}
+.rmain{width:min(980px,calc(100% - 28px));margin:auto;padding:50px 0 100px}
+.rhero{position:relative;padding:36px 0 38px;border-bottom:1px solid rgba(91,96,122,.14);margin-bottom:36px}
+.rhero .k{font:italic 11px Georgia,serif;color:#9599a8;letter-spacing:.14em}
+.rhero h2{font:italic 400 clamp(48px,6vw,82px)/.95 "Snell Roundhand","Apple Chancery","URW Chancery L",cursive;margin:10px 0 0;color:#3d4158}
+.rhero .submark{position:absolute;right:4px;bottom:34px;font:italic 18px "Snell Roundhand","Apple Chancery",cursive;color:#989aaa}
+.flow{max-width:900px;margin:auto}
+.blockText{font-size:14px;line-height:1.95;color:#50566d;margin:0 0 12px}
+.blockText.heading{font:400 22px/1.4 Georgia,"Songti SC",serif;color:#40465d;margin:34px 0 15px;padding-top:8px}
+.blockText.heading:before{content:none}
+.blockImg{
+  display:block;max-width:100%;height:auto;margin:22px auto 30px;border-radius:24px;
+  box-shadow:0 16px 40px rgba(49,54,82,.10);border:1px solid rgba(255,255,255,.82)
+}
+.blockTable{width:100%;border-collapse:collapse;margin:20px 0;background:rgba(255,255,255,.35);backdrop-filter:blur(14px)}
+.blockTable td{padding:10px;border:1px solid rgba(93,99,124,.14)}
+.lnk{color:#626983;text-decoration:underline;text-underline-offset:3px}
+/* subtle page-specific styling, without changing order */
+.reader[data-page="typebook"] .flow{max-width:860px}
+.reader[data-page="typebook"] .blockImg{width:min(100%,760px)}
+.reader[data-page="custom"] .blockText.heading{font:italic 31px "Snell Roundhand","Apple Chancery",cursive;font-weight:400;color:#484c61}
+.reader[data-page="custom"] .flow{background:rgba(255,255,255,.20);border:1px solid rgba(255,255,255,.58);border-radius:30px;padding:28px 34px;backdrop-filter:blur(16px)}
+.reader[data-page="case"] .blockImg{width:min(100%,700px)}
+.reader[data-page="mist"] .blockImg,.reader[data-page="island"] .blockImg,.reader[data-page="moss"] .blockImg{width:min(100%,820px)}
+.reader[data-page="jasmine"] .flow,.reader[data-page="others"] .flow{max-width:820px}
+
+/* auth */
+dialog{width:min(620px,calc(100% - 28px));border:1px solid rgba(255,255,255,.72);border-radius:26px;background:rgba(242,243,247,.84);backdrop-filter:blur(26px);padding:0;box-shadow:0 30px 90px rgba(45,50,75,.20)}
+dialog::backdrop{background:rgba(40,44,67,.24);backdrop-filter:blur(10px)}
+.modal{padding:26px}.mh{display:flex;justify-content:space-between}.close{border:0;background:none;font-size:24px;cursor:pointer}
+.field{display:grid;gap:5px;margin:12px 0}.field label{font-size:11px;color:#808598}.field input,.field textarea,.field select{padding:11px;border:1px solid rgba(255,255,255,.8);border-radius:14px;background:rgba(255,255,255,.58)}.field textarea{min-height:100px}.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.small{font-size:10px;line-height:1.6;color:#8c90a1}
+.toast{position:fixed;right:18px;bottom:18px;z-index:100;background:#4e5268;color:#fff;padding:10px 14px;border-radius:18px;opacity:0;transition:.2s}.toast.show{opacity:1}
+
+@media(max-width:820px){
+  .hero{grid-template-columns:1fr;min-height:980px}.stage{height:500px}
+  .big,.mid,.third{grid-column:span 12}.usergrid{grid-template-columns:1fr}
+  .glass{min-height:230px}.rhero .submark{display:none}
+  .reader[data-page="custom"] .flow{padding:22px 20px}
+}
+</style>
+
+<style>
+.hero{min-height:620px;display:block}
+.cleanStage{height:470px;display:flex;align-items:center;justify-content:center;position:relative}
+.cleanStage:before{
+  content:"";position:absolute;width:72%;height:1px;left:13%;top:51%;
+  background:linear-gradient(90deg,transparent,rgba(91,96,122,.24),transparent)
+}
+.cleanStage:after{
+  content:"";position:absolute;width:260px;height:260px;right:5%;top:15%;
+  border-radius:50%;background:radial-gradient(circle,rgba(205,202,220,.16),transparent 68%);
+  filter:blur(6px)
+}
+.cleanCrest{position:relative;inset:auto;text-align:center;z-index:2}
+.cleanCrest .q{font-size:42px;color:#77798d;margin-bottom:4px}
+.cleanCrest .script{font-size:clamp(62px,7vw,100px);white-space:nowrap}
+.cleanCrest small{font-size:8px;letter-spacing:.28em}
+@media(max-width:820px){.hero{min-height:620px}.cleanStage{height:380px}.cleanCrest .script{font-size:58px}}
+</style>
+
+<style id="luxury-refine-v2">
+.hero{
+  min-height:610px!important;
+  padding-top:150px!important;
+  padding-bottom:80px!important;
+  display:block!important;
+  position:relative;
+}
+.hero>div:first-child{max-width:760px}
+.hero h1{
+  font-size:clamp(82px,10vw,138px)!important;
+  line-height:.70!important;
+  max-width:600px;
+}
+.hero .lead{
+  max-width:610px!important;
+  margin-top:46px!important;
+  font-size:12.5px!important;
+  line-height:2.05!important;
+  letter-spacing:.01em;
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  right:2%;
+  top:25%;
+  width:34%;
+  height:42%;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at center,rgba(196,198,213,.15),rgba(207,199,220,.07) 34%,transparent 69%);
+  filter:blur(18px);
+}
+.section{padding:92px 0!important}
+.head{margin-bottom:34px!important}
+.glass{
+  border-color:rgba(255,255,255,.58)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(225,227,234,.10))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72),0 22px 60px rgba(48,53,82,.055)!important;
+}
+.glass:hover{
+  background:linear-gradient(145deg,rgba(255,255,255,.46),rgba(222,225,234,.16))!important;
+  box-shadow:inset 0 1px 0 white,0 30px 72px rgba(48,53,82,.10)!important;
+}
+@media(max-width:820px){
+ .hero{min-height:570px!important;padding-top:125px!important}
+ .hero:after{width:60%;right:-20%}
+}
+</style>
+
+
+<style id="title-refine-v3">
+.collectionSub{
+  font:italic 14px/1.6 "Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT",cursive!important;
+  color:#8b8da0!important;
+  letter-spacing:.02em;
+  margin-top:9px!important;
+}
+.hero .lead{
+  font:400 15px/2.1 "Songti SC","STSong",serif!important;
+  color:#666b7f!important;
+  letter-spacing:.035em!important;
+  max-width:560px!important;
+}
+.reader[data-page="mist"] .rhero h2,
+.reader[data-page="island"] .rhero h2,
+.reader[data-page="moss"] .rhero h2,
+.reader[data-page="others"] .rhero h2{
+  letter-spacing:.015em;
+}
+</style>
+
+
+<style id="subpage-calligraphy-toc-v4">
+/* child page typography */
+.rhero h2{
+  font-family:"Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT","Kaiti SC","STKaiti",cursive!important;
+  font-style:italic!important;
+  font-weight:400!important;
+  letter-spacing:-.01em!important;
+}
+.rhero .k,
+.rhero .submark{
+  font-family:"Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT",cursive!important;
+  font-style:italic!important;
+}
+.blockText.heading{
+  font-family:"Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT","Kaiti SC","STKaiti",cursive!important;
+  font-style:italic!important;
+  font-weight:400!important;
+  font-size:30px!important;
+  line-height:1.35!important;
+  color:#4f5368!important;
+  letter-spacing:.01em!important;
+  margin-top:42px!important;
+  margin-bottom:18px!important;
+}
+.reader[data-page="custom"] .blockText.heading{
+  font-size:34px!important;
+}
+.blockText:not(.heading){
+  font-family:"Songti SC","STSong","Noto Serif SC",serif;
+}
+.reader .lnk{
+  font-family:"Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT",cursive;
+  font-style:italic;
+}
+
+/* hidden left directory */
+.tocHandle{
+  position:fixed;left:0;top:50%;transform:translateY(-50%);
+  z-index:92;width:20px;height:88px;border-radius:0 14px 14px 0;
+  border:1px solid rgba(255,255,255,.76);border-left:0;
+  background:rgba(238,240,246,.68);backdrop-filter:blur(18px);
+  box-shadow:0 10px 30px rgba(49,54,82,.10);
+  cursor:pointer;display:none;
+}
+.reader.open .tocHandle{display:block}
+.tocHandle:after{
+  content:"⋮";position:absolute;inset:0;display:grid;place-items:center;
+  font:20px Georgia,serif;color:#8b8fa2
+}
+.tocPanel{
+  position:fixed;left:0;top:50%;transform:translate(-102%,-50%);
+  z-index:91;width:min(285px,82vw);max-height:72vh;overflow:auto;
+  padding:22px 20px 24px;border-radius:0 26px 26px 0;
+  border:1px solid rgba(255,255,255,.78);border-left:0;
+  background:rgba(244,245,249,.88);backdrop-filter:blur(28px) saturate(1.1);
+  box-shadow:0 24px 70px rgba(47,52,78,.14);
+  transition:transform .28s cubic-bezier(.2,.8,.2,1)
+}
+.tocPanel.open{transform:translate(0,-50%)}
+.tocTitle{
+  font:italic 26px/1 "Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT",cursive;
+  color:#50546c;margin-bottom:16px
+}
+.tocList{display:flex;flex-direction:column;gap:3px}
+.tocItem{
+  display:block;padding:9px 8px;border-radius:10px;text-decoration:none;
+  color:#73788d;font-size:12px;line-height:1.45;cursor:pointer
+}
+.tocItem:hover{background:rgba(255,255,255,.62);color:#454a62}
+.tocItem .idx{
+  display:inline-block;width:30px;font:italic 10px Georgia,serif;color:#a1a4b2
+}
+@media(max-width:820px){
+  .tocPanel{width:min(265px,86vw)}
+  .blockText.heading{font-size:26px!important}
+}
+</style>
+
+
+<style id="toc-binding-fix-v5">
+.blockText.heading{scroll-margin-top:92px}
+.blockImg{content-visibility:auto;contain-intrinsic-size:700px 520px}
+.tocItem.active{background:rgba(255,255,255,.72)!important;color:#44495f!important}
+.tocItem.active .idx{color:#666b83!important}
+</style>
+
+
+<style id="cloud-owner-ui">
+.ownerOnly{display:none!important}
+body.owner-mode .ownerOnly{display:block!important}
+.ownerBlock{position:relative}
+.ownerBlockTools{
+  position:absolute;right:-8px;top:-8px;z-index:8;display:none;gap:5px
+}
+body.owner-mode .ownerBlock:hover .ownerBlockTools{display:flex}
+.ownerMini{
+  width:28px;height:28px;border:1px solid rgba(255,255,255,.82);border-radius:50%;
+  background:rgba(245,246,250,.90);backdrop-filter:blur(14px);color:#666b80;
+  cursor:pointer;box-shadow:0 7px 20px rgba(49,54,82,.10);font-size:12px
+}
+.dynamicOwnerTools{position:absolute;right:13px;top:12px;display:none;z-index:5}
+body.owner-mode .glass:hover .dynamicOwnerTools{display:block}
+.cloudStatus{font-size:11px;color:#8b8fa1;margin-top:8px}
+</style>
+
+</head>
+<body>
+<nav><div class="navin"><span class="brand">QEARL ATELIER.</span><button class="btn" id="owner">owner entrance ୨୧</button></div></nav>
+
+<main class="wrap">
+<section class="hero">
+  <div>
+    <div class="eyebrow">𓂃 ࣪˖ 𓈒 private collection / moonstone silver</div>
+    <h1>Qearl<i>atelier.</i></h1>
+    <p class="lead">可是..希冀何以化作透明蝴蝶越过山谷</p>
+  </div>
+  
+</section>
+
+<section class="section">
+  <div class="head"><h2>Keyboard archive</h2><span>keys / custom / little details</span></div>
+  <div class="showcase">
+    <article class="glass big" data-open="typebook">
+      <div class="no">01 / TYPE BOOK</div><div class="monogram">Q.</div>
+      <h3>𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡</h3><p>在售键盘、音效、套装与下单说明。</p><div class="enter">explore collection ↗</div>
+    </article>
+    <article class="glass mid custom" data-open="custom">
+      <div class="no">NEW / CUSTOM KEYS</div><div class="monogram">୨୧</div>
+      <h3>𝖰.𝖢𝖴𝖲𝖳𝖮𝖬𝖪𝖤𝖸𝖲୨୧</h3><p>定制价格、排期、修改、交付与使用规则。</p><div class="enter">open custom studio ↗</div><div class="edgeLace"></div>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="head"><h2>Private collections</h2><span>mist / island / moss</span></div>
+  <div class="showcase">
+    <article class="glass third" data-open="mist"><div class="no">02 / MISTBOUND NOTES</div><div class="monogram">M.</div><h3>薄雾集</h3><p class="collectionSub">mistbound notes</p><div class="enter">enter ↗</div></article>
+    <article class="glass third" data-open="island"><div class="no">03 / NOCTURNE ISLE</div><div class="monogram">I.</div><h3>失眠岛</h3><p class="collectionSub">nocturne isle</p><div class="enter">enter ↗</div></article>
+    <article class="glass third" data-open="moss"><div class="no">04 / MOSS AFTER TEARS</div><div class="monogram">L.</div><h3>淚生苔</h3><p class="collectionSub">moss after tears</p><div class="enter">enter ↗</div><div class="edgeLace"></div></article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="head"><h2>Theme & fragments</h2><span>paired pieces / self-cut / others</span></div>
+  <div class="showcase">
+    <article class="glass third" data-open="case"><div class="no">05 / THEME</div><div class="monogram">T.</div><h3>𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡</h3><p>主题配套与组合预览。</p><div class="enter">open ↗</div></article>
+    <article class="glass third" data-open="jasmine"><div class="no">06 / SELF-CUT</div><div class="monogram">J.</div><h3>#茉莉信†﹡</h3><p>头像、字体、名片、推人及掉落。</p><div class="enter">open ↗</div></article>
+    <article class="glass third" data-open="others"><div class="no">07 / MISCELLANY</div><div class="monogram">Q.</div><h3>枝间拾遗</h3><p class="collectionSub">a miscellany of little things</p><div class="enter">open ↗</div></article>
+  </div>
+</section>
+
+<section class="section" id="dynamicSection" hidden>
+      <div class="head"><h2>New archives</h2><span>later additions / quietly collected</span></div>
+      <div class="showcase" id="dynamicPages"></div>
+    </section>
+    <section class="addbox ownerOnly" id="ownerAdditions"><h2>Owner desk</h2><p>这里仅你登录后可见。</p><div class="usergrid" id="usergrid"></div><button class="btn add" id="addpage">＋ add a new archive</button></section>
+</main>
+<footer><div class="wrap foot"><span>Qearl atelier. · 2026</span><span>liquid glass / moonstone / silver</span></div></footer>
+
+<section class="reader" id="reader">
+<div class="tocHandle" id="tocHandle" title="目录"></div>
+<aside class="tocPanel" id="tocPanel">
+  <div class="tocTitle">contents.</div>
+  <div class="tocList" id="tocList"></div>
+</aside>
+  <div class="rnav"><div class="wrap rbar"><button class="btn" id="back">← back</button><span class="brand">QEARL ARCHIVE.</span><button class="btn" id="append">＋ add</button></div></div>
+  <div class="rmain"><div class="rhero"><div class="k" id="rk"></div><h2 id="rt"></h2><div class="submark">made in little details.</div></div><div class="flow" id="rb"></div></div>
+</section>
+
+<dialog id="login"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / owner entrance</span><button class="close" data-close="login">×</button></div><h2 style="font:italic 30px Georgia,serif">Private access ୨୧</h2><div class="field"><label>OWNER ID</label><input id="uid" autocomplete="username"></div><div class="field"><label>PASSWORD</label><input id="pwd" type="password" autocomplete="current-password"></div><button class="btn" id="loginbtn">enter owner mode</button><p class="small">当前预览仅演示 Owner / Visitor 状态；正式公开站需要服务端鉴权。</p></div></dialog>
+<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">保存</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
+
+<dialog id="editBlockDialog"><div class="modal">
+  <div class="mh"><span class="eyebrow">Qearl / edit block</span><button class="close" data-close="editBlockDialog">×</button></div>
+  <h2 style="font:italic 30px Georgia,serif">Edit this detail.</h2>
+  <div class="field" id="editTextField"><label>内容</label><textarea id="editBlockText"></textarea></div>
+  <div class="field" id="editImageField" hidden><label>替换图片</label><input id="editBlockImage" type="file" accept="image/*"></div>
+  <div class="acts">
+    <button class="btn" id="editBlockSave">保存修改</button>
+    <button class="btn" id="editBlockDelete">删除此项</button>
+  </div>
+</div></dialog>
+
+<div class="toast" id="toast">saved ♡</div>
+
+<script>
+const DOCS={"home": {"title": "Qearl atelier.", "blocks": [{"type": "text", "text": "𓂃 ࣪˖ 𓈒", "links": []}, {"type": "text", "text": "branch atelier", "links": []}, {"type": "text", "text": "枝", "links": []}, {"type": "text", "text": "keyboard · aesthetic", "links": []}, {"type": "text", "text": "customized design", "links": []}, {"type": "text", "text": "since 2026", "links": []}, {"type": "text", "text": "♡ order guide ♡", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "自助下单 · 默认24h内出图", "links": []}, {"type": "text", "text": "在线基本秒出", "links": []}, {"type": "text", "text": "加急 ×1.5", "links": []}, {"type": "text", "text": "首次下单请提供IP录屏", "links": []}, {"type": "text", "text": "（聊天页 → 小红书主页 → 微博主页）", "links": []}, {"type": "text", "text": "键盘均为打标发货，请提供QQ号 & VX号", "links": []}, {"type": "text", "text": "转账 / 红包 / 扫码均可", "links": []}, {"type": "text", "text": "收款码见最下方", "links": []}, {"type": "text", "text": "有任何问题欢迎私聊♡", "links": []}, {"type": "text", "text": "♡ keyboard ♡", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "video preview available on xhs", "links": []}, {"type": "text", "text": "墨冬島尋枝", "links": []}, {"type": "text", "text": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "links": []}, {"type": "text", "text": "⁺｡꒰১ set ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "links": []}, {"type": "text", "text": "⁺｡꒰১ theme ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "°⑅♡#薄雾集♡⑅ °", "links": []}, {"type": "text", "text": "-°⑅♡#失眠岛♡⑅ °", "links": []}, {"type": "text", "text": "°⑅♡#淚生苔♡⑅ °", "links": []}, {"type": "text", "text": "⁺｡꒰১ self-cut ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "#茉莉信†﹡预览", "links": []}, {"type": "text", "text": "⁺｡꒰১ others ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "°⑅♡枝间拾遗♡⑅ °", "links": []}, {"type": "text", "text": "✦ Branch & Bloom 🌿", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "消费满 𝟹𝟻 可私聊进群 𓂃", "links": []}, {"type": "text", "text": "携带｜xhs主页 · 云黑码 · 网盘主页 · 微博主页 · 购买记录", "links": []}, {"type": "text", "text": "𝖬𝖾𝗆𝖻𝖾𝗋 𝗈𝗇𝗅𝗒 ♡", "links": []}, {"type": "text", "text": "专属掉落 · 福利抽奖 · 提前上新 · 新品尝鲜", "links": []}, {"type": "text", "text": "◌  payment ◌", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "thank you♡", "links": []}, {"type": "text", "text": "感谢每一份喜欢。", "links": []}, {"type": "text", "text": "付款后请把截图发送给我，", "links": []}, {"type": "text", "text": "会尽快开始制作♡", "links": []}, {"type": "image", "src": "assets/qearl-187c1c7412c610.webp", "w": 1400, "h": 1400}]}, "typebook": {"title": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "blocks": [{"type": "text", "text": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "links": []}, {"type": "text", "text": "☆̸★下单默认已读", "links": []}, {"type": "text", "text": "• 呆呆小程序/菜瓜星球 小程序同步在售", "links": []}, {"type": "text", "text": "• 音效可在xhs：墨冬岛寻枝 查看", "links": []}, {"type": "text", "text": "• 手作产物 有瑕疵 强迫症完美主义宝宝慎重购买哦", "links": []}, {"type": "text", "text": "• 不教兑换和使用！！xhs上可以搜教程滴", "links": []}, {"type": "text", "text": "• 打标出图 下单需要提供ip录屏+vx号+qq号哦", "links": []}, {"type": "text", "text": "†桜莓ふわ﹡（福利款已下架）", "links": []}, {"type": "image", "src": "assets/qearl-e6f458dec29230.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†天使小叽﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送头像和壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡）12.88", "links": []}, {"type": "image", "src": "assets/qearl-aadea69e3bcc53.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†夢境兎﹡", "links": []}, {"type": "text", "text": "☘︎ 单键盘3.88", "links": []}, {"type": "image", "src": "assets/qearl-8bbca3f898080a.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†灰烬的圣歌﹡", "links": []}, {"type": "text", "text": "☘︎ 单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5fc1c8ec1c1928.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†青苹果乐园﹡", "links": []}, {"type": "text", "text": "☘︎ 键盘6.88（赠送壁纸）", "links": []}, {"type": "image", "src": "assets/qearl-374a8304b43c46.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†Kitty甜品屋﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送头像和壁纸", "links": []}, {"type": "text", "text": "☘︎ 直购价6.88", "links": []}, {"type": "text", "text": "需要壁纸的宝宝下单时备注双人单字署名即可（默认顺序从左到右，也可出同一署名，无署名默认不需要哦）", "links": []}, {"type": "text", "text": "需要头像的宝宝下单时需要自带两层密集水印哦，贴膜出图", "links": []}, {"type": "image", "src": "assets/qearl-b81e0a1c021051.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-b6d0813bcf1aef.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†鳥の詩﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡）12.88", "links": []}, {"type": "image", "src": "assets/qearl-82f1e966a1ea3a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c3118410a49adc.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†恋恋熊咪﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "需要壁纸的宝宝下单时备注单字署名即可（无备注署名默认不需要哦）", "links": []}, {"type": "image", "src": "assets/qearl-f451a76fb8ac87.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-e31e8aaaf72359.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†无尽夏之梦﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 双背景 单键盘7.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡+转账）14.88", "links": []}, {"type": "image", "src": "assets/qearl-247e256c3b4982.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-073ad9bac4be4f.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†蓝的独白﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5e70d9dc156a8e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6bbe8e52fdbc5b.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†冬日记忆﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-0ed08a747d1d15.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-27f60958d5c87f.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†浮羽集﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 三音效闷闷&脆脆&特殊音  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5b52c5ecebd712.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-2e43f7bb7c0e4a.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†低像素天使﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 三音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-254523563bd404.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-460e4fc2fb8dd1.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†灰福玫账簿﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-e97e94645e1533.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-a1066bf5e4c324.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†圣诞恋歌﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-69c087a056ee47.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†累累滴﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包6.88", "links": []}, {"type": "image", "src": "assets/qearl-92034986e9e353.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-69efe07d4d89a4.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†福团迎岁﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘5.88 双音效打包8.88", "links": []}, {"type": "image", "src": "assets/qearl-4bce5376824c78.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†星穹摇篮曲﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘8.88 双音效打包15.88", "links": []}, {"type": "image", "src": "assets/qearl-334d3a19f9f217.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-30001b32bc618f.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†Muted Lambs﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-c6b4ec683ce301.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-16d14c2d353053.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†月渡寒汀﹡（已下架绝版）", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-f4be9483e9fe2e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-2dce9f03ed0925.webp", "w": 1080, "h": 1080}, {"type": "image", "src": "assets/qearl-d2c20936f416f1.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†绿野的晨祷﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-fc285017cf6651.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-6769dfbc25b5b6.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†雨帘垂落之前﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-13b11e1ffbaaa8.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†베어.mood﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包8.88", "links": []}, {"type": "text", "text": "☘︎ ios加购无背景 单音效2.88 双音效 3.88", "links": []}, {"type": "image", "src": "assets/qearl-cc09efd988ffc4.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†#雨帘垂落之前﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-13b11e1ffbaaa8.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†#空白花语﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包8.88", "links": []}, {"type": "text", "text": "☘︎ ios有背景+无背景打包9.88", "links": []}, {"type": "image", "src": "assets/qearl-47c8fc756300c7.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c93f947e48c050.webp", "w": 1400, "h": 1000}]}, "custom": {"title": "𝖰.𝖢𝖴𝖲𝖳𝖮𝖬𝖪𝖤𝖸𝖲୨୧", "blocks": [{"type": "text", "text": "𝖰. 𝖢𝖴𝖲𝖳𝖮𝖬 𝖪𝖤𝖸𝖲 ୨୧", "links": []}, {"type": "text", "text": "𝘮𝘢𝘥𝘦 𝘪𝘯 𝘭𝘪𝘵𝘵𝘭𝘦 𝘥𝘦𝘵𝘢𝘪𝘭𝘴.", "links": []}, {"type": "text", "text": "⌇ 𝖯𝖱𝖨𝖢𝖤", "links": []}, {"type": "text", "text": "自带完整素材 ¥50+", "links": []}, {"type": "text", "text": "仅提供主体   ¥55+", "links": []}, {"type": "text", "text": "素材由我整理 ¥60+", "links": []}, {"type": "text", "text": "♡ 𝖨𝗇𝖼𝗅𝗎𝖽𝖾𝖽", "links": []}, {"type": "text", "text": "日常页面 + 暗黑页面 + 单音效", "links": []}, {"type": "text", "text": "♡ 𝖠𝖽𝖽 𝖮𝗇", "links": []}, {"type": "text", "text": "壁纸 +¥3 ｜ 增加音效 +¥15 / 个｜ 暗黑独立设计 +¥30", "links": []}, {"type": "text", "text": "加急 ×1.5 ｜ 商用 ×2          ｜ 买断 ×3", "links": []}, {"type": "text", "text": "〔 𝖬𝖺𝗍𝖾𝗋𝗂𝖺𝗅 𝖭𝗈𝗍𝖾 〕", "links": []}, {"type": "text", "text": "自带素材尽量准备高清 / 透明底 / 易抠图版本，", "links": []}, {"type": "text", "text": "主体、图标、漂浮及装饰小素材都可以一起打包给我。", "links": []}, {"type": "text", "text": "素材由我整理时，会围绕主题与整体氛围进行搭配，", "links": []}, {"type": "text", "text": "以实际可获取素材为准，不保证指定素材均可找到。", "links": []}, {"type": "text", "text": "复杂排版 / 大量素材处理 / 特殊需求可能适当浮价，", "links": []}, {"type": "text", "text": "所有费用都会在排单前确认 ♡", "links": []}, {"type": "text", "text": "〔 𝖱𝗎𝗌𝗁 𝖭𝗈𝗍𝖾 〕", "links": []}, {"type": "text", "text": "加急约 1–2 天，需提前确认是否有加急档期。", "links": []}, {"type": "text", "text": "加急为额外安排制作时间，", "links": []}, {"type": "text", "text": "不会占用普通订单原有排期，", "links": []}, {"type": "text", "text": "也不会影响已经排单或正在制作的键盘。", "links": []}, {"type": "text", "text": "※ 加急不默认随时可接，也不等于当天交付。", "links": []}, {"type": "text", "text": "୨୧ ───── 𝖮𝖱𝖣𝖤𝖱 𝖥𝖫𝖮𝖶 ───── ୨୧", "links": []}, {"type": "text", "text": "私聊确认需求 → 全款排单 → 等待排期 → 开工通知 →", "links": []}, {"type": "text", "text": "正式制作 → 首版预览 → 修改确认 → 封包上机 → 网盘交付 ♡", "links": []}, {"type": "text", "text": "普通制作｜约 5–7 天", "links": []}, {"type": "text", "text": "加急制作｜约 1–2 天", "links": []}, {"type": "text", "text": "排到你的订单后，我会主动发消息通知，", "links": []}, {"type": "text", "text": "并正式开始制作你的键盘 ♡", "links": []}, {"type": "text", "text": "普通订单按照排单顺序依次制作；", "links": []}, {"type": "text", "text": "加急则会另外安排时间完成，不占用原有排期。", "links": []}, {"type": "text", "text": "※ 制作工期从发送「开工通知」起计算，", "links": []}, {"type": "text", "text": "等待排期及等待确认的时间不包含在内。", "links": []}, {"type": "text", "text": "𝘧𝘳𝘰𝘮 𝘢𝘯 𝘪𝘥𝘦𝘢, 𝘪𝘯𝘵𝘰 𝘴𝘰𝘮𝘦𝘵𝘩𝘪𝘯𝘨 𝘺𝘰𝘶𝘳𝘴.", "links": []}, {"type": "text", "text": "୨୧ ─────── 𝖰. 𝖭𝖮𝖳𝖤𝖲 ─────── ୨୧", "links": []}, {"type": "text", "text": "定制前の小约定 ♡", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖨𝖽𝖾𝖺𝗌", "links": []}, {"type": "text", "text": "关于你的想法", "links": []}, {"type": "text", "text": "主题 / 配色 / 素材 / 喜好 / 雷点，", "links": []}, {"type": "text", "text": "以及音效、动效等特殊需求，", "links": []}, {"type": "text", "text": "请尽量在排单时一次告诉我。", "links": []}, {"type": "text", "text": "有明确想法可以尽可能说细；", "links": []}, {"type": "text", "text": "只有大概的感觉也没关系，", "links": []}, {"type": "text", "text": "可以给我留一些自由发挥的空间 ♡", "links": []}, {"type": "text", "text": "参考图仅用于确认喜欢的方向，不做 1:1 复刻。", "links": []}, {"type": "text", "text": "定制会保留我的个人审美与制作习惯，", "links": []}, {"type": "text", "text": "不擅长或无法达到预期的主题会提前说明。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖤𝖽𝗂𝗍𝗌", "links": []}, {"type": "text", "text": "关于预览与修改", "links": []}, {"type": "text", "text": "制作过程中会发送预览确认，", "links": []}, {"type": "text", "text": "包含 2 轮免费修改。", "links": []}, {"type": "text", "text": "「1轮」＝一次集中反馈，", "links": []}, {"type": "text", "text": "同一轮可以一起提出多个细节调整。", "links": []}, {"type": "text", "text": "位置 / 大小 / 局部素材等均可正常调整；", "links": []}, {"type": "text", "text": "原需求中没有提出的新增内容，", "links": []}, {"type": "text", "text": "或确认方向后重新更换风格 / 配色 / 大面积重做，", "links": []}, {"type": "text", "text": "会根据增加的制作量补差。", "links": []}, {"type": "text", "text": "收到预览后可以先仔细看看，", "links": []}, {"type": "text", "text": "整理好想调整的地方再一次告诉我 ♡", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖱𝖾𝖿𝗎𝗇𝖽𝗌", "links": []}, {"type": "text", "text": "关于排单与退单", "links": []}, {"type": "text", "text": "确认需求与价格并支付全款后，", "links": []}, {"type": "text", "text": "订单正式进入等待排期。", "links": []}, {"type": "text", "text": "收到我的「开工通知」前，", "links": []}, {"type": "text", "text": "都属于未开始制作阶段。", "links": []}, {"type": "text", "text": "未收到开工通知       全额退款", "links": []}, {"type": "text", "text": "已通知开工 · 尚未发送预览  退款 50%", "links": []}, {"type": "text", "text": "26键 / 9键 / 123键全部完成", "links": []}, {"type": "text", "text": "并发送预览后        退款 30%", "links": []}, {"type": "text", "text": "「开工通知」为正式开始制作的节点。", "links": []}, {"type": "text", "text": "排到你的订单后我会主动联系，", "links": []}, {"type": "text", "text": "通知发出后即进入制作阶段 ♡", "links": []}, {"type": "text", "text": "完整预览发送后如选择退单，", "links": []}, {"type": "text", "text": "定制文件不再交付；", "links": []}, {"type": "text", "text": "作品会恢复为非独占状态，", "links": []}, {"type": "text", "text": "我可在重新修改 / 调整后进行展示、上架或售卖。", "links": []}, {"type": "text", "text": "如因我的原因无法继续完成，", "links": []}, {"type": "text", "text": "会根据实际情况退还对应费用。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖣𝖾𝗅𝗂𝗏𝖾𝗋𝗒", "links": []}, {"type": "text", "text": "关于封包与交付", "links": []}, {"type": "text", "text": "全部页面及修改确认完成后，", "links": []}, {"type": "text", "text": "会进行封包并提供实际上机预览。", "links": []}, {"type": "text", "text": "封包前请确认好最终效果 ♡", "links": []}, {"type": "text", "text": "确认封包后如需再次调整：", "links": []}, {"type": "text", "text": "普通细节修改 ¥5 / 轮", "links": []}, {"type": "text", "text": "大改 / 新增内容 按实际工作量另计", "links": []}, {"type": "text", "text": "更换音效 / 转系统 / 新增页面等，", "links": []}, {"type": "text", "text": "属于新的制作需求，不包含在原定制范围内。", "links": []}, {"type": "text", "text": "确认无误后通过网盘交付，", "links": []}, {"type": "text", "text": "收到文件后请及时转存，", "links": []}, {"type": "text", "text": "文件不作永久补档。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖴𝗌𝖾", "links": []}, {"type": "text", "text": "关于使用范围", "links": []}, {"type": "text", "text": "♡ 个人定制", "links": []}, {"type": "text", "text": "默认仅供本人使用，", "links": []}, {"type": "text", "text": "可私下分享给 3 位亲友。", "links": []}, {"type": "text", "text": "禁止公开二传 / 转售 / 二改后出售，", "links": []}, {"type": "text", "text": "不可通过群聊、公开链接等形式传播。", "links": []}, {"type": "text", "text": "♡ 商用 ×2", "links": []}, {"type": "text", "text": "可用于掉落 / 福利 / 引流，", "links": []}, {"type": "text", "text": "不可直接转售定制文件。", "links": []}, {"type": "text", "text": "♡ 买断 ×3", "links": []}, {"type": "text", "text": "成品不再展示、上架或重复出售，", "links": []}, {"type": "text", "text": "除制作权外，该定制成品的使用权归买家。", "links": []}, {"type": "text", "text": "※ 商用 / 买断仅针对我的设计与成品，", "links": []}, {"type": "text", "text": "不包含第三方素材、字体等原始版权。", "links": []}, {"type": "text", "text": "⌇ 𝖫𝗂𝗍𝗍𝗅𝖾 𝖭𝗈𝗍𝖾", "links": []}, {"type": "text", "text": "一些放在最后的小提醒 ୨୧", "links": []}, {"type": "text", "text": "· 自带素材请自行确认来源及可使用范围，", "links": []}, {"type": "text", "text": "因提供素材产生的版权 / 授权问题需自行负责。", "links": []}, {"type": "text", "text": "· 非买断定制默认保留成品展示权，", "links": []}, {"type": "text", "text": "可能用于作品展示 / 定制案例；", "links": []}, {"type": "text", "text": "介意公开或需要保密，请在排单前告诉我。", "links": []}, {"type": "text", "text": "· 预览发出后请尽量及时确认。", "links": []}, {"type": "text", "text": "超过 48h 未回复，订单会暂时停留在当前进度；", "links": []}, {"type": "text", "text": "再次联系后根据当时排期重新安排，", "links": []}, {"type": "text", "text": "原定交付时间也会相应顺延。", "links": []}, {"type": "text", "text": "· 因设备 / 系统版本 / 第三方软件更新等", "links": []}, {"type": "text", "text": "非成品本身导致的兼容问题，", "links": []}, {"type": "text", "text": "不属于免费修改范围。", "links": []}, {"type": "text", "text": "· 不同定制可能使用相同题材、配色或公开素材，", "links": []}, {"type": "text", "text": "非买断订单不保证后续作品完全不出现相似元素。", "links": []}, {"type": "text", "text": "· 未成年宝宝请在监护人知情并同意后下单。", "links": []}, {"type": "text", "text": "𝖯𝖺𝗒𝗆𝖾𝗇𝗍 = 𝖺𝗀𝗋𝖾𝖾𝗆𝖾𝗇𝗍 ୨୧", "links": []}, {"type": "text", "text": "付款即默认已阅读并接受以上定制规则。", "links": []}, {"type": "text", "text": "° 𝖰. 𝖺𝗋𝖼𝗁𝗂𝗏𝖾", "links": []}, {"type": "text", "text": "𝘴𝘮𝘢𝘭𝘭 𝘵𝘩𝘪𝘯𝘨𝘴, 𝘬𝘦𝘱𝘵 𝘸𝘪𝘵𝘩 𝘤𝘢𝘳𝘦.", "links": []}]}, "case": {"title": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "blocks": [{"type": "text", "text": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "links": []}, {"type": "text", "text": "☆̸★下单默认已读", "links": []}, {"type": "text", "text": "• 手作产物 有瑕疵 强迫症完美主义宝宝慎重购买哦", "links": []}, {"type": "text", "text": "• 非主题 仅为配套 不教使用！！xhs上可以搜教程滴", "links": []}, {"type": "text", "text": "• 打标出图 下单需要提供ip录屏+vx号+qq号哦", "links": []}, {"type": "text", "text": "• 为8048版本展示 其他版本可能会出现图标位置不同的情况", "links": []}, {"type": "text", "text": "• 纯手作产物 气泡会出现拉伸 介意宝宝请勿下单", "links": []}, {"type": "text", "text": "†天使小叽﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 单键盘6.88  全套12.88", "links": []}, {"type": "image", "src": "assets/qearl-6f5031c06783e5.webp", "w": 1179, "h": 2556}, {"type": "image", "src": "assets/qearl-080247db5648ba.webp", "w": 1179, "h": 2556}, {"type": "image", "src": "assets/qearl-aadea69e3bcc53.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "copy_19715E9C-434B-48F7-ACE9-4DB2E6E607F5.MOV", "links": []}, {"type": "text", "text": "†鳥の詩﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 脆脆&闷闷 单音效键盘6.88  全套12.88（不含转账）", "links": []}, {"type": "image", "src": "assets/qearl-82f1e966a1ea3a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c3118410a49adc.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "copy_2BDE265A-6273-40E1-9B71-C8177D49F203.MOV", "links": []}, {"type": "text", "text": "†无尽夏之梦﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 脆脆&闷闷 单音效键盘6.88  全套14.88", "links": []}, {"type": "text", "text": "copy_A550F45A-250A-44B1-9ACE-54F63D917B09.MOV", "links": []}, {"type": "image", "src": "assets/qearl-247e256c3b4982.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-073ad9bac4be4f.webp", "w": 1400, "h": 997}]}, "mist": {"title": "薄雾集", "blocks": [{"type": "text", "text": "°⑅♡#薄雾集♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入20.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-db8dbbe577464b.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-fd8d4bbf3cb1aa.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-6aebe0a14ee31d.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "image", "src": "assets/qearl-03db7b71cfef3e.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第一套：花境谜语，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-ff77abd2849262.webp", "w": 1280, "h": 912}, {"type": "text", "text": "第二套：藤枝雨，已掉落专属配套主题盒子", "links": []}, {"type": "text", "text": "第三套：梦是柔软的绷带，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-88f0d8fcf7ed17.webp", "w": 1400, "h": 997}, {"type": "image", "src": "assets/qearl-7f31ddcb371794.webp", "w": 1400, "h": 997}, {"type": "text", "text": "第四套：Mintchoc喵，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-4a7fee4ee8d167.webp", "w": 1280, "h": 1280}]}, "island": {"title": "失眠岛", "blocks": [{"type": "text", "text": "°⑅♡#失眠岛♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入23.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "image", "src": "assets/qearl-abbee2f90430a1.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-140f5318dbc1d0.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6ff6d9af88c997.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-313a791388c088.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-34799327a7ab59.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†掉落键盘预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-8100c3a573b3bc.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-f74ec47055d32a.webp", "w": 1280, "h": 2781}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-fa6391be865ced.webp", "w": 1179, "h": 1544}, {"type": "image", "src": "assets/qearl-f69a4548d1873c.webp", "w": 1179, "h": 1544}, {"type": "image", "src": "assets/qearl-b3410b29040f13.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "text", "text": "第一套：阿芙洛的湖畔少女，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-4cb85d50d8a36b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-43a02d0357efef.webp", "w": 1400, "h": 998}, {"type": "text", "text": "第二套：雨あと、苔，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-79564de2dd62b4.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-764918dd6dca90.webp", "w": 1400, "h": 998}, {"type": "text", "text": "第三套：蕾丝少女偶，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-bfbf812a694bc9.webp", "w": 1400, "h": 787}, {"type": "text", "text": "第四套：Mintchoc喵，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-acd6003ac25c36.webp", "w": 1280, "h": 1280}]}, "moss": {"title": "淚生苔", "blocks": [{"type": "text", "text": "°⑅♡#淚生苔♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入23.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "image", "src": "assets/qearl-abbee2f90430a1.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-9cb4a28ce85ed9.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-31810280d41645.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-db9e57fbae9b6f.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†掉落键盘预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-b9e779383c57c7.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-8cf12079df6a06.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-80ddd73ef0f06a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-a1352f5cb828b0.webp", "w": 1080, "h": 1080}, {"type": "image", "src": "assets/qearl-5c86492e3b2415.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "text", "text": "第一套：晚春的叹息，已掉落专属配套盒子", "links": []}, {"type": "image", "src": "assets/qearl-c55f142db83fa3.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-fab6e8708477b2.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第二套：Lacrimosa，带专署配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-15c44f69a4cb9b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-ad477431ab4119.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第三套：慢半拍雨季，赠送配套壁纸", "links": []}, {"type": "text", "text": "第四套：Mint곰，赠送配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-0e2d420402c33b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-65f2572f3c57d9.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-2c03d6caa6a701.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-3bceea63a9c704.webp", "w": 1280, "h": 1280}]}, "jasmine": {"title": "#茉莉信†﹡", "blocks": [{"type": "text", "text": "#茉莉信†﹡", "links": []}, {"type": "text", "text": "# 此文档为会内自截预览", "links": []}, {"type": "text", "text": "# 保底1500＋ 只多不少", "links": []}, {"type": "text", "text": "# 风格不固定 「低保和、古早之类 欢迎大人品尝っω<｡」", "links": []}, {"type": "text", "text": "# 入会请联系Llie_eovo", "links": []}, {"type": "text", "text": "# 感谢大人们支持(*´ω｀)p", "links": []}, {"type": "text", "text": "☆ 头像预览：", "links": []}, {"type": "image", "src": "assets/qearl-5296126d5fa3b4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-ad36714cfda63c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-7ed7481d7e536c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-0c83cec732a580.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9d0c9a1aa81b6c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-bc3f5f6566c7b4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-892c3d6491f713.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-91594493b8c6f7.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-b609820a941c9a.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-265d82887b2460.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-87cb77ea29dba5.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-dd81ece732e253.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-177372127a28e6.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-c276debf0c9fe4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-edfe61d39e41d1.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-31453e3268cc9c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-53f90abfd41770.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-77da894bd09f95.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-12474e807836fb.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-3165a6e5e422ba.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6adb5d3fd57b02.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-faea20ca7c8816.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-e62ebdf782e2bb.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-cfea6999fc5b43.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-970ea2cd464c4e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-2a4480c424e891.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-f85280d8595619.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9899e019da0373.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-3d4778e60f7678.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-0fca89dbc78452.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-ce9487b1598733.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-eee9bf6cdb91cd.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-414f65e5efbcad.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-f0f16cf903ef9f.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-07b7a83c9d76f4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-a6473d0cbd51c0.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-7e1fdf3d182ac4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9b4703f3f9f31c.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "☆ 掉落预览：", "links": []}, {"type": "text", "text": "† 字体预览：", "links": []}, {"type": "image", "src": "assets/qearl-ab0cd5f3038171.webp", "w": 1200, "h": 1600}, {"type": "text", "text": "† 名片预览：", "links": []}, {"type": "image", "src": "assets/qearl-4ab21809f74c57.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "「其余掉落加工中..」", "links": []}, {"type": "text", "text": "☆ 推人预览：", "links": []}, {"type": "text", "text": "推1「字体」：", "links": []}, {"type": "image", "src": "assets/qearl-3e2ee6d7688ffc.webp", "w": 1280, "h": 1449}, {"type": "text", "text": "推3「壁纸+键盘+字体」：", "links": []}, {"type": "image", "src": "assets/qearl-277f4bae62a925.webp", "w": 1324, "h": 2868}]}, "others": {"title": "°⑅♡ 枝间拾遗 ♡⑅°", "blocks": [{"type": "text", "text": "°⑅♡枝间拾遗♡⑅ °", "links": []}, {"type": "text", "text": "★/★下单默认已读", "links": []}, {"type": "text", "text": "因为内存原因无法在文档内进行预览", "links": []}, {"type": "text", "text": "可以通过236623390空间进行查看选款", "links": []}, {"type": "text", "text": "相册没有标注价格的可以私聊我进行询问哦~", "links": []}, {"type": "text", "text": "也可以在pyq进行查看预览~", "links": []}, {"type": "text", "text": "上述方法都不想使用的宝宝也可以私聊我发送相册进行查看~", "links": []}, {"type": "text", "text": "视频名片预览：#小程序://腾讯相册/0hTQVuNVBQ61xXD", "links": []}, {"type": "text", "text": "水印预览：#小程序://腾讯相册/a8UzlbZtNur1gWm", "links": []}, {"type": "text", "text": "名片预览：#小程序://腾讯相册/Jkq7WBQqXFAxP2w", "links": []}, {"type": "text", "text": "表情预览：#小程序://腾讯相册/MpvhXZGcRGwkBKn", "links": []}]}},KEY='qearl_atelier_custom_v1',OWNER='qearl_owner_preview';
+let data=JSON.parse(localStorage.getItem(KEY)||'{"cards":[],"append":{}}'),current=null;
+const reader=document.getElementById('reader'),rt=document.getElementById('rt'),rk=document.getElementById('rk'),rb=document.getElementById('rb');
+
+function ownerOn(){return sessionStorage.getItem(OWNER)==='1'}
+function ownerUI(){document.getElementById('owner').textContent=ownerOn()?'✦ owner mode':'owner entrance ୨୧';document.getElementById('append').style.display=ownerOn()?'inline-block':'none';document.getElementById('addpage').style.display=ownerOn()?'inline-block':'none'}
+function esc(s){return(s||'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function linkify(t){return esc(t).replace(/(https?:\/\/[^\s<]+)/g,'<a class="lnk" target="_blank" href="$1">$1</a>')}
+function isTocHeading(t,page){
+  const x=(t||'').trim();
+  if(!x)return false;
+
+  // Type Book / Theme Case: every actual product title.
+  if(page==='typebook') return /^†/.test(x);
+  if(page==='case') return /^†/.test(x);
+
+  // Three membership collections: previews + club section + each named set.
+  if(['mist','island','moss'].includes(page)){
+    return /^(†|𐂐|第一套：|第二套：|第三套：|第四套：)/.test(x);
+  }
+
+  // Jasmine: all actual preview sections, including push-1 / push-3.
+  if(page==='jasmine'){
+    return /^(☆ 头像预览：|☆ 掉落预览：|† 字体预览：|† 名片预览：|「其余掉落加工中\.\.」|☆ 推人预览：|推1「字体」：|推3「壁纸\+键盘\+字体」：)$/.test(x);
+  }
+
+  // Other pieces: the four actual preview entries.
+  if(page==='others'){
+    return /^(视频名片预览：|水印预览：|名片预览：|表情预览：)/.test(x);
+  }
+
+  // Custom keys: preserve the document's real section hierarchy.
+  if(page==='custom'){
+    return /^⌇ 𝖯𝖱𝖨𝖢𝖤$/.test(x)
+      || /^♡ 𝖨𝗇𝖼𝗅𝗎𝖽𝖾𝖽$/.test(x)
+      || /^♡ 𝖠𝖽𝖽 𝖮𝗇$/.test(x)
+      || /^〔 𝖬𝖺𝗍𝖾𝗋𝗂𝖺𝗅 𝖭𝗈𝗍𝖾 〕$/.test(x)
+      || /^〔 𝖱𝗎𝗌𝗁 𝖭𝗈𝗍𝖾 〕$/.test(x)
+      || /^୨୧ ───── 𝖮𝖱𝖣𝖤𝖱 𝖥𝖫𝖮𝖶 ───── ୨୧$/.test(x)
+      || /^୨୧ ─────── 𝖰\. 𝖭𝖮𝖳𝖤𝖲 ─────── ୨୧$/.test(x)
+      || /^⌇ 𝖠𝖻𝗈𝗎𝗍 𝖨𝖽𝖾𝖺𝗌$/.test(x)
+      || /^⌇ 𝖠𝖻𝗈𝗎𝗍 𝖤𝖽𝗂𝗍𝗌$/.test(x)
+      || /^⌇ 𝖠𝖻𝗈𝗎𝗍 𝖱𝖾𝖿𝗎𝗇𝖽𝗌$/.test(x)
+      || /^⌇ 𝖠𝖻𝗈𝗎𝗍 𝖣𝖾𝗅𝗂𝗏𝖾𝗋𝗒$/.test(x)
+      || /^⌇ 𝖠𝖻𝗈𝗎𝗍 𝖴𝗌𝖾$/.test(x)
+      || /^⌇ 𝖫𝗂𝗍𝗍𝗅𝖾 𝖭𝗈𝗍𝖾$/.test(x);
+  }
+
+  return false;
+}
+function renderSequential(bs,page){
+  let o='',toc=[];
+  (bs||[]).forEach((b,bi)=>{
+    if(b.type==='text'){
+      let t=linkify(b.text);
+      if(b.links)b.links.forEach(([l,u])=>{if(l&&u)t=t.replace(esc(l),`<a class="lnk" target="_blank" href="${esc(u)}">${esc(l)}</a>`)});
+      const heading=isTocHeading(b.text,page);
+      const id=heading?`${page}-block-${bi}`:'';
+      if(heading)toc.push({id,text:b.text,blockIndex:bi});
+      o+=`<p ${id?`id="${id}"`:''} class="blockText ${heading?'heading':''}" data-block="${bi}">${t}</p>`;
+    }else if(b.type==='image'){
+      const wh=(b.w&&b.h)?` width="${b.w}" height="${b.h}" style="aspect-ratio:${b.w}/${b.h}"`:'';
+      o+=`<img class="blockImg" src="${b.src}" alt="Qearl preview"${wh}>`;
+    }else if(b.type==='table'){
+      o+='<table class="blockTable">'+b.rows.map(r=>'<tr>'+r.map(c=>`<td>${linkify(c)}</td>`).join('')+'</tr>').join('')+'</table>';
+    }
+  });
+  window.__currentTOC=toc;
+  return o;
+}
+const labels={typebook:'TYPE BOOK',custom:'CUSTOM KEYS',case:'THEME CASE',mist:'MISTBOUND NOTES',island:'NOCTURNE ISLE',moss:'MOSS AFTER TEARS',jasmine:'SELF-CUT',others:'QEARL MISCELLANY'};
+function openDoc(s){
+  current=s;reader.dataset.page=s;
+  const d=DOCS[s];
+  rt.textContent=d?d.title:(data.cards.find(x=>x.id===s)?.title||'Archive');
+  rk.textContent=labels[s]||'QEARL ARCHIVE';
+  let bs=d?[...d.blocks]:[];
+  if(data.append[s])bs=bs.concat(data.append[s]);
+  if(!d){let c=data.cards.find(x=>x.id===s);bs=c?c.blocks:[]}
+  rb.innerHTML=renderSequential(bs,s);
+  renderTOC(window.__currentTOC||[]);
+  reader.classList.add('open');reader.scrollTop=0;document.body.style.overflow='hidden';ownerUI()
+}
+
+const tocPanel=document.getElementById('tocPanel'),tocHandle=document.getElementById('tocHandle'),tocList=document.getElementById('tocList');
+function renderTOC(items){
+  if(!tocList)return;
+  tocList.innerHTML='';
+  (items||[]).forEach((it,i)=>{
+    const a=document.createElement('a');
+    a.className='tocItem';
+    a.innerHTML=`<span class="idx">${String(i+1).padStart(2,'0')}</span>${esc(it.text)}`;
+    a.onclick=(e)=>{
+      e.preventDefault();
+      const target=document.getElementById(it.id);
+      if(target){
+        const jump=()=>{
+          const nav=document.querySelector('.rnav');
+          const navH=nav?nav.offsetHeight:62;
+          const rr=reader.getBoundingClientRect();
+          const tr=target.getBoundingClientRect();
+          const top=reader.scrollTop+(tr.top-rr.top)-navH-22;
+          reader.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+        };
+        requestAnimationFrame(()=>requestAnimationFrame(jump));
+        document.querySelectorAll('.tocItem').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+      }
+      tocPanel.classList.remove('open');
+    };
+    tocList.appendChild(a);
+  });
+}
+if(tocHandle)tocHandle.onclick=()=>tocPanel.classList.toggle('open');
+document.addEventListener('click',e=>{
+  if(tocPanel && tocPanel.classList.contains('open') && !tocPanel.contains(e.target) && e.target!==tocHandle){
+    tocPanel.classList.remove('open');
+  }
+});
+
+
+function syncTOCActive(){
+  if(!reader.classList.contains('open')||!window.__currentTOC)return;
+  const nav=document.querySelector('.rnav');
+  const navH=nav?nav.offsetHeight:62;
+  const rr=reader.getBoundingClientRect();
+  const anchor=navH+48;
+  let best=null,bestDist=Infinity;
+  for(const it of window.__currentTOC){
+    const el=document.getElementById(it.id);
+    if(!el)continue;
+    const top=el.getBoundingClientRect().top-rr.top;
+    const dist=Math.abs(top-anchor);
+    if(top<=anchor+120 && dist<bestDist){
+      best=it.id;bestDist=dist;
+    }
+  }
+  if(!best && window.__currentTOC.length)best=window.__currentTOC[0].id;
+  document.querySelectorAll('.tocItem').forEach((a,i)=>{
+    const it=window.__currentTOC[i];
+    a.classList.toggle('active',!!it&&it.id===best);
+  });
+}
+reader.addEventListener('scroll',syncTOCActive,{passive:true});
+
+document.querySelectorAll('[data-open]').forEach(e=>e.onclick=()=>openDoc(e.dataset.open));
+document.getElementById('back').onclick=()=>{reader.classList.remove('open');if(tocPanel)tocPanel.classList.remove('open');document.body.style.overflow='';current=null}
+
+const login=document.getElementById('login'),admin=document.getElementById('admin');
+document.getElementById('owner').onclick=()=>ownerOn()?admin.showModal():login.showModal();
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.close).close());
+document.getElementById('loginbtn').onclick=()=>{if(document.getElementById('uid').value.trim()&&document.getElementById('pwd').value){sessionStorage.setItem(OWNER,'1');login.close();ownerUI();renderUsers();toast('owner mode opened')}else alert('请输入账号和密码')};
+function openAdmin(t='new'){if(!ownerOn()){login.showModal();return}document.getElementById('target').value=t;admin.showModal()}
+document.getElementById('append').onclick=()=>openAdmin(current||'new');document.getElementById('addpage').onclick=()=>openAdmin('new');
+function files(fs){return Promise.all([...fs].map(f=>new Promise(r=>{let x=new FileReader();x.onload=()=>r({type:'image',src:x.result});x.readAsDataURL(f)})))}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1300)}
+document.getElementById('save').onclick=async()=>{let target=document.getElementById('target').value,title=document.getElementById('nt').value.trim()||'new archive',text=document.getElementById('nx').value.trim(),imgs=await files(document.getElementById('ni').files),bs=[];if(text)bs.push({type:'text',text});bs.push(...imgs);if(target==='new')data.cards.push({id:'u_'+Date.now(),title,blocks:bs});else{data.append[target]=data.append[target]||[];data.append[target].push({type:'text',text:'✦ '+title},...bs)}localStorage.setItem(KEY,JSON.stringify(data));renderUsers();admin.close();toast('saved ♡')};
+function renderUsers(){let g=document.getElementById('usergrid');g.innerHTML='';data.cards.forEach(c=>{let e=document.createElement('article');e.className='usercard';e.innerHTML=`${ownerOn()?'<button class="del">×</button>':''}<h3>${esc(c.title)}</h3><p style="font-size:12px;color:#84899b">later added to Qearl atelier.</p>`;e.onclick=x=>{if(x.target.classList.contains('del'))return;openDoc(c.id)};if(ownerOn())e.querySelector('.del').onclick=x=>{x.stopPropagation();if(confirm('删除这个栏目吗？')){data.cards=data.cards.filter(y=>y.id!==c.id);localStorage.setItem(KEY,JSON.stringify(data));renderUsers()}};g.appendChild(e)})}
+document.getElementById('logout').onclick=()=>{sessionStorage.removeItem(OWNER);admin.close();ownerUI();renderUsers();toast('visitor mode')};
+document.getElementById('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='qearl-atelier-backup.json';a.click()};
+document.getElementById('import').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);localStorage.setItem(KEY,JSON.stringify(data));renderUsers();toast('imported')}catch{alert('备份格式不正确')}};r.readAsText(f)};
+ownerUI();renderUsers();
+</script>
+
+<script id="qearl-cloud-backend">
+(() => {
+  let cloudOwner = false;
+  let cloudState = {overrides:{}, additions:{}, pages:[]};
+  let editing = null;
+
+  const originalDocs = DOCS;
+  const editDialog = document.getElementById('editBlockDialog');
+  const editTextField = document.getElementById('editTextField');
+  const editImageField = document.getElementById('editImageField');
+  const editBlockText = document.getElementById('editBlockText');
+  const editBlockImage = document.getElementById('editBlockImage');
+
+  async function api(url, options={}) {
+    const res = await fetch(url, {
+      credentials:'same-origin',
+      headers: options.body instanceof FormData ? (options.headers||{}) : {'Content-Type':'application/json', ...(options.headers||{})},
+      ...options
+    });
+    const type = res.headers.get('content-type')||'';
+    const body = type.includes('application/json') ? await res.json() : await res.text();
+    if(!res.ok) throw new Error(body?.error || body || `HTTP ${res.status}`);
+    return body;
+  }
+
+  ownerOn = function(){ return cloudOwner; };
+  ownerUI = function(){
+    document.body.classList.toggle('owner-mode', cloudOwner);
+    const ownerBtn=document.getElementById('owner');
+    if(ownerBtn) ownerBtn.textContent=cloudOwner?'✦ owner mode':'owner entrance ୨୧';
+    const append=document.getElementById('append');
+    if(append) append.style.display=cloudOwner?'inline-block':'none';
+    const addpage=document.getElementById('addpage');
+    if(addpage) addpage.style.display=cloudOwner?'inline-block':'none';
+  };
+
+  async function refreshSession(){
+    try{
+      const x=await api('/api/session');
+      cloudOwner=!!x.authenticated;
+    }catch{ cloudOwner=false; }
+    ownerUI();
+  }
+
+  async function refreshState(){
+    try{
+      cloudState=await api('/api/state');
+      renderDynamicPages();
+      if(current && reader.classList.contains('open')) openDoc(current);
+    }catch(e){ console.error('state load failed',e); }
+  }
+
+  function applyCloudState(page){
+    const base=(originalDocs[page]?.blocks||[]).map((b,i)=>({...b,__sourceIndex:i}));
+    const pageOverrides=cloudState.overrides?.[page]||{};
+    const out=[];
+    base.forEach(b=>{
+      const ov=pageOverrides[String(b.__sourceIndex)];
+      if(ov?.deleted) return;
+      if(ov?.text_override!=null && b.type==='text') b.text=ov.text_override;
+      if(ov?.image_key_override && b.type==='image') b.src='/media/'+encodeURIComponent(ov.image_key_override);
+      out.push(b);
+    });
+    const adds=(cloudState.additions?.[page]||[]).map(a=>({
+      type:a.type,
+      text:a.text_content||'',
+      src:a.image_key?('/media/'+encodeURIComponent(a.image_key)):undefined,
+      forceHeading:!!a.is_heading,
+      __additionId:a.id
+    }));
+    return out.concat(adds);
+  }
+
+  renderSequential = function(bs,page){
+    let o='',toc=[];
+    (bs||[]).forEach((b,bi)=>{
+      const ownerTools = cloudOwner
+        ? `<span class="ownerBlockTools"><button class="ownerMini" data-owner-edit="${b.__additionId?'addition':'base'}" data-page="${esc(page)}" ${b.__additionId?`data-addition-id="${b.__additionId}"`:`data-block-index="${b.__sourceIndex}"`} data-block-type="${b.type}" title="编辑">✎</button></span>`
+        : '';
+      if(b.type==='text'){
+        let t=linkify(b.text);
+        if(b.links)b.links.forEach(([l,u])=>{if(l&&u)t=t.replace(esc(l),`<a class="lnk" target="_blank" href="${esc(u)}">${esc(l)}</a>`)});
+        const heading=!!b.forceHeading || isTocHeading(b.text,page);
+        const stableIndex=b.__sourceIndex!=null?`b${b.__sourceIndex}`:`a${b.__additionId}`;
+        const id=heading?`${page}-${stableIndex}`:'';
+        if(heading)toc.push({id,text:b.text});
+        o+=`<div class="ownerBlock" data-page="${esc(page)}">${ownerTools}<p ${id?`id="${id}"`:''} class="blockText ${heading?'heading':''}">${t}</p></div>`;
+      }else if(b.type==='image'){
+        const wh=(b.w&&b.h)?` width="${b.w}" height="${b.h}" style="aspect-ratio:${b.w}/${b.h}"`:'';
+        o+=`<div class="ownerBlock" data-page="${esc(page)}">${ownerTools}<img class="blockImg" loading="lazy" src="${b.src}" alt="Qearl preview"${wh}></div>`;
+      }else if(b.type==='table'){
+        o+='<table class="blockTable">'+b.rows.map(r=>'<tr>'+r.map(c=>`<td>${linkify(c)}</td>`).join('')+'</tr>').join('')+'</table>';
+      }
+    });
+    window.__currentTOC=toc;
+    return o;
+  };
+
+  openDoc = function(page){
+    current=page; reader.dataset.page=page;
+    const customPage=cloudState.pages?.find(p=>p.slug===page);
+    const d=originalDocs[page];
+    rt.textContent=d?d.title:(customPage?.title||'Archive');
+    rk.textContent=labels[page]||(customPage?'QEARL NEW ARCHIVE':'QEARL ARCHIVE');
+    const bs=applyCloudState(page);
+    rb.innerHTML=renderSequential(bs,page);
+    renderTOC(window.__currentTOC||[]);
+    reader.classList.add('open');reader.scrollTop=0;document.body.style.overflow='hidden';ownerUI();
+  };
+
+  function renderDynamicPages(){
+    const sec=document.getElementById('dynamicSection');
+    const grid=document.getElementById('dynamicPages');
+    if(!sec||!grid)return;
+    const pages=cloudState.pages||[];
+    sec.hidden=pages.length===0;
+    grid.innerHTML='';
+    pages.forEach((p,i)=>{
+      const el=document.createElement('article');
+      el.className='glass third';
+      el.style.position='relative';
+      el.innerHTML=`<div class="no">${String(i+8).padStart(2,'0')} / NEW ARCHIVE</div><div class="monogram">Q.</div><h3>${esc(p.title)}</h3><p class="collectionSub">later addition</p><div class="enter">open ↗</div>${cloudOwner?`<div class="dynamicOwnerTools"><button class="ownerMini" data-delete-page="${esc(p.slug)}" title="删除栏目">×</button></div>`:''}`;
+      el.onclick=(e)=>{if(e.target.closest('[data-delete-page]'))return;openDoc(p.slug)};
+      grid.appendChild(el);
+    });
+  }
+
+  async function uploadFile(file){
+    if(!file)return null;
+    const fd=new FormData(); fd.append('file',file);
+    return await api('/api/upload',{method:'POST',body:fd});
+  }
+
+  // Replace demo login with real server authentication.
+  document.getElementById('loginbtn').onclick=async()=>{
+    const username=document.getElementById('uid').value.trim();
+    const password=document.getElementById('pwd').value;
+    try{
+      await api('/api/login',{method:'POST',body:JSON.stringify({username,password})});
+      cloudOwner=true; document.getElementById('login').close(); ownerUI(); await refreshState(); toast('owner mode opened');
+      document.getElementById('pwd').value='';
+    }catch(e){ alert('账号或密码不正确'); }
+  };
+
+  document.getElementById('logout').onclick=async()=>{
+    try{await api('/api/logout',{method:'POST',body:'{}'});}catch{}
+    cloudOwner=false; document.getElementById('admin').close(); ownerUI(); renderDynamicPages(); toast('visitor mode');
+  };
+
+  // Hide local backup controls: cloud data is now the source of truth.
+  const exportBtn=document.getElementById('export'); if(exportBtn) exportBtn.style.display='none';
+  const importInput=document.getElementById('import'); if(importInput && importInput.parentElement) importInput.parentElement.style.display='none';
+
+  // Cloud-backed "add content" / "new page".
+  document.getElementById('save').onclick=async()=>{
+    if(!cloudOwner)return;
+    const target=document.getElementById('target').value;
+    const title=document.getElementById('nt').value.trim();
+    const text=document.getElementById('nx').value.trim();
+    const files=[...document.getElementById('ni').files];
+    try{
+      let page=target;
+      if(target==='new'){
+        if(!title){alert('新建栏目需要填写标题');return;}
+        const created=await api('/api/page',{method:'POST',body:JSON.stringify({title})});
+        page=created.slug;
+      }else if(title){
+        await api('/api/block',{method:'POST',body:JSON.stringify({page,type:'text',text:title,isHeading:true})});
+      }
+      if(text) await api('/api/block',{method:'POST',body:JSON.stringify({page,type:'text',text,isHeading:false})});
+      for(const f of files){
+        const up=await uploadFile(f);
+        await api('/api/block',{method:'POST',body:JSON.stringify({page,type:'image',imageKey:up.key,isHeading:false})});
+      }
+      document.getElementById('nt').value=''; document.getElementById('nx').value=''; document.getElementById('ni').value='';
+      document.getElementById('admin').close(); await refreshState(); toast('saved ♡');
+    }catch(e){alert('保存失败：'+e.message)}
+  };
+
+  // Owner edit buttons inside every page.
+  rb.addEventListener('click',async(e)=>{
+    const btn=e.target.closest('[data-owner-edit]');
+    if(!btn||!cloudOwner)return;
+    e.preventDefault(); e.stopPropagation();
+    editing={
+      kind:btn.dataset.ownerEdit,
+      page:btn.dataset.page,
+      blockIndex:btn.dataset.blockIndex!=null?Number(btn.dataset.blockIndex):null,
+      additionId:btn.dataset.additionId?Number(btn.dataset.additionId):null,
+      type:btn.dataset.blockType
+    };
+    editTextField.hidden=editing.type!=='text';
+    editImageField.hidden=editing.type!=='image';
+    editBlockImage.value='';
+    if(editing.type==='text'){
+      if(editing.kind==='base'){
+        const b=applyCloudState(editing.page).find(x=>x.__sourceIndex===editing.blockIndex);
+        editBlockText.value=b?.text||'';
+      }else{
+        const a=(cloudState.additions?.[editing.page]||[]).find(x=>x.id===editing.additionId);
+        editBlockText.value=a?.text_content||'';
+      }
+    }
+    editDialog.showModal();
+  });
+
+  document.getElementById('editBlockSave').onclick=async()=>{
+    if(!editing)return;
+    try{
+      if(editing.kind==='base'){
+        const payload={page:editing.page,blockIndex:editing.blockIndex};
+        if(editing.type==='text') payload.text=editBlockText.value;
+        if(editing.type==='image' && editBlockImage.files[0]){
+          const up=await uploadFile(editBlockImage.files[0]); payload.imageKey=up.key;
+        }
+        await api('/api/block',{method:'PUT',body:JSON.stringify(payload)});
+      }else{
+        if(editing.type==='text'){
+          await api('/api/block',{method:'PUT',body:JSON.stringify({additionId:editing.additionId,text:editBlockText.value})});
+        }else if(editBlockImage.files[0]){
+          const up=await uploadFile(editBlockImage.files[0]);
+          await api('/api/block',{method:'PUT',body:JSON.stringify({additionId:editing.additionId,imageKey:up.key})});
+        }
+      }
+      editDialog.close(); await refreshState(); toast('updated ♡');
+    }catch(e){alert('修改失败：'+e.message)}
+  };
+
+  document.getElementById('editBlockDelete').onclick=async()=>{
+    if(!editing||!confirm('确定删除这一项吗？'))return;
+    try{
+      const body=editing.kind==='base'
+        ? {page:editing.page,blockIndex:editing.blockIndex}
+        : {additionId:editing.additionId};
+      await api('/api/block',{method:'DELETE',body:JSON.stringify(body)});
+      editDialog.close(); await refreshState(); toast('deleted');
+    }catch(e){alert('删除失败：'+e.message)}
+  };
+
+  document.getElementById('dynamicPages').addEventListener('click',async(e)=>{
+    const btn=e.target.closest('[data-delete-page]');
+    if(!btn||!cloudOwner)return;
+    e.preventDefault(); e.stopPropagation();
+    if(!confirm('确定删除这个新增栏目吗？'))return;
+    try{
+      await api('/api/page',{method:'DELETE',body:JSON.stringify({slug:btn.dataset.deletePage})});
+      await refreshState(); toast('archive deleted');
+    }catch(e2){alert('删除失败：'+e2.message)}
+  });
+
+  // Ensure admin target list can include new pages after login.
+  const oldOpenAdmin=openAdmin;
+  openAdmin=function(t='new'){
+    if(!cloudOwner){document.getElementById('login').showModal();return;}
+    const select=document.getElementById('target');
+    [...select.querySelectorAll('option[data-cloud-page]')].forEach(x=>x.remove());
+    (cloudState.pages||[]).forEach(p=>{
+      const o=document.createElement('option');o.value=p.slug;o.textContent=p.title;o.dataset.cloudPage='1';select.appendChild(o);
+    });
+    select.value=t;document.getElementById('admin').showModal();
+  };
+
+  // Initial load.
+  (async()=>{
+    await refreshSession();
+    await refreshState();
+    renderDynamicPages();
+  })();
+})();
+</script>
+
+</body></html>

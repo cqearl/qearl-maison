@@ -795,6 +795,79 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+
+<style id="qearl-v16-first-wave-restored">
+/* FIRST-VERSION WAVE — restored verbatim in behavior */
+.glass{
+  position:relative!important;
+  overflow:hidden!important;
+  transition:
+    transform .35s cubic-bezier(.2,.8,.2,1),
+    box-shadow .35s cubic-bezier(.2,.8,.2,1),
+    background .35s cubic-bezier(.2,.8,.2,1)!important;
+}
+.glass::after{
+  content:""!important;
+  position:absolute!important;
+  left:-20%!important;
+  top:-50%!important;
+  width:60%!important;
+  height:190%!important;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.35),
+    transparent
+  )!important;
+  transform:rotate(22deg)!important;
+  transition:left .55s ease!important;
+  pointer-events:none!important;
+  z-index:3!important;
+  opacity:1!important;
+}
+.glass:hover::after{
+  left:110%!important;
+}
+.glass:hover{
+  transform:translateY(-7px) scale(1.01)!important;
+}
+
+/* Same old wave for the reader's glass content + transparent contents drawer */
+.flow,.tocPanel{
+  position:relative!important;
+  overflow:hidden!important;
+}
+.flow::after,.tocPanel::after{
+  content:"";
+  position:absolute;
+  left:-28%;
+  top:-55%;
+  width:48%;
+  height:210%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.26),transparent);
+  transform:rotate(22deg);
+  transition:left .62s ease;
+  pointer-events:none;
+  z-index:4;
+}
+.flow:hover::after,.tocPanel:hover::after{
+  left:116%;
+}
+
+/* Touch phones do not have hover, so a tap runs one pass of the same wave. */
+@keyframes qearlFirstWaveTap{
+  0%{left:-28%}
+  100%{left:116%}
+}
+@media(hover:none){
+  .glass.waveTap::after,
+  .flow.waveTap::after,
+  .tocPanel.waveTap::after{
+    animation:qearlFirstWaveTap .62s ease forwards!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav>
@@ -1117,6 +1190,20 @@ ownerUI();renderUsers();
     });
     card.addEventListener('pointerleave', () => card.style.transform='');
   });
+})();
+</script>
+
+
+<script id="qearl-v16-first-wave-touch">
+(()=>{
+  document.addEventListener('pointerdown',e=>{
+    const el=e.target.closest('.glass,.flow,.tocPanel');
+    if(!el)return;
+    el.classList.remove('waveTap');
+    void el.offsetWidth;
+    el.classList.add('waveTap');
+    setTimeout(()=>el.classList.remove('waveTap'),700);
+  },{passive:true});
 })();
 </script>
 

@@ -1261,6 +1261,154 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+
+<style id="qearl-v23-home-hero">
+.heroV23{
+  position:relative!important;
+  min-height:720px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.12fr) minmax(330px,.72fr)!important;
+  align-items:center!important;
+  column-gap:8vw!important;
+  padding:132px 0 96px!important;
+}
+.heroV23 .heroCopy{position:relative;z-index:2}
+.heroV23 .heroCopy h1{max-width:620px!important}
+.heroV23 .heroCopy .lead{max-width:460px!important}
+
+.heroArchiveGlass{
+  position:relative;z-index:3;width:min(430px,100%);min-height:330px;justify-self:end;
+  padding:30px 30px 27px;overflow:hidden;border:1px solid rgba(255,255,255,.66);
+  border-radius:34px;
+  background:linear-gradient(145deg,rgba(255,255,255,.20),rgba(225,228,239,.08));
+  backdrop-filter:blur(28px) saturate(1.18);
+  -webkit-backdrop-filter:blur(28px) saturate(1.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.76),0 28px 70px rgba(50,56,90,.07);
+  color:#626a87;
+}
+.heroArchiveGlass:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(240px 160px at 8% 0%,rgba(255,255,255,.38),transparent 70%),
+    radial-gradient(220px 180px at 100% 92%,rgba(186,181,215,.10),transparent 72%);
+}
+.heroArchiveGlass:after{
+  content:"";position:absolute;left:-28%;top:-50%;width:45%;height:190%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.26),transparent);
+  transform:rotate(22deg);transition:left .65s ease;pointer-events:none;
+}
+.heroArchiveGlass:hover:after{left:118%}
+.heroArchiveGlass>*{position:relative;z-index:2}
+
+.heroGhostQ{
+  position:absolute!important;right:-12px;bottom:-54px;z-index:0!important;
+  font:italic 210px/.8 Georgia,serif;color:rgba(89,96,128,.045);pointer-events:none;
+}
+.heroArchiveTop,.heroArchiveFoot{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  font:8px/1.2 Georgia,serif;letter-spacing:.22em;color:#8f95aa;
+}
+.heroArchiveLine{height:1px;margin:19px 0 22px;background:linear-gradient(90deg,rgba(108,116,147,.24),rgba(108,116,147,.05))}
+.heroArchiveMeta{display:grid;grid-template-columns:.75fr .75fr 1.45fr;gap:18px;margin-bottom:38px}
+.heroArchiveMeta div{min-width:0}
+.heroArchiveMeta small{display:block;margin-bottom:8px;font:7px/1.2 Georgia,serif;letter-spacing:.20em;color:#a0a5b6}
+.heroArchiveMeta strong{display:block;overflow:hidden;text-overflow:ellipsis;font:400 15px/1.25 Georgia,serif;color:#5d6581}
+.heroArchiveMeta div:last-child strong{font-size:12px;letter-spacing:.03em}
+.heroArchiveNote{margin:0 0 48px;font:italic 17px/1.55 Georgia,serif;color:#6f7690}
+.heroArchiveFoot{padding-top:16px;border-top:1px solid rgba(106,114,146,.14)}
+.heroArchiveFoot a{color:#69718d;text-decoration:none;letter-spacing:.12em;white-space:nowrap}
+.heroArchiveFoot a:hover{opacity:.64}
+
+.heroScrollCue{
+  position:absolute;left:0;bottom:34px;display:flex;align-items:center;gap:14px;
+  font:7px/1 Georgia,serif;letter-spacing:.22em;color:#a0a5b5;
+}
+.heroScrollCue i{display:block;width:66px;height:1px;position:relative;overflow:hidden;background:rgba(100,108,140,.15)}
+.heroScrollCue i:after{
+  content:"";position:absolute;inset:0;width:28px;background:rgba(94,103,138,.46);
+  animation:qearlHeroLine 2.8s ease-in-out infinite;
+}
+@keyframes qearlHeroLine{0%{transform:translateX(-32px)}65%,100%{transform:translateX(70px)}}
+.heroV23:after{opacity:.42!important}
+
+@media(max-width:680px){
+  .heroV23{min-height:auto!important;display:block!important;padding:92px 0 54px!important}
+  .heroV23 .heroCopy h1{max-width:90%!important}
+  .heroArchiveGlass{width:100%;min-height:0;margin-top:42px;padding:20px 19px 18px;border-radius:24px}
+  .heroGhostQ{display:none}
+  .heroArchiveMeta{grid-template-columns:.65fr .65fr 1.4fr;gap:10px;margin-bottom:22px}
+  .heroArchiveMeta strong{font-size:13px}
+  .heroArchiveMeta div:last-child strong{font-size:10px}
+  .heroArchiveNote{margin-bottom:24px;font-size:13px;line-height:1.55}
+  .heroArchiveTop,.heroArchiveFoot{font-size:7px}
+  .heroScrollCue{display:none}
+}
+@media(max-width:430px){
+  .heroV23{padding-top:86px!important}
+  .heroArchiveGlass{margin-top:34px;padding:18px 17px 17px}
+  .heroArchiveMeta{grid-template-columns:1fr 1fr}
+  .heroArchiveMeta div:last-child{grid-column:1/-1}
+}
+</style>
+
+
+<style id="qearl-v24-toc-fix">
+/* TOC: show the complete catalogue instead of clipping the lower entries. */
+#reader .tocPanel{
+  top:72px!important;
+  bottom:24px!important;
+  height:auto!important;
+  max-height:none!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+}
+#reader .tocTitle{
+  flex:0 0 auto!important;
+}
+#reader .tocList{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  padding-right:5px!important;
+  scrollbar-width:thin;
+}
+#reader .tocList::-webkit-scrollbar{width:3px}
+#reader .tocList::-webkit-scrollbar-thumb{
+  background:rgba(101,108,139,.20);
+  border-radius:999px;
+}
+#reader .tocItem{
+  flex:none!important;
+}
+
+/* Keep the homepage side-by-side on laptops / narrow desktop windows.
+   Only actual phone widths stack the V23 hero. */
+@media(min-width:681px){
+  .heroV23{
+    display:grid!important;
+    grid-template-columns:minmax(0,1.08fr) minmax(300px,.72fr)!important;
+  }
+  .heroArchiveGlass{
+    margin-top:0!important;
+    width:min(410px,100%)!important;
+  }
+}
+
+/* Phone-only TOC: still scrolls through every entry. */
+@media(max-width:680px){
+  #reader .tocPanel{
+    top:62px!important;
+    bottom:16px!important;
+    width:min(270px,86vw)!important;
+    max-height:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav>
@@ -1272,16 +1420,38 @@ body.owner-mode .ownerOnly{display:block!important}
     </nav>
 
 <main class="wrap">
-<section class="hero">
-  <div>
+<section class="hero heroV23">
+  <div class="heroCopy">
     <div class="eyebrow">𓂃 ࣪˖ 𓈒 private collection / moonstone silver</div>
     <h1>Qearl<i>atelier.</i></h1>
     <p class="lead">可是..希冀何以化作透明蝴蝶越过山谷</p>
   </div>
-  
+
+  <aside class="heroArchiveGlass" aria-label="Qearl archive index">
+    <div class="heroGhostQ">Q</div>
+    <div class="heroArchiveTop">
+      <span>PRIVATE ARCHIVE</span>
+      <span>Nº. 01</span>
+    </div>
+    <div class="heroArchiveLine"></div>
+    <div class="heroArchiveMeta">
+      <div><small>COLLECTIONS</small><strong>07</strong></div>
+      <div><small>EST.</small><strong>2026</strong></div>
+      <div><small>DOMAIN</small><strong>qearlune.xyz</strong></div>
+    </div>
+    <p class="heroArchiveNote">a quiet index of keys, fragments<br>and little private things.</p>
+    <div class="heroArchiveFoot">
+      <span>QEARL MAISON</span>
+      <a href="#archive-start">view archive ↓</a>
+    </div>
+  </aside>
+
+  <div class="heroScrollCue" aria-hidden="true">
+    <span>SCROLL TO ARCHIVE</span><i></i>
+  </div>
 </section>
 
-<section class="section">
+<section class="section" id="archive-start">
   <div class="head"><h2>Keyboard archive</h2><span>keys / custom / little details</span></div>
   <div class="showcase">
     <article class="glass big" data-open="typebook">

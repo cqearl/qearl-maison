@@ -868,6 +868,182 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+
+<style id="qearl-v17-editorial-liquid-toc">
+/* A + B: iOS26 transparent material × editorial contents layout */
+.tocPanel{
+  width:min(344px,86vw)!important;
+  padding:30px 22px 28px!important;
+  border-radius:0 34px 34px 0!important;
+  border:1px solid rgba(255,255,255,.68)!important;
+  border-left:0!important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.20),rgba(230,233,243,.08))!important;
+  backdrop-filter:blur(28px) saturate(1.24)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(1.24)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.72),
+    inset -1px 0 0 rgba(255,255,255,.18),
+    0 26px 64px rgba(49,55,88,.075)!important;
+}
+.tocPanel:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:
+    radial-gradient(230px 150px at 12% 2%,rgba(255,255,255,.34),transparent 70%),
+    radial-gradient(180px 170px at 98% 85%,rgba(190,183,218,.10),transparent 72%);
+}
+.tocTitle{
+  position:relative;
+  z-index:2;
+  margin:2px 0 24px!important;
+  font:italic 36px/1 "Snell Roundhand","Apple Chancery","Segoe Script","Brush Script MT",cursive!important;
+  color:#586078!important;
+  letter-spacing:-.02em!important;
+}
+.tocTitle:after{
+  content:"ARCHIVE INDEX";
+  display:block;
+  margin-top:11px;
+  font:8px/1.2 Georgia,serif;
+  letter-spacing:.26em;
+  color:#a1a6b8;
+}
+.tocList{
+  position:relative;
+  z-index:2;
+}
+.tocItem{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:32px 1fr auto!important;
+  align-items:center!important;
+  gap:10px!important;
+  min-height:46px!important;
+  padding:8px 10px!important;
+  margin:2px 0!important;
+  border-radius:15px!important;
+  background:transparent!important;
+  border:1px solid transparent!important;
+  color:#6f7690!important;
+  transition:
+    transform .26s ease,
+    background .26s ease,
+    border-color .26s ease,
+    color .26s ease!important;
+}
+.tocItem .idx{
+  width:auto!important;
+  font:italic 9px/1 Georgia,serif!important;
+  letter-spacing:.08em!important;
+  color:#a0a5b6!important;
+  text-align:left!important;
+}
+.tocItem .txt{
+  min-width:0;
+  font-size:12px!important;
+  line-height:1.35!important;
+  letter-spacing:.015em!important;
+}
+.tocItem:before{
+  content:"";
+  width:18px;
+  height:1px;
+  position:absolute;
+  right:12px;
+  top:50%;
+  background:rgba(113,120,148,.18);
+  transform:scaleX(.45);
+  transform-origin:right center;
+  transition:transform .28s ease,background .28s ease;
+}
+.tocItem:hover{
+  transform:translateX(3px)!important;
+  background:rgba(255,255,255,.18)!important;
+  border-color:rgba(255,255,255,.28)!important;
+  color:#525a76!important;
+}
+.tocItem:hover:before{
+  transform:scaleX(1);
+  background:rgba(111,118,147,.34);
+}
+.tocItem.active{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.34),rgba(236,232,245,.12))!important;
+  border-color:rgba(255,255,255,.46)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.56),
+    0 8px 20px rgba(52,58,91,.04)!important;
+  color:#4e5671!important;
+}
+.tocItem.active:before{
+  transform:scaleX(1);
+  background:rgba(107,114,144,.42);
+}
+.tocHandle{
+  width:21px!important;
+  height:104px!important;
+  border-radius:0 17px 17px 0!important;
+  border:1px solid rgba(255,255,255,.62)!important;
+  border-left:0!important;
+  background:
+    linear-gradient(160deg,rgba(255,255,255,.22),rgba(224,227,238,.08))!important;
+  backdrop-filter:blur(22px) saturate(1.18)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(1.18)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.64),
+    0 14px 30px rgba(54,60,92,.05)!important;
+}
+.tocHandle:after{
+  content:"···"!important;
+  writing-mode:vertical-rl;
+  letter-spacing:2px;
+  font:12px/1 Georgia,serif;
+  color:#8e94aa;
+}
+
+/* Keep the first-version wave over this lighter TOC */
+.tocPanel::after{
+  z-index:3!important;
+  opacity:.72!important;
+}
+
+/* Homepage subtitles: quieter, more editorial */
+.glass p{
+  max-width:470px!important;
+  color:#737b98!important;
+  font-size:12px!important;
+  line-height:1.8!important;
+  letter-spacing:.01em!important;
+}
+
+/* Mobile: glass sheet remains light and magazine-like */
+@media(max-width:820px){
+  .tocPanel{
+    width:min(292px,90vw)!important;
+    padding:25px 18px 24px!important;
+    border-radius:0 28px 28px 0!important;
+  }
+  .tocTitle{
+    font-size:31px!important;
+    margin-bottom:20px!important;
+  }
+  .tocItem{
+    grid-template-columns:28px 1fr auto!important;
+    min-height:43px!important;
+    padding:7px 8px!important;
+  }
+  .tocItem .txt{font-size:11px!important}
+  .tocHandle{
+    width:22px!important;
+    height:76px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav>
@@ -893,11 +1069,11 @@ body.owner-mode .ownerOnly{display:block!important}
   <div class="showcase">
     <article class="glass big" data-open="typebook">
       <div class="no">01 / TYPE BOOK</div><div class="monogram">Q.</div>
-      <h3>𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡</h3><p>在售键盘、音效、套装与下单说明。</p><div class="enter">explore collection ↗</div>
+      <h3>𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡</h3><p>在售键盘，音效预览可看xhs墨冬岛寻枝</p><div class="enter">explore collection ↗</div>
     </article>
     <article class="glass mid custom" data-open="custom">
       <div class="no">NEW / CUSTOM KEYS</div><div class="monogram">୨୧</div>
-      <h3>𝖰.𝖢𝖴𝖲𝖳𝖮𝖬𝖪𝖤𝖸𝖲୨୧</h3><p>定制价格、排期、修改、交付与使用规则。</p><div class="enter">open custom studio ↗</div><div class="edgeLace"></div>
+      <h3>𝖰.𝖢𝖴𝖲𝖳𝖮𝖬𝖪𝖤𝖸𝖲୨୧</h3><p>键盘定制价格及注意事项，下单前必看</p><div class="enter">open custom studio ↗</div><div class="edgeLace"></div>
     </article>
   </div>
 </section>
@@ -905,9 +1081,9 @@ body.owner-mode .ownerOnly{display:block!important}
 <section class="section">
   <div class="head"><h2>Private collections</h2><span>mist / island / moss</span></div>
   <div class="showcase">
-    <article class="glass third" data-open="mist"><div class="no">02 / MISTBOUND NOTES</div><div class="monogram">M.</div><h3>#薄雾集†﹡</h3><p class="collectionSub">mistbound notes</p><div class="enter">enter ↗</div></article>
-    <article class="glass third" data-open="island"><div class="no">03 / NOCTURNE ISLE</div><div class="monogram">I.</div><h3>#失眠岛†﹡</h3><p class="collectionSub">nocturne isle</p><div class="enter">enter ↗</div></article>
-    <article class="glass third" data-open="moss"><div class="no">04 / MOSS AFTER TEARS</div><div class="monogram">L.</div><h3>#淚生苔†﹡</h3><p class="collectionSub">moss after tears</p><div class="enter">enter ↗</div><div class="edgeLace"></div></article>
+    <article class="glass third" data-open="mist"><div class="no">02 / MISTBOUND NOTES</div><div class="monogram">M.</div><h3>#薄雾集†﹡</h3><p class="collectionSub">键盘混更会，完结补入20.88</p><div class="enter">enter ↗</div></article>
+    <article class="glass third" data-open="island"><div class="no">03 / NOCTURNE ISLE</div><div class="monogram">I.</div><h3>#失眠岛†﹡</h3><p class="collectionSub">键盘混更会，完结补入23.88</p><div class="enter">enter ↗</div></article>
+    <article class="glass third" data-open="moss"><div class="no">04 / MOSS AFTER TEARS</div><div class="monogram">L.</div><h3>#淚生苔†﹡</h3><p class="collectionSub">键盘混更会，完结补入23.88</p><div class="enter">enter ↗</div><div class="edgeLace"></div></article>
   </div>
 </section>
 
@@ -915,7 +1091,7 @@ body.owner-mode .ownerOnly{display:block!important}
   <div class="head"><h2>Theme & fragments</h2><span>paired pieces / self-cut / others</span></div>
   <div class="showcase">
     <article class="glass third" data-open="case"><div class="no">05 / THEME</div><div class="monogram">T.</div><h3>𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡</h3><p>主题配套与组合预览。</p><div class="enter">open ↗</div></article>
-    <article class="glass third" data-open="jasmine"><div class="no">06 / SELF-CUT</div><div class="monogram">J.</div><h3>#茉莉信†﹡</h3><p>头像、字体、名片、推人及掉落。</p><div class="enter">open ↗</div></article>
+    <article class="glass third" data-open="jasmine"><div class="no">06 / SELF-CUT</div><div class="monogram">J.</div><h3>#茉莉信†﹡</h3><p>自截会，直入10.88</p><div class="enter">open ↗</div></article>
     <article class="glass third" data-open="others"><div class="no">07 / MISCELLANY</div><div class="monogram">Q.</div><h3>枝间拾遗</h3><p class="collectionSub">a miscellany of little things</p><div class="enter">open ↗</div></article>
   </div>
 </section>

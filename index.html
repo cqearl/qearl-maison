@@ -1409,6 +1409,64 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+
+<style id="qearl-v25-toc-centered">
+/* Desktop / tablet: floating centered TOC, while the list itself remains scrollable. */
+@media(min-width:681px){
+  #reader .tocPanel{
+    top:50%!important;
+    bottom:auto!important;
+    height:min(72vh,720px)!important;
+    max-height:720px!important;
+    transform:translate(-104%,-50%)!important;
+    display:flex!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+  }
+  #reader .tocPanel.open{
+    transform:translate(0,-50%)!important;
+  }
+
+  #reader .tocHandle{
+    top:50%!important;
+    bottom:auto!important;
+    transform:translateY(-50%)!important;
+  }
+
+  #reader .tocTitle{
+    flex:0 0 auto!important;
+  }
+  #reader .tocList{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior:contain!important;
+    padding-right:5px!important;
+  }
+}
+
+/* Phone: keep it lower and compact, not centered across the whole screen. */
+@media(max-width:680px){
+  #reader .tocPanel{
+    top:auto!important;
+    bottom:18px!important;
+    height:min(64dvh,560px)!important;
+    max-height:64dvh!important;
+    transform:translateX(-104%)!important;
+  }
+  #reader .tocPanel.open{
+    transform:translateX(0)!important;
+  }
+  #reader .tocHandle{
+    top:auto!important;
+    bottom:76px!important;
+    transform:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav>

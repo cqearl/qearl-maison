@@ -1467,6 +1467,63 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+
+<style id="qearl-v26-toc-device-fix">
+/* Device-aware TOC positioning.
+   Narrow desktop windows still behave like desktop; phones/tablets use touch drawer. */
+
+/* default: centered floating panel */
+#reader .tocPanel{
+  top:50%!important;
+  bottom:auto!important;
+  height:min(620px,calc(100dvh - 110px))!important;
+  max-height:calc(100dvh - 110px)!important;
+  transform:translate(-104%,-50%)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+}
+#reader .tocPanel.open{
+  transform:translate(0,-50%)!important;
+}
+#reader .tocHandle{
+  top:50%!important;
+  bottom:auto!important;
+  transform:translateY(-50%)!important;
+}
+
+/* list scrolls inside the floating glass */
+#reader .tocTitle{flex:0 0 auto!important}
+#reader .tocList{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:contain!important;
+  padding-right:5px!important;
+}
+
+/* True touch devices: lower drawer */
+@media (hover:none) and (pointer:coarse){
+  #reader .tocPanel{
+    top:auto!important;
+    bottom:18px!important;
+    height:min(64dvh,540px)!important;
+    max-height:64dvh!important;
+    transform:translateX(-104%)!important;
+  }
+  #reader .tocPanel.open{
+    transform:translateX(0)!important;
+  }
+  #reader .tocHandle{
+    top:auto!important;
+    bottom:76px!important;
+    transform:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav>
@@ -1700,7 +1757,14 @@ function renderTOC(items){
     tocList.appendChild(a);
   });
 }
-if(tocHandle)tocHandle.onclick=()=>tocPanel.classList.toggle('open');
+if(tocHandle)tocHandle.onclick=()=>{
+  const willOpen=!tocPanel.classList.contains('open');
+  tocPanel.classList.toggle('open');
+  if(willOpen && tocList){
+    tocList.scrollTop=0;
+    requestAnimationFrame(()=>{tocList.scrollTop=0});
+  }
+};
 document.addEventListener('click',e=>{
   if(tocPanel && tocPanel.classList.contains('open') && !tocPanel.contains(e.target) && e.target!==tocHandle){
     tocPanel.classList.remove('open');

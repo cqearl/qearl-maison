@@ -1045,61 +1045,13 @@ body.owner-mode .ownerOnly{display:block!important}
 </style>
 
 
-<style id="qearl-v19-reader-fixed-clean">
-/* Correct fix: this site opens reader via .reader.open, not [hidden]. */
-.reader{
-  position:fixed!important;
-  inset:0!important;
-  z-index:999!important;
-  display:none!important;
-  overflow-y:auto!important;
-  overflow-x:hidden!important;
-  min-height:100dvh!important;
-  margin:0!important;
-  padding:0!important;
-  transform:none!important;
-}
-.reader.open{
-  display:block!important;
-  top:0!important;
-  left:0!important;
-  right:0!important;
-  bottom:0!important;
-}
-
-/* sticky reader nav begins at viewport top */
-.reader .rnav{
-  position:sticky!important;
-  top:0!important;
-  z-index:30!important;
-  margin:0!important;
-}
-
-/* content begins immediately under nav, no inherited homepage gap */
-.reader .rmain{
-  width:min(1080px,calc(100% - 42px))!important;
-  margin:0 auto!important;
-  padding:28px 0 88px!important;
-}
-.reader .rhero{
-  margin-top:0!important;
-  padding-top:22px!important;
-}
-
-/* prevent accidental large top spacer from any old hero rules */
-.reader.open > *:first-child{
-  margin-top:0!important;
-}
-
-@media(max-width:820px){
-  .reader .rmain{
-    width:calc(100% - 22px)!important;
-    padding:16px 0 74px!important;
-  }
-  .reader .rhero{
-    padding-top:16px!important;
-  }
-}
+<style id="qearl-v20-reader-rootfix">
+#reader.reader{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;margin:0!important;padding:0!important;transform:none!important;z-index:9999!important;overflow:auto!important;display:none!important}
+#reader.reader.open{display:block!important}
+#reader .rnav{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;height:66px!important;margin:0!important;transform:none!important;z-index:10020!important}
+#reader .rmain{width:min(1040px,calc(100% - 36px))!important;margin:0 auto!important;padding:92px 0 110px!important;top:0!important;transform:none!important}
+#reader .tocHandle,#reader .tocPanel{position:fixed!important}
+@media(max-width:820px){#reader .rnav{height:58px!important}#reader .rmain{width:calc(100% - 22px)!important;padding:76px 0 78px!important}}
 </style>
 
 </head>
@@ -1281,13 +1233,7 @@ case:'<span class="scriptHeroWrap" aria-label="Qearl’s Theme Case ♡"><svg cl
   if(!d){let c=data.cards.find(x=>x.id===s);bs=c?c.blocks:[]}
   rb.innerHTML=renderSequential(bs,s);
   renderTOC(window.__currentTOC||[]);
-  reader.classList.add('open');
-document.body.style.overflow='hidden';
-requestAnimationFrame(()=>{
-  reader.scrollTop=0;
-  reader.scrollTo({top:0,left:0,behavior:'auto'});
-});
-ownerUI()
+  reader.classList.add('open');reader.scrollTop=0;document.body.style.overflow='hidden';ownerUI()
 }
 
 const tocPanel=document.getElementById('tocPanel'),tocHandle=document.getElementById('tocHandle'),tocList=document.getElementById('tocList');
@@ -1352,11 +1298,7 @@ function syncTOCActive(){
 reader.addEventListener('scroll',syncTOCActive,{passive:true});
 
 document.querySelectorAll('[data-open]').forEach(e=>e.onclick=()=>openDoc(e.dataset.open));
-document.getElementById('back').onclick=()=>{reader.classList.remove('open');
-reader.scrollTop=0;
-if(tocPanel)tocPanel.classList.remove('open');
-document.body.style.overflow='';
-current=null}
+document.getElementById('back').onclick=()=>{reader.classList.remove('open');if(tocPanel)tocPanel.classList.remove('open');document.body.style.overflow='';current=null}
 
 const login=document.getElementById('login'),admin=document.getElementById('admin');
 document.getElementById('owner').onclick=()=>ownerOn()?admin.showModal():login.showModal();

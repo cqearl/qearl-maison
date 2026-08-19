@@ -588,747 +588,63 @@ body.owner-mode .ownerOnly{display:block!important}
 </style>
 
 
-<style id="subpage-final-polish-v5">
-/* Final pass: one typographic language across every archive page. */
-.rhero{
-  overflow:visible!important;
-}
-.rhero h2{
-  display:flex!important;
-  align-items:baseline!important;
-  flex-wrap:wrap!important;
-  gap:.12em!important;
-  max-width:920px!important;
-  font-style:normal!important;
-  font-weight:400!important;
-  line-height:1.03!important;
-  letter-spacing:-.025em!important;
-  text-wrap:balance;
-}
-.rhero h2 .titleScript{
-  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy","URW Chancery L","Brush Script MT",cursive!important;
-  font-style:italic!important;
-  font-weight:400!important;
-  letter-spacing:-.055em!important;
-}
-.rhero h2 .titleSerif{
-  font-family:"Iowan Old Style","Baskerville","Times New Roman",Georgia,serif!important;
-  font-style:italic!important;
-  font-weight:400!important;
-  letter-spacing:-.045em!important;
-}
-.rhero h2 .titleCjk{
-  font-family:"KaiTi","STKaiti","Kaiti SC","FangSong","STFangsong",serif!important;
-  font-style:normal!important;
-  font-weight:400!important;
-  letter-spacing:.075em!important;
-}
-.rhero h2 .titleMark{
-  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy",cursive!important;
-  font-size:.56em!important;
-  color:#8f91a5!important;
-  letter-spacing:.02em!important;
-  transform:translateY(-.08em);
-}
-.rhero h2 .titleHash{
-  font-family:"Iowan Old Style",Baskerville,Georgia,serif!important;
-  font-size:.58em!important;
-  color:#9b9dab!important;
-  font-weight:400!important;
-  transform:translateY(-.1em);
-}
-.reader[data-page="typebook"] .rhero h2,
-.reader[data-page="custom"] .rhero h2,
-.reader[data-page="case"] .rhero h2{
-  font-size:clamp(54px,7.2vw,104px)!important;
-}
-.reader[data-page="mist"] .rhero h2,
-.reader[data-page="island"] .rhero h2,
-.reader[data-page="moss"] .rhero h2,
-.reader[data-page="jasmine"] .rhero h2,
-.reader[data-page="others"] .rhero h2{
-  font-size:clamp(50px,6.6vw,88px)!important;
-}
-/* Small archive label stays editorial, not decorative. */
-.rhero .k{
-  font-family:"Iowan Old Style",Baskerville,Georgia,serif!important;
-  font-style:italic!important;
-  text-transform:uppercase;
-  letter-spacing:.22em!important;
-  opacity:.82;
-}
-.rhero .submark{
-  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy",cursive!important;
-  font-style:italic!important;
-  letter-spacing:.01em!important;
-  opacity:.86;
-}
-/* Normalize decorative unicode headings in the content, then let the font do the ornamentation. */
-.blockText.heading{
-  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy","URW Chancery L","Brush Script MT","KaiTi","STKaiti",cursive!important;
-  font-style:italic!important;
-  font-weight:400!important;
-  font-size:clamp(24px,3.1vw,36px)!important;
-  line-height:1.35!important;
-  letter-spacing:-.015em!important;
-  color:#4a4f67!important;
-  padding-top:3px!important;
-}
-/* CJK collection pages get a softer ink-calligraphy treatment. */
-.reader[data-page="mist"] .blockText.heading,
-.reader[data-page="island"] .blockText.heading,
-.reader[data-page="moss"] .blockText.heading,
-.reader[data-page="jasmine"] .blockText.heading,
-.reader[data-page="others"] .blockText.heading{
-  font-family:"KaiTi","STKaiti","Kaiti SC","FangSong","STFangsong",serif!important;
-  font-style:normal!important;
-  letter-spacing:.045em!important;
-}
-/* Images: consistent editorial framing across every page. */
-.blockImg{
-  background:rgba(255,255,255,.46)!important;
-  border:1px solid rgba(255,255,255,.84)!important;
-  box-shadow:0 24px 70px rgba(46,50,76,.075)!important;
-  object-fit:contain;
-}
-.blockImg + .blockImg{margin-top:-16px!important}
-/* Table and body text alignment pass. */
-.blockText:not(.heading){max-width:780px}
-.blockTable{box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
-/* TOC echoes the exact page hierarchy. */
-.tocTitle{
-  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy",cursive!important;
-  font-style:italic!important;
-  letter-spacing:-.025em!important;
-}
-.tocItem{letter-spacing:.015em}
-@media(max-width:820px){
-  .rhero h2{gap:.08em!important}
-  .reader[data-page="typebook"] .rhero h2,
-  .reader[data-page="custom"] .rhero h2,
-  .reader[data-page="case"] .rhero h2{font-size:clamp(46px,13vw,70px)!important}
-  .reader[data-page="mist"] .rhero h2,
-  .reader[data-page="island"] .rhero h2,
-  .reader[data-page="moss"] .rhero h2,
-  .reader[data-page="jasmine"] .rhero h2,
-  .reader[data-page="others"] .rhero h2{font-size:clamp(42px,11vw,62px)!important}
-  .rhero h2 .titleCjk{letter-spacing:.045em!important}
-  .rhero .k{letter-spacing:.16em!important}
-}
-</style>
-
-
-<style id="script-glyph-fix-v6">
-/* Force visible ornamental glyphs even when local calligraphy fonts are absent. */
-.rhero h2 .glyphScript{
-  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif!important;
-  font-style:normal!important;
-  font-weight:400!important;
-  letter-spacing:-.035em!important;
-  font-variant-ligatures:none!important;
-  text-rendering:geometricPrecision;
-}
-.reader[data-page="typebook"] .rhero h2 .glyphScript,
-.reader[data-page="custom"] .rhero h2 .glyphScript,
-.reader[data-page="case"] .rhero h2 .glyphScript{
-  display:inline-block;
-  transform:translateY(.015em);
-}
-@media(max-width:820px){
-  .rhero h2 .glyphScript{letter-spacing:-.02em!important}
-}
-</style>
-
-
-<style id="qearl-v7-title-admin">
-/* Visible calligraphic hero titles — does not rely on an installed web font. */
-.rhero h2 .glyphScript{
-  font-family:"Times New Roman","Songti SC",serif!important;
-  font-style:normal!important;
-  font-weight:400!important;
-  letter-spacing:-.045em!important;
-  line-height:.92!important;
-}
-.rhero h2 .titleCjk{
-  font-family:"STKaiti","KaiTi","Kaiti SC","Songti SC",serif!important;
-  font-style:italic!important;
-  font-weight:400!important;
-  letter-spacing:.06em!important;
-}
-.rhero h2 .titleHash,.rhero h2 .titleMark{
-  font-family:"Snell Roundhand","Apple Chancery","Segoe Script","Brush Script MT",cursive!important;
-  font-weight:400!important;
-  color:#89869a!important;
-}
-.ownerOnly{display:none!important}
-body.owner-mode .ownerOnly{display:block!important}
-.rnav .ownerOnly{display:none!important}
-body.owner-mode .rnav .ownerOnly{display:inline-flex!important}
-#login .modal{max-width:430px}
-#loginbtn{width:100%;justify-content:center}
-@media(max-width:820px){
-  .rhero h2 .glyphScript{font-size:.92em}
-}
-</style>
-
-
-<style id="qearl-v8-glass-mobile">
-/* ===== Liquid-glass contents drawer ===== */
-.tocHandle{
-  width:18px!important;
-  height:112px!important;
-  left:0!important;
-  border-radius:0 16px 16px 0!important;
-  border:1px solid rgba(255,255,255,.72)!important;
-  border-left:0!important;
-  background:
-    linear-gradient(160deg,rgba(255,255,255,.62),rgba(214,218,232,.20))!important;
-  backdrop-filter:blur(26px) saturate(1.25)!important;
-  -webkit-backdrop-filter:blur(26px) saturate(1.25)!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.94),
-    inset -1px 0 0 rgba(255,255,255,.44),
-    0 18px 44px rgba(52,58,90,.11)!important;
-}
-.tocHandle:before{
-  content:"";
-  position:absolute;
-  inset:8px 4px;
-  border-radius:999px;
-  background:linear-gradient(180deg,rgba(255,255,255,.46),rgba(180,184,204,.08));
-  opacity:.7;
-}
-.tocHandle:after{
-  content:"⋮"!important;
-  position:absolute!important;
-  inset:0!important;
-  display:grid!important;
-  place-items:center!important;
-  font:19px/1 Georgia,serif!important;
-  color:#7c8197!important;
-  text-shadow:0 1px 0 rgba(255,255,255,.9)!important;
-  z-index:2;
-}
-
-.tocPanel{
-  width:min(320px,84vw)!important;
-  max-height:74vh!important;
-  padding:28px 22px 30px!important;
-  border-radius:0 32px 32px 0!important;
-  border:1px solid rgba(255,255,255,.74)!important;
-  border-left:0!important;
-  background:
-    linear-gradient(145deg,rgba(250,251,253,.76),rgba(222,225,237,.34))!important;
-  backdrop-filter:blur(34px) saturate(1.22)!important;
-  -webkit-backdrop-filter:blur(34px) saturate(1.22)!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.96),
-    inset -1px 0 0 rgba(255,255,255,.42),
-    0 34px 90px rgba(42,47,76,.16)!important;
-}
-.tocPanel:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  border-radius:inherit;
-  background:
-    radial-gradient(260px 170px at 20% 0%,rgba(255,255,255,.72),transparent 65%),
-    radial-gradient(200px 170px at 95% 90%,rgba(187,184,210,.20),transparent 70%);
-}
-.tocTitle,.tocList{position:relative;z-index:2}
-.tocTitle{
-  font:italic 32px/1 "Snell Roundhand","Apple Chancery","Segoe Script","Brush Script MT",cursive!important;
-  color:#4f546c!important;
-  margin-bottom:20px!important;
-}
-.tocItem{
-  position:relative;
-  padding:10px 10px!important;
-  border-radius:14px!important;
-  color:#73788f!important;
-  background:transparent!important;
-  transition:background .25s ease,transform .25s ease,color .25s ease!important;
-}
-.tocItem:hover{
-  background:rgba(255,255,255,.48)!important;
-  transform:translateX(3px);
-  color:#4a4f69!important;
-}
-.tocItem.active{
-  background:
-    linear-gradient(145deg,rgba(255,255,255,.74),rgba(231,232,240,.42))!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.92),
-    0 10px 24px rgba(49,54,83,.07)!important;
-  color:#454a63!important;
-}
-.tocItem .idx{
-  color:#9a9dae!important;
-  font-size:9px!important;
-}
-
-/* ===== Mobile: designed, not merely scaled ===== */
+<style id="qearl-v12-mobile-only">
+/* Yesterday's visual is intentionally preserved. This block only reflows it for phones. */
 @media(max-width:820px){
   html,body{overflow-x:hidden}
-  body{
-    background:
-      radial-gradient(520px 420px at 90% 4%,rgba(184,182,207,.22),transparent 66%),
-      radial-gradient(520px 430px at 0% 44%,rgba(205,211,225,.28),transparent 68%),
-      linear-gradient(150deg,#fafafb,#f1f2f5 55%,#f7f6f8)!important;
-  }
-  .wrap{width:calc(100% - 24px)!important}
-  nav{
-    width:calc(100% - 20px)!important;
-    top:10px!important;
-    border-radius:24px!important;
-  }
-  .navin{
-    height:52px!important;
-    padding:0 14px!important;
-  }
-  .brand{
-    font-size:9px!important;
-    letter-spacing:.16em!important;
-  }
-  .navmeta{display:none!important}
-  .ownerBtn{
-    font-size:9px!important;
-    padding:6px 8px!important;
-  }
+  .wrap{width:calc(100% - 24px)}
+  nav{top:10px;width:calc(100% - 20px);border-radius:20px}
+  .navin{height:52px;padding:0 12px}
+  .brand{font-size:9px;letter-spacing:.14em}
+  .navmeta{display:none}
+  .ownerBtn{font-size:9px;padding:6px 8px}
 
-  .hero{
-    min-height:640px!important;
-    padding:118px 0 70px!important;
-    align-items:flex-start!important;
-  }
-  .heroInner{width:100%!important}
-  .eyebrow{
-    font-size:9px!important;
-    letter-spacing:.09em!important;
-    margin-bottom:24px!important;
-  }
-  .hero h1{
-    font-size:clamp(64px,21vw,104px)!important;
-    line-height:.70!important;
-    letter-spacing:-.06em!important;
-    max-width:100%!important;
-  }
-  .hero .lead{
-    margin-top:46px!important;
-    max-width:92%!important;
-    font-size:13px!important;
-    line-height:2!important;
-    letter-spacing:.035em!important;
-  }
-  .heroRule{
-    margin-top:40px!important;
-    width:72%!important;
-  }
+  .hero{min-height:560px!important;padding-top:112px!important;padding-bottom:64px!important}
+  .hero>div:first-child{max-width:100%}
+  .hero h1{font-size:clamp(66px,21vw,96px)!important;line-height:.72!important;max-width:100%!important}
+  .hero .lead{margin-top:36px!important;max-width:92%!important;font-size:12.5px!important;line-height:2!important}
+  .hero:after{width:68%!important;right:-26%!important;top:28%!important}
 
-  .section{
-    padding:70px 0!important;
-  }
-  .head{
-    margin-bottom:28px!important;
-    padding-bottom:14px!important;
-  }
-  .head h2{
-    font-size:38px!important;
-    line-height:1!important;
-  }
-  .head span{
-    font-size:8px!important;
-    max-width:46%;
-    text-align:right;
-  }
+  .section{padding:68px 0!important}
+  .head{align-items:flex-end;gap:14px;margin-bottom:24px!important}
+  .head h2{font-size:38px!important}
+  .head span{font-size:8px!important;text-align:right;max-width:46%}
 
-  .showcase{
-    display:grid!important;
-    grid-template-columns:1fr!important;
-    gap:14px!important;
-  }
-  .glass,
-  .third,
-  .half,
-  .wide{
-    width:100%!important;
-    min-height:225px!important;
-    padding:24px 22px!important;
-    border-radius:24px!important;
-  }
-  .glass h3{
-    margin:50px 0 8px!important;
-    font-size:25px!important;
-  }
-  .glass p:not(.collectionSub){
-    font-size:11px!important;
-    line-height:1.75!important;
-    max-width:88%!important;
-  }
-  .collectionSub{
-    font-size:15px!important;
-  }
-  .monogram{
-    top:17px!important;
-    right:20px!important;
-    font-size:27px!important;
-  }
-  .enter{
-    left:22px!important;
-    bottom:21px!important;
-    font-size:12px!important;
-  }
+  .showcase{grid-template-columns:1fr!important;gap:14px!important}
+  .big,.mid,.third{grid-column:span 1!important}
+  .glass{min-height:225px!important;padding:22px!important;border-radius:26px!important}
+  .glass h3{margin:48px 0 8px!important;font-size:24px!important}
+  .glass p{font-size:11px!important;line-height:1.75!important}
+  .enter{left:22px!important;bottom:20px!important}
+  .monogram{right:20px!important;top:17px!important}
 
-  /* Reader mobile */
-  .rnav{height:auto!important}
-  .rbar{
-    height:58px!important;
-    padding:0 10px!important;
-    gap:8px!important;
-  }
-  .rbar .btn{
-    font-size:9px!important;
-    padding:6px 8px!important;
-  }
-  .rmain{
-    width:calc(100% - 24px)!important;
-    padding:28px 0 86px!important;
-  }
-  .rhero{
-    padding:30px 0 34px!important;
-    margin-bottom:32px!important;
-  }
-  .rhero .k{
-    font-size:8px!important;
-    letter-spacing:.16em!important;
-  }
-  .rhero h2{
-    font-size:clamp(48px,14vw,66px)!important;
-    line-height:.92!important;
-    margin-top:12px!important;
-    overflow-wrap:anywhere;
-  }
-  .rhero h2 .glyphScript{
-    font-size:.84em!important;
-    letter-spacing:-.04em!important;
-  }
-  .rhero .submark{
-    position:static!important;
-    display:block!important;
-    margin-top:16px!important;
-    font-size:16px!important;
-  }
+  .rbar{height:56px!important;padding:0 2px}
+  .rbar .btn{font-size:9px;padding:6px 8px}
+  .rmain{width:calc(100% - 24px)!important;padding:30px 0 80px!important}
+  .rhero{padding:28px 0 32px!important;margin-bottom:30px!important}
+  .rhero h2{font-size:clamp(46px,13vw,64px)!important;line-height:.98!important;overflow-wrap:anywhere}
+  .rhero .k{font-size:8px!important}
+  .rhero .submark{display:none!important}
   .flow{max-width:100%!important}
-  .blockText{
-    font-size:13px!important;
-    line-height:1.95!important;
-    margin-bottom:13px!important;
-  }
-  .blockText.heading{
-    font-size:25px!important;
-    line-height:1.35!important;
-    margin:42px 0 18px!important;
-  }
-  .blockImg{
-    width:100%!important;
-    height:auto!important;
-    margin:22px auto 32px!important;
-    border-radius:20px!important;
-    box-shadow:0 18px 42px rgba(42,47,73,.09)!important;
-  }
-  .blockTable{
-    display:block!important;
-    overflow-x:auto!important;
-    -webkit-overflow-scrolling:touch;
-    font-size:11px!important;
-  }
+  .blockText{font-size:13px!important;line-height:1.9!important}
+  .blockText.heading{font-size:24px!important;line-height:1.35!important;margin:38px 0 16px!important}
+  .blockImg{width:100%!important;height:auto!important;border-radius:20px!important;margin:20px auto 28px!important}
+  .blockTable{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
 
-  /* Mobile contents becomes a glass drawer */
-  .tocHandle{
-    top:auto!important;
-    bottom:88px!important;
-    transform:none!important;
-    width:28px!important;
-    height:72px!important;
-    border-radius:0 16px 16px 0!important;
-  }
-  .tocPanel{
-    top:auto!important;
-    bottom:72px!important;
-    transform:translateX(-102%)!important;
-    width:min(290px,88vw)!important;
-    max-height:62vh!important;
-    border-radius:0 28px 28px 0!important;
-    padding:24px 18px 24px!important;
-  }
-  .tocPanel.open{
-    transform:translateX(0)!important;
-  }
-  .tocTitle{
-    font-size:28px!important;
-    margin-bottom:16px!important;
-  }
-  .tocItem{
-    padding:9px 8px!important;
-    font-size:11px!important;
-  }
+  .tocHandle{top:auto!important;bottom:82px!important;transform:none!important;width:20px!important;height:78px!important;border-radius:0 14px 14px 0!important}
+  .tocPanel{top:auto!important;bottom:68px!important;transform:translateX(-104%)!important;width:min(278px,88vw)!important;max-height:62vh!important;border-radius:0 26px 26px 0!important}
+  .tocPanel.open{transform:translateX(0)!important}
+  .tocTitle{font-size:28px!important}
+  .tocItem{font-size:11px!important;padding:9px 8px!important}
 
-  dialog{
-    width:calc(100% - 24px)!important;
-    max-width:none!important;
-    border-radius:24px!important;
-  }
-  .modal{padding:22px!important}
-  .modal h2{font-size:25px!important}
-  .field input,.field textarea,.field select{
-    font-size:16px!important; /* prevents iOS auto zoom */
-  }
+  dialog{width:calc(100% - 24px)!important;border-radius:22px!important}
+  .modal{padding:21px!important}
+  .field input,.field textarea,.field select{font-size:16px}
 }
-
 @media(max-width:430px){
-  .hero h1{font-size:clamp(58px,20vw,88px)!important}
-  .hero .lead{font-size:12px!important;max-width:95%!important}
+  .hero h1{font-size:clamp(60px,20vw,84px)!important}
   .head h2{font-size:34px!important}
-  .rhero h2{font-size:clamp(42px,13vw,58px)!important}
-  .tocPanel{width:min(270px,90vw)!important}
-}
-</style>
-
-
-<style id="qearl-v9-liquid-restore">
-/* Restore the richer liquid-glass character globally */
-.glass,.tocPanel,.tocHandle,nav,.btn,.ownerBtn{
-  isolation:isolate;
-}
-.glass{
-  overflow:hidden!important;
-  background:
-    radial-gradient(120% 100% at 12% 0%,rgba(255,255,255,.78),transparent 46%),
-    radial-gradient(100% 90% at 92% 100%,rgba(184,181,211,.22),transparent 54%),
-    linear-gradient(145deg,rgba(255,255,255,.54),rgba(224,226,237,.20))!important;
-  border:1px solid rgba(255,255,255,.76)!important;
-  backdrop-filter:blur(26px) saturate(1.35)!important;
-  -webkit-backdrop-filter:blur(26px) saturate(1.35)!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.96),
-    inset 0 -1px 0 rgba(255,255,255,.28),
-    0 24px 58px rgba(50,54,83,.10)!important;
-}
-.glass:before{
-  content:"";
-  position:absolute;
-  width:190px;height:190px;
-  left:var(--lx,50%);top:var(--ly,50%);
-  transform:translate(-50%,-50%) scale(.25);
-  border-radius:50%;
-  pointer-events:none;
-  opacity:0;
-  z-index:0;
-  background:
-    radial-gradient(circle at 35% 30%,rgba(255,255,255,.92),rgba(219,214,239,.34) 30%,rgba(176,185,217,.15) 52%,transparent 72%);
-  filter:blur(2px);
-  transition:opacity .28s ease,transform .65s cubic-bezier(.16,.84,.25,1);
-}
-.glass:hover:before{
-  opacity:.55;
-  transform:translate(-50%,-50%) scale(1);
-}
-.glass.liquid-hit:before{
-  opacity:.92!important;
-  transform:translate(-50%,-50%) scale(1.55)!important;
-  transition:opacity .12s ease,transform .58s cubic-bezier(.16,.84,.25,1)!important;
-}
-.glass:after{
-  content:"";
-  position:absolute;
-  inset:-45% -30%;
-  pointer-events:none;
-  z-index:0;
-  opacity:.0;
-  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.48) 48%,rgba(209,204,231,.16) 54%,transparent 66%);
-  transform:translateX(-28%) rotate(3deg);
-}
-.glass.liquid-hit:after{
-  animation:qearlLiquidSweep .95s cubic-bezier(.2,.7,.2,1);
-}
-.glass>*{position:relative;z-index:1}
-@keyframes qearlLiquidSweep{
-  0%{opacity:0;transform:translateX(-36%) rotate(3deg)}
-  22%{opacity:.78}
-  100%{opacity:0;transform:translateX(36%) rotate(3deg)}
-}
-@keyframes qearlRipple{
-  0%{transform:translate(-50%,-50%) scale(.08);opacity:.72}
-  100%{transform:translate(-50%,-50%) scale(1);opacity:0}
-}
-.liquid-ripple{
-  position:fixed;
-  width:170px;height:170px;
-  margin:0;
-  border-radius:50%;
-  pointer-events:none;
-  z-index:99999;
-  border:1px solid rgba(255,255,255,.82);
-  background:radial-gradient(circle,rgba(255,255,255,.28),rgba(190,187,220,.13) 42%,transparent 68%);
-  box-shadow:inset 0 0 24px rgba(255,255,255,.48),0 0 30px rgba(116,119,153,.08);
-  backdrop-filter:blur(2px);
-  -webkit-backdrop-filter:blur(2px);
-  animation:qearlRipple .72s cubic-bezier(.14,.7,.2,1) forwards;
-}
-.tocPanel{
-  background:
-    radial-gradient(130% 90% at 15% 0%,rgba(255,255,255,.82),transparent 48%),
-    linear-gradient(145deg,rgba(247,248,252,.68),rgba(213,216,232,.27))!important;
-  backdrop-filter:blur(34px) saturate(1.42)!important;
-  -webkit-backdrop-filter:blur(34px) saturate(1.42)!important;
-}
-.tocItem{overflow:hidden}
-.tocItem:after{
-  content:"";
-  position:absolute;inset:0;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.48),transparent);
-  transform:translateX(-120%);
-  transition:transform .55s ease;
-  pointer-events:none;
-}
-.tocItem:hover:after,.tocItem:active:after{transform:translateX(120%)}
-@media(hover:none){
-  .glass:hover:before{opacity:0}
-  .glass:active:before{opacity:.7;transform:translate(-50%,-50%) scale(1)}
-}
-@media(prefers-reduced-motion:reduce){
-  .liquid-ripple{display:none}
-  .glass.liquid-hit:after{animation:none}
-}
-</style>
-
-
-<style id="qearl-v10-ios26-glass">
-:root{
-  --glass-bg: rgba(248,249,252,.34);
-  --glass-stroke: rgba(255,255,255,.72);
-  --glass-inner: rgba(255,255,255,.88);
-  --glass-shadow: rgba(49,54,82,.075);
-  --glass-violet: rgba(196,194,222,.16);
-  --glass-blue: rgba(205,214,233,.15);
-}
-
-/* iOS26-like: quiet, thin, refractive, not ripple-heavy */
-.glass, nav, .tocPanel, .tocHandle, dialog, .btn, .ownerBtn{
-  background:
-    linear-gradient(145deg,rgba(255,255,255,.48),rgba(233,235,243,.16))!important;
-  border:1px solid var(--glass-stroke)!important;
-  backdrop-filter:blur(30px) saturate(1.32) contrast(1.02)!important;
-  -webkit-backdrop-filter:blur(30px) saturate(1.32) contrast(1.02)!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.94),
-    inset 0 -1px 0 rgba(255,255,255,.18),
-    0 18px 50px var(--glass-shadow)!important;
-}
-
-.glass{
-  position:relative;
-  overflow:hidden!important;
-  transform-style:preserve-3d;
-  will-change:transform,filter;
-  transition:transform .48s cubic-bezier(.16,.84,.24,1),box-shadow .48s ease,filter .48s ease!important;
-}
-.glass::before{
-  content:"";
-  position:absolute;
-  inset:-24%;
-  pointer-events:none;
-  z-index:0;
-  opacity:.42;
-  background:
-    radial-gradient(28% 22% at calc(var(--gx,50%)*1%) calc(var(--gy,50%)*1%),rgba(255,255,255,.95),transparent 65%),
-    radial-gradient(34% 28% at calc((var(--gx,50%)*1%) + 10%) calc((var(--gy,50%)*1%) + 8%),var(--glass-violet),transparent 72%),
-    radial-gradient(36% 30% at calc((var(--gx,50%)*1%) - 12%) calc((var(--gy,50%)*1%) - 9%),var(--glass-blue),transparent 75%);
-  filter:blur(18px);
-  transform:translate3d(var(--tx,0px),var(--ty,0px),0) scale(1.02);
-  transition:opacity .36s ease,transform .22s ease-out;
-}
-.glass::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  opacity:.0;
-  background:
-    linear-gradient(112deg,transparent 18%,rgba(255,255,255,.16) 34%,rgba(255,255,255,.58) 47%,rgba(208,206,229,.14) 55%,transparent 72%);
-  transform:translateX(-22%);
-  mix-blend-mode:screen;
-}
-.glass:hover{
-  transform:translateY(-5px) perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.98),
-    inset 0 -1px 0 rgba(255,255,255,.20),
-    0 26px 72px rgba(49,54,82,.11)!important;
-  filter:saturate(1.03) brightness(1.01);
-}
-.glass:hover::after{opacity:.42;animation:qearlRefraction 1.8s ease-in-out infinite alternate}
-.glass>*{position:relative;z-index:1}
-
-@keyframes qearlRefraction{
-  from{transform:translateX(-18%) skewX(-2deg)}
-  to{transform:translateX(18%) skewX(2deg)}
-}
-
-/* pressed glass flex: a soft lens bend instead of circular ripple */
-.glass.is-pressed{
-  transform:translateY(-2px) scale(.995) perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-}
-.glass.is-pressed::before{
-  opacity:.68;
-  transform:translate3d(var(--tx,0px),var(--ty,0px),0) scale(1.08);
-}
-.glass.is-pressed::after{
-  opacity:.7!important;
-  animation:qearlPressSheen .55s cubic-bezier(.2,.75,.2,1) 1!important;
-}
-@keyframes qearlPressSheen{
-  0%{transform:translateX(-26%) scaleX(.95);filter:blur(0)}
-  45%{transform:translateX(2%) scaleX(1.05);filter:blur(.4px)}
-  100%{transform:translateX(26%) scaleX(.98);filter:blur(0)}
-}
-
-/* glass nav and drawer stay even quieter */
-nav,.tocPanel,.tocHandle{
-  background:
-    linear-gradient(150deg,rgba(255,255,255,.44),rgba(228,231,241,.17))!important;
-}
-.tocPanel{
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.94),
-    0 30px 86px rgba(47,52,79,.12)!important;
-}
-.tocItem{
-  transition:background .28s ease,transform .28s cubic-bezier(.2,.8,.2,1),color .28s ease!important;
-}
-.tocItem:hover,.tocItem:active{
-  background:rgba(255,255,255,.34)!important;
-  transform:translateX(4px);
-}
-
-/* Remove the artificial circle ripple from v9 */
-.liquid-ripple{display:none!important}
-
-@media(hover:none){
-  .glass:hover{transform:none!important}
-  .glass:hover::after{animation:none;opacity:0}
-  .glass:active{
-    transform:scale(.992)!important;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.98),
-      0 16px 42px rgba(49,54,82,.10)!important;
-  }
-}
-
-@media(prefers-reduced-motion:reduce){
-  .glass,.glass::before,.glass::after{transition:none!important;animation:none!important}
+  .rhero h2{font-size:clamp(42px,12vw,56px)!important}
 }
 </style>
 
@@ -1394,12 +710,12 @@ nav,.tocPanel,.tocHandle{
   <div class="tocTitle">contents.</div>
   <div class="tocList" id="tocList"></div>
 </aside>
-  <div class="rnav"><div class="wrap rbar"><button class="btn" id="back">← back</button><span class="brand">QEARL ARCHIVE.</span><button class="btn ownerOnly" id="append">＋ 新增内容</button></div></div>
+  <div class="rnav"><div class="wrap rbar"><button class="btn" id="back">← back</button><span class="brand">QEARL ARCHIVE.</span><button class="btn" id="append" style="display:none">＋ add</button></div></div>
   <div class="rmain"><div class="rhero"><div class="k" id="rk"></div><h2 id="rt"></h2><div class="submark">made in little details.</div></div><div class="flow" id="rb"></div></div>
 </section>
 
-<dialog id="login"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / owner entrance</span><button class="close" data-close="login">×</button></div><h2 style="font:italic 30px Georgia,serif">Private access ୨୧</h2><div class="field"><label>OWNER ID</label><input id="uid" autocomplete="username"></div><div class="field"><label>PASSWORD</label><input id="pwd" type="password" autocomplete="current-password"></div><button class="btn" id="loginbtn">enter owner mode</button><p class="small">仅管理员账号可进入编辑模式。</p></div></dialog>
-<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><p class="small" style="margin:-8px 0 16px">Type Book 中新增的标题会自动加入左侧键盘目录；访客不会看到新增/删除入口。</p><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">保存</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
+<dialog id="login"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / owner entrance</span><button class="close" data-close="login">×</button></div><h2 style="font:italic 30px Georgia,serif">Private access ୨୧</h2><div class="field"><label>OWNER ID</label><input id="uid" autocomplete="username"></div><div class="field"><label>PASSWORD</label><input id="pwd" type="password" autocomplete="current-password"></div><button class="btn" id="loginbtn">enter owner mode</button><p class="small">仅管理员登录后显示新增、删除与备份入口。</p></div></dialog>
+<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">保存</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
 <div class="toast" id="toast">saved ♡</div>
 
 <script>
@@ -1412,7 +728,9 @@ function ownerUI(){
   const on=ownerOn();
   document.body.classList.toggle('owner-mode',on);
   document.getElementById('owner').textContent=on?'✦ owner mode':'owner entrance ୨୧';
-  document.getElementById('append').style.display=on?'inline-block':'none';
+  const append=document.getElementById('append');
+  append.style.display=on?'inline-block':'none';
+  append.textContent=current==='typebook'?'＋ 新增键盘目录':'＋ 新增内容';
   document.getElementById('addpage').style.display=on?'inline-block':'none';
 }
 function esc(s){return(s||'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
@@ -1463,12 +781,11 @@ function renderSequential(bs,page){
   let o='',toc=[];
   (bs||[]).forEach((b,bi)=>{
     if(b.type==='text'){
-      const heading=isTocHeading(b.text,page);
-      const displayText=heading?String(b.text).normalize('NFKC'):b.text;
-      let t=linkify(displayText);
+      let t=linkify(b.text);
       if(b.links)b.links.forEach(([l,u])=>{if(l&&u)t=t.replace(esc(l),`<a class="lnk" target="_blank" href="${esc(u)}">${esc(l)}</a>`)});
+      const heading=isTocHeading(b.text,page);
       const id=heading?`${page}-block-${bi}`:'';
-      if(heading)toc.push({id,text:String(b.text).normalize('NFKC'),blockIndex:bi});
+      if(heading)toc.push({id,text:b.text,blockIndex:bi});
       o+=`<p ${id?`id="${id}"`:''} class="blockText ${heading?'heading':''}" data-block="${bi}">${t}</p>`;
     }else if(b.type==='image'){
       const wh=(b.w&&b.h)?` width="${b.w}" height="${b.h}" style="aspect-ratio:${b.w}/${b.h}"`:'';
@@ -1482,19 +799,19 @@ function renderSequential(bs,page){
 }
 const labels={typebook:'TYPE BOOK',custom:'CUSTOM KEYS',case:'THEME CASE',mist:'MISTBOUND NOTES',island:'NOCTURNE ISLE',moss:'MOSS AFTER TEARS',jasmine:'SELF-CUT',others:'QEARL MISCELLANY'};
 const heroTitles={
-  typebook:'<span class="titleScript glyphScript">𝓠𝓮𝓪𝓻𝓵’𝓼 𝓣𝔂𝓹𝓮 𝓑𝓸𝓸𝓴</span><span class="titleMark">♡</span>',
-  custom:'<span class="titleScript glyphScript">𝓠𝓮𝓪𝓻𝓵’𝓼 𝓒𝓾𝓼𝓽𝓸𝓶 𝓚𝓮𝔂𝓼</span><span class="titleMark">୨୧</span>',
-  case:'<span class="titleScript glyphScript">𝓠𝓮𝓪𝓻𝓵’𝓼 𝓣𝓱𝓮𝓶𝓮 𝓒𝓪𝓼𝓮</span><span class="titleMark">♡</span>',
-  mist:'<span class="titleHash">#</span><span class="titleCjk">薄雾集</span><span class="titleMark">†﹡</span>',
-  island:'<span class="titleHash">#</span><span class="titleCjk">失眠岛</span><span class="titleMark">†﹡</span>',
-  moss:'<span class="titleHash">#</span><span class="titleCjk">淚生苔</span><span class="titleMark">†﹡</span>',
-  jasmine:'<span class="titleHash">#</span><span class="titleCjk">茉莉信</span><span class="titleMark">†﹡</span>',
-  others:'<span class="titleCjk">枝间拾遗</span><span class="titleMark">♡⑅°</span>'
+  typebook:"Qearl’s Type Book ♡",
+  custom:"Qearl’s Custom Keys ୨୧",
+  case:"Qearl’s Theme Case ♡",
+  mist:"#薄雾集†﹡",
+  island:"#失眠岛†﹡",
+  moss:"#淚生苔†﹡",
+  jasmine:"#茉莉信†﹡",
+  others:"枝间拾遗"
 };
 function openDoc(s){
   current=s;reader.dataset.page=s;
   const d=DOCS[s];
-  rt.innerHTML=heroTitles[s]||(d?esc(String(d.title).normalize('NFKC')):esc(data.cards.find(x=>x.id===s)?.title||'Archive'));
+  rt.textContent=heroTitles[s]||(d?d.title:(data.cards.find(x=>x.id===s)?.title||'Archive'));
   rk.textContent=labels[s]||'QEARL ARCHIVE';
   let bs=d?[...d.blocks]:[];
   if(data.append[s])bs=bs.concat(data.append[s]);
@@ -1574,7 +891,7 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>document.getE
 const OWNER_ID='Qearl';
 const OWNER_SALT='qearl-owner-v1';
 const OWNER_DIGEST='7896765c1e95a7cf5dad346dbc5936a4fa0476acb9904854ddf56e194bddd05c';
-async function sha256Hex(v){
+async function ownerDigest(v){
   const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));
   return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
 }
@@ -1582,14 +899,11 @@ document.getElementById('loginbtn').onclick=async()=>{
   const uid=document.getElementById('uid').value.trim();
   const pwd=document.getElementById('pwd').value;
   if(!uid||!pwd){alert('请输入管理员账号和密码');return}
-  const digest=await sha256Hex(`${OWNER_SALT}|${uid}|${pwd}`);
+  const digest=await ownerDigest(`${OWNER_SALT}|${uid}|${pwd}`);
   if(uid===OWNER_ID && digest===OWNER_DIGEST){
     sessionStorage.setItem(OWNER,'1');
     document.getElementById('pwd').value='';
-    login.close();
-    ownerUI();
-    renderUsers();
-    toast('welcome, Qearl ♡');
+    login.close();ownerUI();renderUsers();toast('welcome, Qearl ♡');
   }else{
     document.getElementById('pwd').value='';
     alert('管理员账号或密码不正确');
@@ -1612,9 +926,13 @@ document.getElementById('save').onclick=async()=>{
     data.cards.push({id:'u_'+Date.now(),title,blocks:bs});
   }else{
     data.append[target]=data.append[target]||[];
-    let heading=title;
-    if(target==='typebook' && !/^†/.test(heading)) heading='†'+heading.replace(/^#+\s*/,'')+'﹡';
-    else if(target!=='typebook') heading='✦ '+heading;
+    let heading;
+    if(target==='typebook'){
+      const clean=title.replace(/^#+\s*/,'').replace(/^†/,'').replace(/﹡$/,'');
+      heading='†'+clean+'﹡';
+    }else{
+      heading='✦ '+title;
+    }
     data.append[target].push({type:'text',text:heading},...bs);
   }
   localStorage.setItem(KEY,JSON.stringify(data));
@@ -1643,73 +961,6 @@ ownerUI();renderUsers();
     });
     card.addEventListener('pointerleave', () => card.style.transform='');
   });
-})();
-</script>
-
-
-<script id="qearl-v9-liquid-js">
-(()=>{
-  const cards=()=>document.querySelectorAll('.glass,.tocItem,.btn,.ownerBtn,.tocHandle');
-  document.addEventListener('pointermove',e=>{
-    const g=e.target.closest('.glass');
-    if(!g)return;
-    const r=g.getBoundingClientRect();
-    g.style.setProperty('--lx',(e.clientX-r.left)+'px');
-    g.style.setProperty('--ly',(e.clientY-r.top)+'px');
-  },{passive:true});
-  document.addEventListener('pointerdown',e=>{
-    const el=e.target.closest('.glass,.tocItem,.btn,.ownerBtn,.tocHandle');
-    if(!el)return;
-    if(el.classList.contains('glass')){
-      const r=el.getBoundingClientRect();
-      el.style.setProperty('--lx',(e.clientX-r.left)+'px');
-      el.style.setProperty('--ly',(e.clientY-r.top)+'px');
-      el.classList.remove('liquid-hit');
-      void el.offsetWidth;
-      el.classList.add('liquid-hit');
-      setTimeout(()=>el.classList.remove('liquid-hit'),760);
-    }
-    const ripple=document.createElement('i');
-    ripple.className='liquid-ripple';
-    ripple.style.left=e.clientX+'px';
-    ripple.style.top=e.clientY+'px';
-    document.body.appendChild(ripple);
-    ripple.addEventListener('animationend',()=>ripple.remove(),{once:true});
-  },{passive:true});
-})();
-</script>
-
-
-<script id="qearl-v10-ios26-motion">
-(()=>{
-  const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
-  document.addEventListener('pointermove',e=>{
-    const g=e.target.closest('.glass');
-    if(!g) return;
-    const r=g.getBoundingClientRect();
-    const x=(e.clientX-r.left)/r.width;
-    const y=(e.clientY-r.top)/r.height;
-    const nx=(x-.5), ny=(y-.5);
-    g.style.setProperty('--gx',(x*100).toFixed(1));
-    g.style.setProperty('--gy',(y*100).toFixed(1));
-    g.style.setProperty('--tx',(nx*10).toFixed(2)+'px');
-    g.style.setProperty('--ty',(ny*8).toFixed(2)+'px');
-    g.style.setProperty('--rx',clamp(-ny*1.4,-.9,.9).toFixed(2)+'deg');
-    g.style.setProperty('--ry',clamp(nx*1.8,-1.1,1.1).toFixed(2)+'deg');
-  },{passive:true});
-  document.addEventListener('pointerleave',e=>{
-    const g=e.target.closest&&e.target.closest('.glass');
-    if(!g)return;
-    g.style.removeProperty('--rx');g.style.removeProperty('--ry');
-  },true);
-  document.addEventListener('pointerdown',e=>{
-    const g=e.target.closest('.glass');
-    if(!g)return;
-    g.classList.add('is-pressed');
-  },{passive:true});
-  const release=e=>{const g=e.target.closest&&e.target.closest('.glass');if(g)g.classList.remove('is-pressed')};
-  document.addEventListener('pointerup',release,{passive:true});
-  document.addEventListener('pointercancel',release,{passive:true});
 })();
 </script>
 

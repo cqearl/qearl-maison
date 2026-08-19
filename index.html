@@ -587,6 +587,190 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+
+<style id="subpage-final-polish-v5">
+/* Final pass: one typographic language across every archive page. */
+.rhero{
+  overflow:visible!important;
+}
+.rhero h2{
+  display:flex!important;
+  align-items:baseline!important;
+  flex-wrap:wrap!important;
+  gap:.12em!important;
+  max-width:920px!important;
+  font-style:normal!important;
+  font-weight:400!important;
+  line-height:1.03!important;
+  letter-spacing:-.025em!important;
+  text-wrap:balance;
+}
+.rhero h2 .titleScript{
+  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy","URW Chancery L","Brush Script MT",cursive!important;
+  font-style:italic!important;
+  font-weight:400!important;
+  letter-spacing:-.055em!important;
+}
+.rhero h2 .titleSerif{
+  font-family:"Iowan Old Style","Baskerville","Times New Roman",Georgia,serif!important;
+  font-style:italic!important;
+  font-weight:400!important;
+  letter-spacing:-.045em!important;
+}
+.rhero h2 .titleCjk{
+  font-family:"KaiTi","STKaiti","Kaiti SC","FangSong","STFangsong",serif!important;
+  font-style:normal!important;
+  font-weight:400!important;
+  letter-spacing:.075em!important;
+}
+.rhero h2 .titleMark{
+  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy",cursive!important;
+  font-size:.56em!important;
+  color:#8f91a5!important;
+  letter-spacing:.02em!important;
+  transform:translateY(-.08em);
+}
+.rhero h2 .titleHash{
+  font-family:"Iowan Old Style",Baskerville,Georgia,serif!important;
+  font-size:.58em!important;
+  color:#9b9dab!important;
+  font-weight:400!important;
+  transform:translateY(-.1em);
+}
+.reader[data-page="typebook"] .rhero h2,
+.reader[data-page="custom"] .rhero h2,
+.reader[data-page="case"] .rhero h2{
+  font-size:clamp(54px,7.2vw,104px)!important;
+}
+.reader[data-page="mist"] .rhero h2,
+.reader[data-page="island"] .rhero h2,
+.reader[data-page="moss"] .rhero h2,
+.reader[data-page="jasmine"] .rhero h2,
+.reader[data-page="others"] .rhero h2{
+  font-size:clamp(50px,6.6vw,88px)!important;
+}
+/* Small archive label stays editorial, not decorative. */
+.rhero .k{
+  font-family:"Iowan Old Style",Baskerville,Georgia,serif!important;
+  font-style:italic!important;
+  text-transform:uppercase;
+  letter-spacing:.22em!important;
+  opacity:.82;
+}
+.rhero .submark{
+  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy",cursive!important;
+  font-style:italic!important;
+  letter-spacing:.01em!important;
+  opacity:.86;
+}
+/* Normalize decorative unicode headings in the content, then let the font do the ornamentation. */
+.blockText.heading{
+  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy","URW Chancery L","Brush Script MT","KaiTi","STKaiti",cursive!important;
+  font-style:italic!important;
+  font-weight:400!important;
+  font-size:clamp(24px,3.1vw,36px)!important;
+  line-height:1.35!important;
+  letter-spacing:-.015em!important;
+  color:#4a4f67!important;
+  padding-top:3px!important;
+}
+/* CJK collection pages get a softer ink-calligraphy treatment. */
+.reader[data-page="mist"] .blockText.heading,
+.reader[data-page="island"] .blockText.heading,
+.reader[data-page="moss"] .blockText.heading,
+.reader[data-page="jasmine"] .blockText.heading,
+.reader[data-page="others"] .blockText.heading{
+  font-family:"KaiTi","STKaiti","Kaiti SC","FangSong","STFangsong",serif!important;
+  font-style:normal!important;
+  letter-spacing:.045em!important;
+}
+/* Images: consistent editorial framing across every page. */
+.blockImg{
+  background:rgba(255,255,255,.46)!important;
+  border:1px solid rgba(255,255,255,.84)!important;
+  box-shadow:0 24px 70px rgba(46,50,76,.075)!important;
+  object-fit:contain;
+}
+.blockImg + .blockImg{margin-top:-16px!important}
+/* Table and body text alignment pass. */
+.blockText:not(.heading){max-width:780px}
+.blockTable{box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
+/* TOC echoes the exact page hierarchy. */
+.tocTitle{
+  font-family:"Segoe Script","Snell Roundhand","Apple Chancery","Lucida Calligraphy",cursive!important;
+  font-style:italic!important;
+  letter-spacing:-.025em!important;
+}
+.tocItem{letter-spacing:.015em}
+@media(max-width:820px){
+  .rhero h2{gap:.08em!important}
+  .reader[data-page="typebook"] .rhero h2,
+  .reader[data-page="custom"] .rhero h2,
+  .reader[data-page="case"] .rhero h2{font-size:clamp(46px,13vw,70px)!important}
+  .reader[data-page="mist"] .rhero h2,
+  .reader[data-page="island"] .rhero h2,
+  .reader[data-page="moss"] .rhero h2,
+  .reader[data-page="jasmine"] .rhero h2,
+  .reader[data-page="others"] .rhero h2{font-size:clamp(42px,11vw,62px)!important}
+  .rhero h2 .titleCjk{letter-spacing:.045em!important}
+  .rhero .k{letter-spacing:.16em!important}
+}
+</style>
+
+
+<style id="script-glyph-fix-v6">
+/* Force visible ornamental glyphs even when local calligraphy fonts are absent. */
+.rhero h2 .glyphScript{
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif!important;
+  font-style:normal!important;
+  font-weight:400!important;
+  letter-spacing:-.035em!important;
+  font-variant-ligatures:none!important;
+  text-rendering:geometricPrecision;
+}
+.reader[data-page="typebook"] .rhero h2 .glyphScript,
+.reader[data-page="custom"] .rhero h2 .glyphScript,
+.reader[data-page="case"] .rhero h2 .glyphScript{
+  display:inline-block;
+  transform:translateY(.015em);
+}
+@media(max-width:820px){
+  .rhero h2 .glyphScript{letter-spacing:-.02em!important}
+}
+</style>
+
+
+<style id="qearl-v7-title-admin">
+/* Visible calligraphic hero titles — does not rely on an installed web font. */
+.rhero h2 .glyphScript{
+  font-family:"Times New Roman","Songti SC",serif!important;
+  font-style:normal!important;
+  font-weight:400!important;
+  letter-spacing:-.045em!important;
+  line-height:.92!important;
+}
+.rhero h2 .titleCjk{
+  font-family:"STKaiti","KaiTi","Kaiti SC","Songti SC",serif!important;
+  font-style:italic!important;
+  font-weight:400!important;
+  letter-spacing:.06em!important;
+}
+.rhero h2 .titleHash,.rhero h2 .titleMark{
+  font-family:"Snell Roundhand","Apple Chancery","Segoe Script","Brush Script MT",cursive!important;
+  font-weight:400!important;
+  color:#89869a!important;
+}
+.ownerOnly{display:none!important}
+body.owner-mode .ownerOnly{display:block!important}
+.rnav .ownerOnly{display:none!important}
+body.owner-mode .rnav .ownerOnly{display:inline-flex!important}
+#login .modal{max-width:430px}
+#loginbtn{width:100%;justify-content:center}
+@media(max-width:820px){
+  .rhero h2 .glyphScript{font-size:.92em}
+}
+</style>
+
 </head>
 <body>
 <nav>
@@ -649,12 +833,12 @@ body.owner-mode .ownerOnly{display:block!important}
   <div class="tocTitle">contents.</div>
   <div class="tocList" id="tocList"></div>
 </aside>
-  <div class="rnav"><div class="wrap rbar"><button class="btn" id="back">← back</button><span class="brand">QEARL ARCHIVE.</span><button class="btn" id="append">＋ add</button></div></div>
+  <div class="rnav"><div class="wrap rbar"><button class="btn" id="back">← back</button><span class="brand">QEARL ARCHIVE.</span><button class="btn ownerOnly" id="append">＋ 新增内容</button></div></div>
   <div class="rmain"><div class="rhero"><div class="k" id="rk"></div><h2 id="rt"></h2><div class="submark">made in little details.</div></div><div class="flow" id="rb"></div></div>
 </section>
 
-<dialog id="login"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / owner entrance</span><button class="close" data-close="login">×</button></div><h2 style="font:italic 30px Georgia,serif">Private access ୨୧</h2><div class="field"><label>OWNER ID</label><input id="uid" autocomplete="username"></div><div class="field"><label>PASSWORD</label><input id="pwd" type="password" autocomplete="current-password"></div><button class="btn" id="loginbtn">enter owner mode</button><p class="small">当前预览仅演示 Owner / Visitor 状态；正式公开站需要服务端鉴权。</p></div></dialog>
-<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">保存</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
+<dialog id="login"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / owner entrance</span><button class="close" data-close="login">×</button></div><h2 style="font:italic 30px Georgia,serif">Private access ୨୧</h2><div class="field"><label>OWNER ID</label><input id="uid" autocomplete="username"></div><div class="field"><label>PASSWORD</label><input id="pwd" type="password" autocomplete="current-password"></div><button class="btn" id="loginbtn">enter owner mode</button><p class="small">仅管理员账号可进入编辑模式。</p></div></dialog>
+<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><p class="small" style="margin:-8px 0 16px">Type Book 中新增的标题会自动加入左侧键盘目录；访客不会看到新增/删除入口。</p><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">保存</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
 <div class="toast" id="toast">saved ♡</div>
 
 <script>
@@ -718,11 +902,12 @@ function renderSequential(bs,page){
   let o='',toc=[];
   (bs||[]).forEach((b,bi)=>{
     if(b.type==='text'){
-      let t=linkify(b.text);
-      if(b.links)b.links.forEach(([l,u])=>{if(l&&u)t=t.replace(esc(l),`<a class="lnk" target="_blank" href="${esc(u)}">${esc(l)}</a>`)});
       const heading=isTocHeading(b.text,page);
+      const displayText=heading?String(b.text).normalize('NFKC'):b.text;
+      let t=linkify(displayText);
+      if(b.links)b.links.forEach(([l,u])=>{if(l&&u)t=t.replace(esc(l),`<a class="lnk" target="_blank" href="${esc(u)}">${esc(l)}</a>`)});
       const id=heading?`${page}-block-${bi}`:'';
-      if(heading)toc.push({id,text:b.text,blockIndex:bi});
+      if(heading)toc.push({id,text:String(b.text).normalize('NFKC'),blockIndex:bi});
       o+=`<p ${id?`id="${id}"`:''} class="blockText ${heading?'heading':''}" data-block="${bi}">${t}</p>`;
     }else if(b.type==='image'){
       const wh=(b.w&&b.h)?` width="${b.w}" height="${b.h}" style="aspect-ratio:${b.w}/${b.h}"`:'';
@@ -735,10 +920,20 @@ function renderSequential(bs,page){
   return o;
 }
 const labels={typebook:'TYPE BOOK',custom:'CUSTOM KEYS',case:'THEME CASE',mist:'MISTBOUND NOTES',island:'NOCTURNE ISLE',moss:'MOSS AFTER TEARS',jasmine:'SELF-CUT',others:'QEARL MISCELLANY'};
+const heroTitles={
+  typebook:'<span class="titleScript glyphScript">𝓠𝓮𝓪𝓻𝓵’𝓼 𝓣𝔂𝓹𝓮 𝓑𝓸𝓸𝓴</span><span class="titleMark">♡</span>',
+  custom:'<span class="titleScript glyphScript">𝓠𝓮𝓪𝓻𝓵’𝓼 𝓒𝓾𝓼𝓽𝓸𝓶 𝓚𝓮𝔂𝓼</span><span class="titleMark">୨୧</span>',
+  case:'<span class="titleScript glyphScript">𝓠𝓮𝓪𝓻𝓵’𝓼 𝓣𝓱𝓮𝓶𝓮 𝓒𝓪𝓼𝓮</span><span class="titleMark">♡</span>',
+  mist:'<span class="titleHash">#</span><span class="titleCjk">薄雾集</span><span class="titleMark">†﹡</span>',
+  island:'<span class="titleHash">#</span><span class="titleCjk">失眠岛</span><span class="titleMark">†﹡</span>',
+  moss:'<span class="titleHash">#</span><span class="titleCjk">淚生苔</span><span class="titleMark">†﹡</span>',
+  jasmine:'<span class="titleHash">#</span><span class="titleCjk">茉莉信</span><span class="titleMark">†﹡</span>',
+  others:'<span class="titleCjk">枝间拾遗</span><span class="titleMark">♡⑅°</span>'
+};
 function openDoc(s){
   current=s;reader.dataset.page=s;
   const d=DOCS[s];
-  rt.textContent=d?d.title:(data.cards.find(x=>x.id===s)?.title||'Archive');
+  rt.innerHTML=heroTitles[s]||(d?esc(String(d.title).normalize('NFKC')):esc(data.cards.find(x=>x.id===s)?.title||'Archive'));
   rk.textContent=labels[s]||'QEARL ARCHIVE';
   let bs=d?[...d.blocks]:[];
   if(data.append[s])bs=bs.concat(data.append[s]);
@@ -815,16 +1010,62 @@ document.getElementById('back').onclick=()=>{reader.classList.remove('open');if(
 const login=document.getElementById('login'),admin=document.getElementById('admin');
 document.getElementById('owner').onclick=()=>ownerOn()?admin.showModal():login.showModal();
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.close).close());
-document.getElementById('loginbtn').onclick=()=>{if(document.getElementById('uid').value.trim()&&document.getElementById('pwd').value){sessionStorage.setItem(OWNER,'1');login.close();ownerUI();renderUsers();toast('owner mode opened')}else alert('请输入账号和密码')};
+const OWNER_ID='Qearl';
+const OWNER_SALT='qearl-owner-v1';
+const OWNER_DIGEST='7896765c1e95a7cf5dad346dbc5936a4fa0476acb9904854ddf56e194bddd05c';
+async function sha256Hex(v){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+document.getElementById('loginbtn').onclick=async()=>{
+  const uid=document.getElementById('uid').value.trim();
+  const pwd=document.getElementById('pwd').value;
+  if(!uid||!pwd){alert('请输入管理员账号和密码');return}
+  const digest=await sha256Hex(`${OWNER_SALT}|${uid}|${pwd}`);
+  if(uid===OWNER_ID && digest===OWNER_DIGEST){
+    sessionStorage.setItem(OWNER,'1');
+    document.getElementById('pwd').value='';
+    login.close();
+    ownerUI();
+    renderUsers();
+    toast('welcome, Qearl ♡');
+  }else{
+    document.getElementById('pwd').value='';
+    alert('管理员账号或密码不正确');
+  }
+};
 function openAdmin(t='new'){if(!ownerOn()){login.showModal();return}document.getElementById('target').value=t;admin.showModal()}
 document.getElementById('append').onclick=()=>openAdmin(current||'new');document.getElementById('addpage').onclick=()=>openAdmin('new');
 function files(fs){return Promise.all([...fs].map(f=>new Promise(r=>{let x=new FileReader();x.onload=()=>r({type:'image',src:x.result});x.readAsDataURL(f)})))}
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1300)}
-document.getElementById('save').onclick=async()=>{let target=document.getElementById('target').value,title=document.getElementById('nt').value.trim()||'new archive',text=document.getElementById('nx').value.trim(),imgs=await files(document.getElementById('ni').files),bs=[];if(text)bs.push({type:'text',text});bs.push(...imgs);if(target==='new')data.cards.push({id:'u_'+Date.now(),title,blocks:bs});else{data.append[target]=data.append[target]||[];data.append[target].push({type:'text',text:'✦ '+title},...bs)}localStorage.setItem(KEY,JSON.stringify(data));renderUsers();admin.close();toast('saved ♡')};
+document.getElementById('save').onclick=async()=>{
+  if(!ownerOn()){admin.close();login.showModal();return}
+  let target=document.getElementById('target').value,
+      title=document.getElementById('nt').value.trim()||'new archive',
+      text=document.getElementById('nx').value.trim(),
+      imgs=await files(document.getElementById('ni').files),
+      bs=[];
+  if(text)bs.push({type:'text',text});
+  bs.push(...imgs);
+  if(target==='new'){
+    data.cards.push({id:'u_'+Date.now(),title,blocks:bs});
+  }else{
+    data.append[target]=data.append[target]||[];
+    let heading=title;
+    if(target==='typebook' && !/^†/.test(heading)) heading='†'+heading.replace(/^#+\s*/,'')+'﹡';
+    else if(target!=='typebook') heading='✦ '+heading;
+    data.append[target].push({type:'text',text:heading},...bs);
+  }
+  localStorage.setItem(KEY,JSON.stringify(data));
+  renderUsers();
+  admin.close();
+  if(current)openDoc(current);
+  toast(target==='typebook'?'键盘目录已新增 ♡':'saved ♡');
+};
 function renderUsers(){let g=document.getElementById('usergrid');g.innerHTML='';data.cards.forEach(c=>{let e=document.createElement('article');e.className='usercard';e.innerHTML=`${ownerOn()?'<button class="del">×</button>':''}<h3>${esc(c.title)}</h3><p style="font-size:12px;color:#84899b">later added to Qearl atelier.</p>`;e.onclick=x=>{if(x.target.classList.contains('del'))return;openDoc(c.id)};if(ownerOn())e.querySelector('.del').onclick=x=>{x.stopPropagation();if(confirm('删除这个栏目吗？')){data.cards=data.cards.filter(y=>y.id!==c.id);localStorage.setItem(KEY,JSON.stringify(data));renderUsers()}};g.appendChild(e)})}
 document.getElementById('logout').onclick=()=>{sessionStorage.removeItem(OWNER);admin.close();ownerUI();renderUsers();toast('visitor mode')};
-document.getElementById('export').onclick=()=>{let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='qearl-atelier-backup.json';a.click()};
-document.getElementById('import').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);localStorage.setItem(KEY,JSON.stringify(data));renderUsers();toast('imported')}catch{alert('备份格式不正确')}};r.readAsText(f)};
+document.getElementById('export').onclick=()=>{if(!ownerOn())return;let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='qearl-atelier-backup.json';a.click()};
+document.getElementById('import').onchange=e=>{if(!ownerOn())return;let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);localStorage.setItem(KEY,JSON.stringify(data));renderUsers();toast('imported')}catch{alert('备份格式不正确')}};r.readAsText(f)};
 ownerUI();renderUsers();
 </script>
 

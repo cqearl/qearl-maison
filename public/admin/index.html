@@ -55,7 +55,9 @@ button:disabled{opacity:.38;cursor:not-allowed;transform:none!important}
   color:#666b81;transition:.18s ease
 }
 .btn:hover,.iconBtn:hover{background:rgba(255,255,255,.65);transform:translateY(-1px)}
-.btn{border-radius:15px;padding:9px 13px}
+.btn{border-radius:15px;padding:9px 13px;appearance:none;-webkit-appearance:none;outline:0;line-height:1.15}
+.btn:focus{outline:none}
+.btn:focus-visible{box-shadow:0 0 0 3px rgba(116,122,154,.12),inset 0 1px 0 rgba(255,255,255,.92)}
 .btn.primary{background:var(--deep);border-color:rgba(255,255,255,.32);color:white}
 .btn.danger,.textDanger{color:var(--danger)}
 .iconBtn{min-width:35px;height:35px;padding:0 10px;border-radius:12px;display:inline-grid;place-items:center}
@@ -132,7 +134,19 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
 .closeBtn{border:0;background:transparent;width:38px;height:38px;border-radius:50%;font-size:25px;line-height:1;color:#34384c}
 .closeBtn:hover{background:rgba(255,255,255,.46)}
 .modalBody{padding:0 25px 22px}
-.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:start}
+.formGrid>.field{align-self:start}
+.formGrid>.field>input,.formGrid>.field>select{height:48px}
+.pageIdentityGrid{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:13px;row-gap:13px}
+.pageIdentityGrid .field{grid-template-rows:auto 48px 18px}
+.pageIdentityGrid .field>label{align-self:end}
+.pageIdentityGrid .field>input{height:48px}
+.pageIdentityGrid .field>.hint{min-height:18px;margin:0;display:flex;align-items:flex-start}
+.pageIdentityGrid .field.titleField>.hint{visibility:hidden}
+.modalFooter{min-height:68px}
+.footerActions{margin-left:auto;align-self:center}
+.footerActions .btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.92)}
+.footerActions .btn.primary{box-shadow:none;border-color:transparent}
 .field{display:grid;gap:6px}
 .field.full{grid-column:1/-1}
 .field label{font-size:9px;color:#808599;letter-spacing:.07em}
@@ -220,9 +234,9 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
     </div>
     <div class="modalBody">
       <input type="hidden" id="pageId">
-      <div class="formGrid">
-        <div class="field"><label>TITLE</label><input id="pageTitle" placeholder="例如：Home / Keyboard archive"></div>
-        <div class="field"><label>SLUG</label><input id="pageSlug" placeholder="home"><div class="hint">网址标识；留空时由系统自动生成。</div></div>
+      <div class="formGrid pageIdentityGrid">
+        <div class="field titleField"><label>TITLE</label><input id="pageTitle" placeholder="例如：Home / Keyboard archive"><div class="hint" aria-hidden="true">占位</div></div>
+        <div class="field slugField"><label>SLUG</label><input id="pageSlug" placeholder="home"><div class="hint">网址标识；留空时由系统自动生成。</div></div>
         <div class="field full"><label>SUBTITLE</label><input id="pageSubtitle" placeholder="可留空"></div>
         <label class="switchline full"><input type="checkbox" id="pageVisible" checked> visible on site</label>
       </div>

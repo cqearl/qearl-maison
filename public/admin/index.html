@@ -165,7 +165,7 @@ dialog::backdrop{background:rgba(40,44,67,.24);backdrop-filter:blur(10px)}
     <p>页面、区块、卡片与图片都在这里整理。PC 与移动端布局可以分开设置，内容本身不再被写死在页面代码里。</p>
   </section>
 
-  <section id="loginGate" class="loginGate">
+  <section id="loginGate" class="loginGate hidden">
     <div class="loginCard glass">
       <h2>Private access ୨୧</h2>
       <p>使用 Qearl Maison 的管理员账号登录。登录状态由安全 Cookie 保持。</p>
@@ -264,10 +264,10 @@ const jsonOpts=(method,data)=>({method,headers:{'Content-Type':'application/json
 async function checkLogin(){
   try{
     await api('/api/me');
-    showApp();
+    await showApp();
   }catch{
-    $('#loginGate').classList.remove('hidden');
-    $('#app').classList.add('hidden');
+    document.body.innerHTML='';
+    location.replace('https://qearlune.xyz');
   }
 }
 async function showApp(){

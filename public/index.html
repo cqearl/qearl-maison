@@ -563,7 +563,13 @@ document.querySelectorAll('[data-open]').forEach(e=>e.onclick=()=>openDoc(e.data
 document.getElementById('back').onclick=()=>{reader.classList.remove('open');if(tocPanel)tocPanel.classList.remove('open');document.body.style.overflow='';current=null}
 
 const login=document.getElementById('login'),admin=document.getElementById('admin');
-document.getElementById('owner').onclick=()=>ownerOn()?admin.showModal():login.showModal();
+document.getElementById('owner').onclick=async()=>{
+  try{
+    const r=await fetch(`${API_BASE}/api/me`,{credentials:'include'});
+    if(r.ok){ location.href='/admin/'; return; }
+  }catch(e){}
+  login.showModal();
+};
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.close).close());
 document.getElementById('loginbtn').onclick=()=>{if(document.getElementById('uid').value.trim()&&document.getElementById('pwd').value){sessionStorage.setItem(OWNER,'1');login.close();ownerUI();renderUsers();toast('owner mode opened')}else alert('请输入账号和密码')};
 function openAdmin(t='new'){if(!ownerOn()){login.showModal();return}document.getElementById('target').value=t;admin.showModal()}

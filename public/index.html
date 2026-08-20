@@ -566,7 +566,7 @@ const login=document.getElementById('login'),admin=document.getElementById('admi
 document.getElementById('owner').onclick=async()=>{
   try{
     const r=await fetch(`${API_BASE}/api/me`,{credentials:'include'});
-    if(r.ok){ location.href='/admin/'; return; }
+    if(r.ok){ location.href='/admin/index.html'; return; }
   }catch(e){}
   login.showModal();
 };
@@ -721,7 +721,7 @@ ownerUI();renderUsers();
     const password=document.getElementById('pwd').value;
     try{
       await api('/api/login',{method:'POST',body:JSON.stringify({username,password})});
-      cloudOwner=true; document.getElementById('login').close(); ownerUI(); await refreshState(); toast('owner mode opened'); window.location.href='/admin/';
+      cloudOwner=true; document.getElementById('login').close(); ownerUI(); await refreshState(); toast('owner mode opened'); window.location.href='/admin/index.html';
       document.getElementById('pwd').value='';
     }catch(e){ alert('账号或密码不正确'); }
   };

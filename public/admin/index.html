@@ -6,154 +6,183 @@
 <title>Qearl Maison · Admin</title>
 <style>
 :root{
-  --ink:#2e324d;--sub:#777c95;--deep:#24283d;--silver:#c7cbd7;
-  --line:rgba(86,92,121,.15);--white:rgba(255,255,255,.72);
-  --glass:rgba(255,255,255,.34);--glass2:rgba(255,255,255,.52);
-  --shadow:0 22px 64px rgba(48,53,82,.08);
+  --ink:#30354f; --ink2:#555b73; --muted:#8b90a5; --line:rgba(90,96,125,.13);
+  --glass:rgba(255,255,255,.42); --glass-strong:rgba(255,255,255,.62);
+  --deep:rgba(68,73,101,.90); --danger:#9b6671;
+  --shadow:0 22px 66px rgba(44,49,76,.08);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;min-height:100vh;color:var(--ink);
+  margin:0; min-height:100vh; color:var(--ink);
   font-family:"Songti SC","STSong","PingFang SC",serif;
   background:
-    radial-gradient(circle at 15% 5%,rgba(255,255,255,.99),transparent 27%),
-    radial-gradient(circle at 83% 12%,rgba(182,187,205,.28),transparent 31%),
-    radial-gradient(circle at 19% 77%,rgba(196,204,220,.33),transparent 29%),
-    radial-gradient(circle at 82% 78%,rgba(182,173,202,.17),transparent 29%),
-    linear-gradient(145deg,#fbfbfc,#eceef2 50%,#f7f6f8);
+    radial-gradient(circle at 14% 3%,rgba(255,255,255,.99),transparent 28%),
+    radial-gradient(circle at 84% 8%,rgba(183,188,207,.31),transparent 31%),
+    radial-gradient(circle at 18% 78%,rgba(201,207,221,.31),transparent 29%),
+    radial-gradient(circle at 84% 82%,rgba(189,180,207,.17),transparent 30%),
+    linear-gradient(145deg,#fbfbfc,#eceef3 50%,#f7f6f8);
   overflow-x:hidden
 }
-body:after{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.055;
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.045;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E")
 }
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer}
+button:disabled{opacity:.38;cursor:not-allowed;transform:none!important}
 .hidden{display:none!important}
 .shell{width:min(1240px,calc(100% - 28px));margin:auto;padding:112px 0 72px}
+.glass{
+  border:1px solid rgba(255,255,255,.75);
+  background:
+    radial-gradient(circle at 13% 10%,rgba(255,255,255,.76),transparent 31%),
+    linear-gradient(145deg,rgba(255,255,255,.40),rgba(217,221,232,.13));
+  backdrop-filter:blur(25px) saturate(1.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96),var(--shadow);
+}
 .topbar{
-  position:fixed;top:18px;left:50%;transform:translateX(-50%);
-  width:min(1200px,calc(100% - 28px));z-index:50;
-  border:1px solid rgba(255,255,255,.72);border-radius:22px;
-  background:rgba(255,255,255,.30);backdrop-filter:blur(28px) saturate(1.15);
-  box-shadow:0 16px 50px rgba(48,53,82,.08),inset 0 1px 0 white
+  position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:50;
+  width:min(1200px,calc(100% - 28px));border-radius:23px;
 }
-.topin{height:58px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topin{height:58px;padding:0 14px 0 17px;display:flex;align-items:center;justify-content:space-between;gap:14px}
 .brand{font:500 12px Georgia,serif;letter-spacing:.18em;white-space:nowrap}
-.meta{font:italic 10px Georgia,serif;color:#8d91a3;letter-spacing:.13em}
-.toolbar{display:flex;gap:8px;align-items:center}
-.btn{
-  border:1px solid rgba(255,255,255,.82);background:rgba(255,255,255,.42);
-  border-radius:16px;padding:9px 13px;color:#62677e;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
-  transition:.2s
+.meta{font:italic 10px Georgia,serif;color:#8d92a5;letter-spacing:.13em}
+.toolbar,.actionGroup{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.btn,.iconBtn{
+  border:1px solid rgba(255,255,255,.84);background:rgba(255,255,255,.43);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92);
+  color:#666b81;transition:.18s ease
 }
-.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.62)}
-.btn.primary{background:rgba(79,83,112,.88);color:white;border-color:rgba(255,255,255,.35)}
-.btn.danger{color:#8f5b66}
-.hero{padding:36px 4px 42px;border-bottom:1px solid rgba(91,96,122,.14);margin-bottom:30px}
-.eyebrow{font:italic 11px Georgia,serif;letter-spacing:.17em;color:#8a8e9f;margin-bottom:11px}
+.btn:hover,.iconBtn:hover{background:rgba(255,255,255,.65);transform:translateY(-1px)}
+.btn{border-radius:15px;padding:9px 13px}
+.btn.primary{background:var(--deep);border-color:rgba(255,255,255,.32);color:white}
+.btn.danger,.textDanger{color:var(--danger)}
+.iconBtn{min-width:35px;height:35px;padding:0 10px;border-radius:12px;display:inline-grid;place-items:center}
+.hero{padding:34px 4px 42px;border-bottom:1px solid var(--line);margin-bottom:30px}
+.eyebrow{font:italic 10px Georgia,serif;letter-spacing:.17em;color:#858a9f;margin-bottom:10px}
 .hero h1{
   font:italic 400 clamp(54px,7vw,86px)/.88 "Snell Roundhand","Apple Chancery","URW Chancery L","Brush Script MT",cursive;
-  letter-spacing:-.035em;margin:0;color:#30344c
+  letter-spacing:-.035em;margin:0;color:#30354e
 }
-.hero p{font-size:12px;line-height:2;color:#73788e;max-width:680px;margin:20px 0 0}
-.layout{display:grid;grid-template-columns:280px 1fr;gap:18px}
-.glass{
-  border:1px solid rgba(255,255,255,.72);
-  background:
-    radial-gradient(circle at 15% 12%,rgba(255,255,255,.72),transparent 30%),
-    linear-gradient(145deg,rgba(255,255,255,.38),rgba(218,222,232,.13));
-  backdrop-filter:blur(24px) saturate(1.12);
-  box-shadow:inset 0 1px 0 white,0 19px 52px rgba(48,53,82,.07);
-  border-radius:26px
-}
-.sidebar{padding:18px;position:sticky;top:92px;height:max-content}
-.sidebar h3{font:italic 26px "Snell Roundhand","Apple Chancery",cursive;margin:3px 0 15px}
-.pageList{display:grid;gap:8px}
+.hero p{font-size:12px;line-height:2;color:#74798e;max-width:720px;margin:20px 0 0}
+.layout{display:grid;grid-template-columns:286px minmax(0,1fr);gap:18px}
+.sidebar{padding:19px;position:sticky;top:92px;height:max-content;border-radius:26px}
+.sideKicker{font:italic 9px Georgia,serif;letter-spacing:.18em;color:#969aad}
+.sideTitle{font:italic 29px/1 "Snell Roundhand","Apple Chancery",cursive;margin:6px 0 4px}
+.sideDesc{font-size:11px;color:#9498aa;line-height:1.65;margin-bottom:17px}
+.pageList{display:grid;gap:7px}
 .pageBtn{
   width:100%;text-align:left;border:1px solid transparent;background:transparent;
-  padding:12px;border-radius:16px;color:#6f748a
+  padding:12px 13px;border-radius:15px;color:#6c7187;transition:.16s
 }
-.pageBtn.active{background:rgba(255,255,255,.58);border-color:rgba(255,255,255,.8);color:#3d4259}
-.pageBtn small{display:block;margin-top:4px;color:#9a9dac;font:italic 10px Georgia,serif}
+.pageBtn:hover{background:rgba(255,255,255,.32)}
+.pageBtn.active{background:rgba(255,255,255,.61);border-color:rgba(255,255,255,.82);color:#3d425b}
+.pageBtn small{display:block;margin-top:4px;color:#9a9eae;font:italic 9px Georgia,serif}
+.sideCreate{
+  width:100%;margin-top:13px;padding:11px 12px;border-radius:15px;border:1px dashed rgba(102,108,138,.20);
+  background:rgba(255,255,255,.22);color:#73788e
+}
 .main{min-width:0}
-.panel{padding:22px;margin-bottom:18px}
-.panelHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-.panelHead h2{font:italic 34px "Snell Roundhand","Apple Chancery",cursive;margin:0;color:#3e435b}
-.panelHead .sub{font:italic 10px Georgia,serif;color:#9296a6;letter-spacing:.12em}
-.empty{text-align:center;padding:60px 20px;color:#9296a6}
-.empty .script{font:italic 38px "Snell Roundhand","Apple Chancery",cursive;margin-bottom:10px}
-.sectionCard{padding:18px;margin:12px 0;border-radius:22px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.30)}
-.sectionTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.sectionTitle{font:400 20px Georgia,"Songti SC",serif;margin:0;color:#3d435d}
-.sectionMeta{font:italic 10px Georgia,serif;color:#969aac;margin-top:6px}
-.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.iconBtn{border:1px solid rgba(255,255,255,.78);background:rgba(255,255,255,.48);border-radius:13px;padding:7px 10px;color:#71768b}
+.panel{padding:22px;margin-bottom:18px;border-radius:26px}
+.panelHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+.panelHead h2{font:italic 36px/1 "Snell Roundhand","Apple Chancery",cursive;margin:3px 0 0;color:#3d425a}
+.panelSub{font-size:12px;line-height:1.8;color:#858a9c}
+.segment{
+  display:inline-flex;gap:3px;padding:4px;border-radius:15px;
+  border:1px solid rgba(255,255,255,.62);background:rgba(255,255,255,.23)
+}
+.segment .iconBtn{border:0;background:transparent;box-shadow:none}
+.segment .iconBtn:hover{background:rgba(255,255,255,.54)}
+.empty{padding:58px 24px;text-align:center;color:#9095a8}
+.emptyInner{max-width:460px;margin:auto}
+.emptyScript{font:italic 40px/1.05 "Snell Roundhand","Apple Chancery",cursive;color:#777d96;margin-bottom:12px}
+.emptyText{font-size:12px;line-height:1.9;color:#969aac}
+.emptyAction{
+  margin:22px auto 0;display:inline-flex;align-items:center;gap:8px;padding:11px 17px;
+  border-radius:16px;border:1px solid rgba(255,255,255,.82);background:rgba(255,255,255,.42);
+  box-shadow:inset 0 1px 0 white;color:#666c84
+}
+.sectionCard{padding:18px;margin:12px 0;border-radius:23px}
+.sectionTop{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.sectionTitle{font:400 19px Georgia,"Songti SC",serif;margin:0;color:#3e435c}
+.sectionMeta{font:italic 9px/1.7 Georgia,serif;color:#979bae;margin-top:6px}
 .items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
-.item{padding:14px;border:1px solid rgba(255,255,255,.62);background:rgba(255,255,255,.27);border-radius:18px;min-width:0}
-.item h4{font:400 16px Georgia,"Songti SC",serif;margin:0 0 6px;color:#474c64}
-.item p{margin:0;color:#85899b;font-size:12px;line-height:1.65;white-space:pre-wrap;max-height:72px;overflow:hidden}
+.item{
+  padding:14px;border:1px solid rgba(255,255,255,.66);background:rgba(255,255,255,.26);
+  border-radius:18px;min-width:0
+}
+.item h4{font:400 16px Georgia,"Songti SC",serif;margin:0 0 6px;color:#464b64}
+.item p{margin:0;color:#858a9d;font-size:12px;line-height:1.65;white-space:pre-wrap;max-height:72px;overflow:hidden}
 .itemFoot{display:flex;justify-content:space-between;gap:8px;margin-top:12px;align-items:center}
-.badge{font:italic 9px Georgia,serif;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.46);color:#8a8ea1}
-.mediaRow{display:flex;gap:6px;overflow:auto;margin-top:10px;padding-bottom:2px}
-.thumb{position:relative;flex:0 0 72px;width:72px;height:72px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.82);background:#eef0f5}
+.badge{font:italic 9px Georgia,serif;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.48);color:#898da1}
+.mediaRow{display:flex;gap:7px;overflow:auto;margin-top:11px;padding-bottom:2px}
+.thumb{position:relative;flex:0 0 74px;width:74px;height:74px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.82);background:#eef0f5}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb button{position:absolute;right:3px;top:3px;border:0;border-radius:50%;width:22px;height:22px;background:rgba(34,37,52,.65);color:white;font-size:12px}
-.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.field{display:grid;gap:5px}
-.field.full{grid-column:1/-1}
-.field label{font-size:10px;color:#808598;letter-spacing:.04em}
-.field input,.field textarea,.field select{
-  width:100%;padding:11px 12px;border:1px solid rgba(255,255,255,.82);border-radius:14px;
-  background:rgba(255,255,255,.56);outline:none
-}
-.field textarea{min-height:108px;resize:vertical}
-.switchline{display:flex;align-items:center;gap:8px;font-size:12px;color:#777c91}
+.thumb button{position:absolute;right:4px;top:4px;border:0;border-radius:50%;width:22px;height:22px;background:rgba(38,42,59,.68);color:white}
 dialog{
-  width:min(680px,calc(100% - 28px));border:1px solid rgba(255,255,255,.72);border-radius:26px;
-  background:rgba(242,243,247,.88);backdrop-filter:blur(26px);padding:0;
-  box-shadow:0 30px 90px rgba(45,50,75,.20)
+  width:min(700px,calc(100% - 28px));border:1px solid rgba(255,255,255,.76);border-radius:27px;
+  background:rgba(241,243,248,.91);backdrop-filter:blur(28px) saturate(1.1);padding:0;
+  box-shadow:0 32px 92px rgba(44,49,76,.22);overflow:hidden
 }
-dialog::backdrop{background:rgba(40,44,67,.24);backdrop-filter:blur(10px)}
-.modal{padding:24px}
-.mh{display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:16px}
-.mh h3{font:italic 31px "Snell Roundhand","Apple Chancery",cursive;margin:0}
-.close{border:0;background:none;font-size:25px}
-.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;justify-content:flex-end}
-.loginGate{min-height:60vh;display:grid;place-items:center}
-.loginCard{width:min(520px,100%);padding:30px}
-.loginCard h2{font:italic 44px "Snell Roundhand","Apple Chancery",cursive;margin:0 0 8px}
-.loginCard p{font-size:12px;line-height:1.8;color:#85899c;margin:0 0 18px}
+dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
+.modal{padding:0}
+.modalHead{padding:23px 25px 17px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modalHead h3{font:italic 34px/1 "Snell Roundhand","Apple Chancery",cursive;margin:4px 0 0}
+.closeBtn{border:0;background:transparent;width:38px;height:38px;border-radius:50%;font-size:25px;line-height:1;color:#34384c}
+.closeBtn:hover{background:rgba(255,255,255,.46)}
+.modalBody{padding:0 25px 22px}
+.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:grid;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:9px;color:#808599;letter-spacing:.07em}
+.field input,.field textarea,.field select{
+  width:100%;padding:12px 13px;border:1px solid rgba(255,255,255,.86);border-radius:14px;
+  background:rgba(255,255,255,.57);outline:none;transition:.15s
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:rgba(102,108,139,.34);box-shadow:0 0 0 3px rgba(116,122,154,.07)
+}
+.field textarea{min-height:112px;resize:vertical}
+.hint{font-size:10px;color:#a0a4b3;line-height:1.55}
+.switchline{display:flex;align-items:center;gap:8px;font-size:12px;color:#74798f}
+.modalFooter{
+  border-top:1px solid rgba(91,96,124,.10);background:rgba(255,255,255,.20);
+  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px
+}
+.footerNote{font-size:10px;line-height:1.6;color:#989cad}
+.footerActions{display:flex;gap:8px;align-items:center}
+.inlineError{font-size:11px;color:#9b6671;margin-top:7px;display:none}
+.inlineError.show{display:block}
+.dangerZone{
+  margin-top:18px;padding-top:14px;border-top:1px dashed rgba(147,93,106,.19);
+  display:flex;justify-content:space-between;gap:12px;align-items:center
+}
+.dangerZone span{font-size:10px;color:#9b7c84}
 .toast{
-  position:fixed;right:18px;bottom:18px;z-index:110;background:#4e5268;color:#fff;
-  padding:10px 14px;border-radius:18px;opacity:0;transform:translateY(6px);transition:.2s
+  position:fixed;right:18px;bottom:18px;z-index:120;background:#4d5269;color:white;
+  padding:10px 14px;border-radius:17px;opacity:0;transform:translateY(7px);transition:.2s
 }
 .toast.show{opacity:1;transform:none}
-.statusDot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#9fa4b6;margin-right:5px}
-.statusDot.on{background:#77839c}
+.loadingScreen{min-height:55vh;display:grid;place-items:center;color:#8d92a6}
+.loadingScreen span{font:italic 25px "Snell Roundhand","Apple Chancery",cursive}
 @media(max-width:820px){
-  .meta{display:none}.shell{padding-top:98px}
-  .layout{grid-template-columns:1fr}
-  .sidebar{position:relative;top:auto}
-  .pageList{display:flex;overflow:auto;padding-bottom:2px}
-  .pageBtn{min-width:170px}
-  .items{grid-template-columns:1fr}
-  .formGrid{grid-template-columns:1fr}
-  .field.full{grid-column:auto}
-  .hero{padding-top:18px}
+  .meta{display:none}.shell{padding-top:98px}.layout{grid-template-columns:1fr}
+  .sidebar{position:relative;top:auto}.pageList{display:flex;overflow:auto;padding-bottom:2px}
+  .pageBtn{min-width:170px}.items{grid-template-columns:1fr}.formGrid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}.hero{padding-top:18px}.panelHead,.sectionTop{align-items:flex-start}
+  .modalFooter{align-items:flex-start;flex-direction:column}.footerActions{width:100%}.footerActions .btn{flex:1}
 }
 </style>
 </head>
 <body>
-<nav class="topbar">
+<nav class="topbar glass">
   <div class="topin">
     <span class="brand">QEARL MAISON · ADMIN</span>
     <div class="meta">PRIVATE ARCHIVE / LAYOUT DESK</div>
     <div class="toolbar">
-      <button class="btn" id="backSite">view site ↗</button>
-      <button class="btn hidden" id="logoutBtn">logout</button>
+      <button class="btn" id="backSite" type="button">view site ↗</button>
+      <button class="btn" id="logoutBtn" type="button">logout</button>
     </div>
   </div>
 </nav>
@@ -162,26 +191,18 @@ dialog::backdrop{background:rgba(40,44,67,.24);backdrop-filter:blur(10px)}
   <section class="hero">
     <div class="eyebrow">Qearl / private layout atelier</div>
     <h1>Maison desk</h1>
-    <p>页面、区块、卡片与图片都在这里整理。PC 与移动端布局可以分开设置，内容本身不再被写死在页面代码里。</p>
+    <p>在这里整理页面、区块、卡片与图片。桌面端和移动端布局可以分别设置；保存后由云端数据统一管理。</p>
   </section>
 
-  <section id="loginGate" class="loginGate hidden">
-    <div class="loginCard glass">
-      <h2>Private access ୨୧</h2>
-      <p>使用 Qearl Maison 的管理员账号登录。登录状态由安全 Cookie 保持。</p>
-      <div class="field"><label>OWNER ID</label><input id="loginUser" autocomplete="username" value="Qearl"></div>
-      <div class="field"><label>PASSWORD</label><input id="loginPass" type="password" autocomplete="current-password"></div>
-      <div class="acts"><button class="btn primary" id="loginBtn">enter owner mode</button></div>
-    </div>
-  </section>
+  <section id="loading" class="loadingScreen"><span>checking private access…</span></section>
 
   <section id="app" class="layout hidden">
     <aside class="sidebar glass">
-      <div class="panelHead">
-        <div><div class="sub">PAGES</div><h3>Archive map</h3></div>
-        <button class="iconBtn" id="newPageBtn">＋</button>
-      </div>
+      <div class="sideKicker">PAGES / STRUCTURE</div>
+      <div class="sideTitle">Archive index</div>
+      <div class="sideDesc">选择一个页面，再整理它的区块与内容。</div>
       <div id="pageList" class="pageList"></div>
+      <button class="sideCreate" id="newPageBtn" type="button">＋ new page</button>
     </aside>
 
     <div class="main">
@@ -192,56 +213,90 @@ dialog::backdrop{background:rgba(40,44,67,.24);backdrop-filter:blur(10px)}
 </main>
 
 <dialog id="pageDialog">
-  <form method="dialog" class="modal" id="pageForm">
-    <div class="mh"><div><div class="eyebrow">PAGE SETTINGS</div><h3 id="pageDialogTitle">New page</h3></div><button class="close" value="cancel">×</button></div>
-    <input type="hidden" id="pageId">
-    <div class="formGrid">
-      <div class="field"><label>TITLE</label><input id="pageTitle" required></div>
-      <div class="field"><label>SLUG</label><input id="pageSlug" placeholder="home"></div>
-      <div class="field full"><label>SUBTITLE</label><input id="pageSubtitle"></div>
-      <label class="switchline full"><input type="checkbox" id="pageVisible" checked> visible on site</label>
+  <div class="modal">
+    <div class="modalHead">
+      <div><div class="eyebrow">PAGE SETTINGS</div><h3 id="pageDialogTitle">New page</h3></div>
+      <button class="closeBtn" type="button" data-close="pageDialog" aria-label="关闭">×</button>
     </div>
-    <div class="acts"><button class="btn" value="cancel">cancel</button><button class="btn primary" type="button" id="savePageBtn">save page</button></div>
-  </form>
+    <div class="modalBody">
+      <input type="hidden" id="pageId">
+      <div class="formGrid">
+        <div class="field"><label>TITLE</label><input id="pageTitle" placeholder="例如：Home / Keyboard archive"></div>
+        <div class="field"><label>SLUG</label><input id="pageSlug" placeholder="home"><div class="hint">网址标识；留空时由系统自动生成。</div></div>
+        <div class="field full"><label>SUBTITLE</label><input id="pageSubtitle" placeholder="可留空"></div>
+        <label class="switchline full"><input type="checkbox" id="pageVisible" checked> visible on site</label>
+      </div>
+      <div id="pageError" class="inlineError"></div>
+      <div id="pageDanger" class="dangerZone hidden">
+        <span>删除页面会同时删除它下面的区块与内容。</span>
+        <button class="btn danger" id="deletePageBtn" type="button">delete page</button>
+      </div>
+    </div>
+    <div class="modalFooter">
+      <div class="footerNote">关闭或取消不会保存任何修改。</div>
+      <div class="footerActions">
+        <button class="btn" type="button" data-close="pageDialog">cancel</button>
+        <button class="btn primary" type="button" id="savePageBtn">save page</button>
+      </div>
+    </div>
+  </div>
 </dialog>
 
 <dialog id="sectionDialog">
-  <form method="dialog" class="modal">
-    <div class="mh"><div><div class="eyebrow">SECTION / LAYOUT</div><h3 id="sectionDialogTitle">New section</h3></div><button class="close" value="cancel">×</button></div>
-    <input type="hidden" id="sectionId">
-    <div class="formGrid">
-      <div class="field"><label>TITLE</label><input id="sectionTitle"></div>
-      <div class="field"><label>SUBTITLE</label><input id="sectionSubtitle"></div>
-      <div class="field"><label>DESKTOP TYPE</label><select id="desktopType"><option value="grid">grid</option><option value="list">list</option><option value="carousel">carousel</option></select></div>
-      <div class="field"><label>DESKTOP COLUMNS</label><select id="desktopColumns"><option>1</option><option>2</option><option selected>3</option><option>4</option></select></div>
-      <div class="field"><label>MOBILE TYPE</label><select id="mobileType"><option value="stack">stack</option><option value="grid">grid</option><option value="carousel" selected>carousel</option></select></div>
-      <div class="field"><label>MOBILE VISIBLE / COLUMNS</label><select id="mobileVisible"><option>1</option><option selected>2</option><option>3</option></select></div>
-      <label class="switchline full"><input type="checkbox" id="sectionVisible" checked> visible on site</label>
+  <div class="modal">
+    <div class="modalHead">
+      <div><div class="eyebrow">SECTION / LAYOUT</div><h3 id="sectionDialogTitle">New section</h3></div>
+      <button class="closeBtn" type="button" data-close="sectionDialog" aria-label="关闭">×</button>
     </div>
-    <div class="acts"><button class="btn" value="cancel">cancel</button><button class="btn primary" type="button" id="saveSectionBtn">save section</button></div>
-  </form>
+    <div class="modalBody">
+      <input type="hidden" id="sectionId">
+      <div class="formGrid">
+        <div class="field"><label>TITLE</label><input id="sectionTitle" placeholder="区块标题"></div>
+        <div class="field"><label>SUBTITLE</label><input id="sectionSubtitle" placeholder="可留空"></div>
+        <div class="field"><label>DESKTOP LAYOUT</label><select id="desktopType"><option value="grid">grid</option><option value="list">list</option><option value="carousel">carousel</option></select></div>
+        <div class="field"><label>DESKTOP COLUMNS</label><select id="desktopColumns"><option>1</option><option>2</option><option selected>3</option><option>4</option></select></div>
+        <div class="field"><label>MOBILE LAYOUT</label><select id="mobileType"><option value="stack">stack</option><option value="grid">grid</option><option value="carousel" selected>carousel</option></select></div>
+        <div class="field"><label>MOBILE VISIBLE / COLUMNS</label><select id="mobileVisible"><option>1</option><option selected>2</option><option>3</option></select></div>
+        <label class="switchline full"><input type="checkbox" id="sectionVisible" checked> visible on site</label>
+      </div>
+    </div>
+    <div class="modalFooter">
+      <div class="footerNote">布局只影响展示方式，不会删除内容。</div>
+      <div class="footerActions">
+        <button class="btn" type="button" data-close="sectionDialog">cancel</button>
+        <button class="btn primary" type="button" id="saveSectionBtn">save section</button>
+      </div>
+    </div>
+  </div>
 </dialog>
 
 <dialog id="itemDialog">
-  <form method="dialog" class="modal">
-    <div class="mh"><div><div class="eyebrow">CARD / CONTENT</div><h3 id="itemDialogTitle">New item</h3></div><button class="close" value="cancel">×</button></div>
-    <input type="hidden" id="itemId">
-    <input type="hidden" id="itemSectionId">
-    <div class="formGrid">
-      <div class="field"><label>TITLE</label><input id="itemTitle"></div>
-      <div class="field"><label>SUBTITLE</label><input id="itemSubtitle"></div>
-      <div class="field"><label>BADGE</label><input id="itemBadge" placeholder="NEW / TYPE BOOK / ..."></div>
-      <div class="field"><label>LINK</label><input id="itemHref" placeholder="/... or https://..."></div>
-      <div class="field full"><label>CONTENT</label><textarea id="itemContent"></textarea></div>
-      <label class="switchline full"><input type="checkbox" id="itemVisible" checked> visible on site</label>
-      <div class="field full">
-        <label>UPLOAD IMAGES</label>
-        <input id="itemImages" type="file" accept="image/*" multiple>
+  <div class="modal">
+    <div class="modalHead">
+      <div><div class="eyebrow">CARD / CONTENT</div><h3 id="itemDialogTitle">New item</h3></div>
+      <button class="closeBtn" type="button" data-close="itemDialog" aria-label="关闭">×</button>
+    </div>
+    <div class="modalBody">
+      <input type="hidden" id="itemId"><input type="hidden" id="itemSectionId">
+      <div class="formGrid">
+        <div class="field"><label>TITLE</label><input id="itemTitle" placeholder="内容标题"></div>
+        <div class="field"><label>SUBTITLE</label><input id="itemSubtitle" placeholder="可留空"></div>
+        <div class="field"><label>BADGE</label><input id="itemBadge" placeholder="NEW / TYPE BOOK / ..."></div>
+        <div class="field"><label>LINK</label><input id="itemHref" placeholder="/... 或 https://..."></div>
+        <div class="field full"><label>CONTENT</label><textarea id="itemContent" placeholder="正文内容"></textarea></div>
+        <label class="switchline full"><input type="checkbox" id="itemVisible" checked> visible on site</label>
+        <div class="field full"><label>UPLOAD IMAGES</label><input id="itemImages" type="file" accept="image/*" multiple><div class="hint">可一次选择多张；保存时上传到 Cloudinary。</div></div>
+      </div>
+      <div id="currentMedia" class="mediaRow"></div>
+    </div>
+    <div class="modalFooter">
+      <div class="footerNote">已有图片可单独移除；新图片会在保存时上传。</div>
+      <div class="footerActions">
+        <button class="btn" type="button" data-close="itemDialog">cancel</button>
+        <button class="btn primary" type="button" id="saveItemBtn">save item</button>
       </div>
     </div>
-    <div id="currentMedia" class="mediaRow"></div>
-    <div class="acts"><button class="btn" value="cancel">cancel</button><button class="btn primary" type="button" id="saveItemBtn">save item</button></div>
-  </form>
+  </div>
 </dialog>
 
 <div id="toast" class="toast"></div>
@@ -250,9 +305,8 @@ dialog::backdrop{background:rgba(40,44,67,.24);backdrop-filter:blur(10px)}
 const API='https://api.qearlune.xyz';
 let site={pages:[]};
 let currentPageId=null;
-
 const $=s=>document.querySelector(s);
-const toast=t=>{const x=$('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1600)};
+const toast=t=>{const x=$('#toast');x.textContent=t;x.classList.add('show');clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>x.classList.remove('show'),1600)};
 const api=async(path,opts={})=>{
   const r=await fetch(API+path,{credentials:'include',...opts});
   const j=await r.json().catch(()=>({}));
@@ -260,125 +314,142 @@ const api=async(path,opts={})=>{
   return j;
 };
 const jsonOpts=(method,data)=>({method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+const esc=(v='')=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const attr=esc;
+
+function closeDialog(id){const d=document.getElementById(id);if(d?.open)d.close()}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeDialog(b.dataset.close)));
+document.querySelectorAll('dialog').forEach(d=>{
+  d.addEventListener('click',e=>{if(e.target===d)d.close()});
+  d.addEventListener('cancel',e=>{e.preventDefault();d.close()});
+});
 
 async function checkLogin(){
   try{
     await api('/api/me');
-    await showApp();
+    $('#loading').classList.add('hidden');
+    $('#app').classList.remove('hidden');
+    await load();
   }catch{
-    document.body.innerHTML='';
     location.replace('https://qearlune.xyz');
   }
 }
-async function showApp(){
-  $('#loginGate').classList.add('hidden');
-  $('#app').classList.remove('hidden');
-  $('#logoutBtn').classList.remove('hidden');
-  await load();
-}
-$('#loginBtn').onclick=async()=>{
-  const btn=$('#loginBtn');
-  btn.disabled=true;btn.textContent='verifying…';
-  try{
-    await api('/api/login',jsonOpts('POST',{id:$('#loginUser').value.trim(),password:$('#loginPass').value}));
-    $('#loginPass').value='';
-    toast('welcome, Qearl ♡');
-    await showApp();
-  }catch(e){alert(e.message)}
-  finally{btn.disabled=false;btn.textContent='enter owner mode'}
-};
-$('#logoutBtn').onclick=async()=>{try{await api('/api/logout',{method:'POST'})}catch{} location.reload()};
+$('#logoutBtn').onclick=async()=>{try{await api('/api/logout',{method:'POST'})}catch{} location.replace('https://qearlune.xyz')};
 $('#backSite').onclick=()=>location.href='https://qearlune.xyz';
 
 async function load(){
   const j=await api('/api/admin/bootstrap');
   site=j.data||{pages:[]};
-  if(!currentPageId || !site.pages.some(p=>p.id===currentPageId)) currentPageId=site.pages[0]?.id||null;
+  if(!currentPageId||!site.pages.some(p=>p.id===currentPageId))currentPageId=site.pages[0]?.id||null;
   render();
 }
-function render(){
-  renderPages();
-  renderPage();
-  renderSections();
-}
 function currentPage(){return site.pages.find(p=>p.id===currentPageId)}
+function render(){renderPages();renderPage();renderSections()}
+
 function renderPages(){
   const box=$('#pageList');box.innerHTML='';
-  if(!site.pages.length){
-    box.innerHTML='<div class="empty" style="padding:18px 4px">No pages yet.</div>';
-    return;
-  }
+  if(!site.pages.length){box.innerHTML='<div class="emptyText" style="padding:10px 5px 2px">No pages yet.</div>';return}
   site.pages.forEach(p=>{
     const b=document.createElement('button');
-    b.className='pageBtn'+(p.id===currentPageId?' active':'');
-    b.innerHTML=`${esc(p.title)}<small>${esc(p.slug)} · ${p.is_visible?'visible':'hidden'}</small>`;
+    b.type='button';b.className='pageBtn'+(p.id===currentPageId?' active':'');
+    b.innerHTML=`${esc(p.title||'Untitled page')}<small>${esc(p.slug||'—')} · ${p.is_visible?'visible':'hidden'}</small>`;
     b.onclick=()=>{currentPageId=p.id;render()};
     box.appendChild(b);
   });
 }
+
 function renderPage(){
-  const p=currentPage(), box=$('#pagePanel');
+  const p=currentPage(),box=$('#pagePanel');
   if(!p){
-    box.innerHTML=`<div class="empty"><div class="script">An empty archive.</div><div>先创建一个页面，例如 home。</div><p><button class="btn primary" onclick="openPage()">create page</button></p></div>`;
+    box.innerHTML=`<div class="empty"><div class="emptyInner">
+      <div class="emptyScript">An empty archive.</div>
+      <div class="emptyText">这里还没有页面。先建立第一张页面骨架，再往里面放区块与内容。</div>
+      <button class="emptyAction" type="button" id="firstPageBtn">＋ create first page</button>
+    </div></div>`;
+    $('#firstPageBtn').onclick=()=>openPage();
     return;
   }
+  const idx=site.pages.findIndex(x=>x.id===p.id);
   box.innerHTML=`
     <div class="panelHead">
-      <div><div class="sub">PAGE / ${esc(p.slug)}</div><h2>${esc(p.title)}</h2></div>
-      <div class="actions">
-        <button class="iconBtn" onclick="movePage(-1)">↑</button>
-        <button class="iconBtn" onclick="movePage(1)">↓</button>
-        <button class="iconBtn" onclick="openPage('${p.id}')">edit</button>
-        <button class="iconBtn" onclick="openSection()">＋ section</button>
+      <div><div class="eyebrow">PAGE / ${esc(p.slug||'—')}</div><h2>${esc(p.title||'Untitled page')}</h2></div>
+      <div class="segment">
+        <button class="iconBtn" id="pageUp" type="button" title="上移">↑</button>
+        <button class="iconBtn" id="pageDown" type="button" title="下移">↓</button>
+        <button class="iconBtn" id="editPage" type="button">edit</button>
+        <button class="iconBtn" id="newSection" type="button">＋ section</button>
       </div>
     </div>
-    <div style="font-size:12px;color:#85899b;line-height:1.8">${esc(p.subtitle||'')}</div>`;
+    <div class="panelSub">${esc(p.subtitle||'没有副标题。')}</div>`;
+  $('#pageUp').disabled=idx<=0;$('#pageDown').disabled=idx>=site.pages.length-1;
+  $('#pageUp').onclick=()=>movePage(-1);$('#pageDown').onclick=()=>movePage(1);
+  $('#editPage').onclick=()=>openPage(p.id);$('#newSection').onclick=()=>openSection();
 }
+
 function renderSections(){
-  const p=currentPage(), box=$('#sectionsPanel');box.innerHTML='';
-  if(!p) return;
+  const p=currentPage(),box=$('#sectionsPanel');box.innerHTML='';
+  if(!p)return;
   if(!p.sections?.length){
-    box.innerHTML='<div class="panel glass empty"><div class="script">No sections yet.</div><div>建立第一个区块，然后选择 PC / 手机布局。</div></div>';
+    box.innerHTML=`<div class="panel glass empty"><div class="emptyInner">
+      <div class="emptyScript">No sections yet.</div>
+      <div class="emptyText">页面已经建立。下一步添加一个区块，再选择它在电脑与手机上的布局。</div>
+      <button class="emptyAction" type="button" id="firstSectionBtn">＋ create first section</button>
+    </div></div>`;
+    $('#firstSectionBtn').onclick=()=>openSection();
     return;
   }
   p.sections.forEach((s,si)=>{
     const el=document.createElement('section');el.className='sectionCard glass';
-    const dl=s.layout?.desktop||{}, ml=s.layout?.mobile||{};
+    const dl=s.layout?.desktop||{},ml=s.layout?.mobile||{};
+    const items=s.items||[];
     el.innerHTML=`
       <div class="sectionTop">
         <div>
-          <h3 class="sectionTitle">${esc(s.title)}</h3>
-          <div class="sectionMeta">${esc(s.subtitle||'')} · desktop ${esc(dl.type||'grid')}/${dl.columns||'-'} · mobile ${esc(ml.type||'stack')}/${ml.visible||ml.columns||'-'} · ${s.is_visible?'visible':'hidden'}</div>
+          <h3 class="sectionTitle">${esc(s.title||'Untitled section')}</h3>
+          <div class="sectionMeta">${esc(s.subtitle||'')} ${s.subtitle?'· ':''}desktop ${esc(dl.type||'grid')}/${dl.columns||'-'} · mobile ${esc(ml.type||'stack')}/${ml.visible||ml.columns||'-'} · ${s.is_visible?'visible':'hidden'}</div>
         </div>
-        <div class="actions">
-          <button class="iconBtn" onclick="moveSection('${s.id}',-1)">↑</button>
-          <button class="iconBtn" onclick="moveSection('${s.id}',1)">↓</button>
-          <button class="iconBtn" onclick="openSection('${s.id}')">layout</button>
-          <button class="iconBtn" onclick="openItem('${s.id}')">＋ item</button>
-          <button class="iconBtn" onclick="removeSection('${s.id}')">delete</button>
+        <div class="segment">
+          <button class="iconBtn sUp" type="button" title="上移">↑</button>
+          <button class="iconBtn sDown" type="button" title="下移">↓</button>
+          <button class="iconBtn sEdit" type="button">layout</button>
+          <button class="iconBtn sAdd" type="button">＋ item</button>
+          <button class="iconBtn sDelete textDanger" type="button">delete</button>
         </div>
       </div>
-      <div class="items" id="items-${s.id}"></div>`;
+      <div class="items"></div>`;
+    const [up,down,edit,add,del]=[...el.querySelectorAll('.segment button')];
+    up.disabled=si===0;down.disabled=si===p.sections.length-1;
+    up.onclick=()=>moveSection(s.id,-1);down.onclick=()=>moveSection(s.id,1);
+    edit.onclick=()=>openSection(s.id);add.onclick=()=>openItem(s.id);del.onclick=()=>removeSection(s.id);
+    const ib=el.querySelector('.items');
+    items.forEach((it,ii)=>ib.appendChild(itemNode(s,it,ii)));
+    if(!items.length){
+      ib.innerHTML='<div class="emptyText" style="grid-column:1/-1;padding:14px 4px">这个区块还没有内容。点击 “＋ item” 添加。</div>';
+    }
     box.appendChild(el);
-    const ib=el.querySelector(`#items-${CSS.escape(s.id)}`);
-    (s.items||[]).forEach((it,ii)=>ib.appendChild(itemNode(s,it,ii)));
   });
 }
+
 function itemNode(section,it,index){
   const d=document.createElement('article');d.className='item';
+  const arr=section.items||[];
   d.innerHTML=`
-    <h4>${esc(it.title)}</h4>
-    <p>${esc(it.subtitle||it.content_text||'')}</p>
+    <h4>${esc(it.title||'Untitled item')}</h4>
+    <p>${esc(it.subtitle||it.content_text||'暂无正文')}</p>
     ${(it.media||[]).length?`<div class="mediaRow">${it.media.map(m=>`<div class="thumb"><img src="${attr(m.url)}" alt=""></div>`).join('')}</div>`:''}
     <div class="itemFoot">
-      <span class="badge">${esc(it.badge|| (it.is_visible?'VISIBLE':'HIDDEN'))}</span>
-      <div class="actions">
-        <button class="iconBtn" onclick="moveItem('${section.id}','${it.id}',-1)">↑</button>
-        <button class="iconBtn" onclick="moveItem('${section.id}','${it.id}',1)">↓</button>
-        <button class="iconBtn" onclick="openItem('${section.id}','${it.id}')">edit</button>
-        <button class="iconBtn" onclick="removeItem('${it.id}')">×</button>
+      <span class="badge">${esc(it.badge||(it.is_visible?'VISIBLE':'HIDDEN'))}</span>
+      <div class="segment">
+        <button class="iconBtn iUp" type="button">↑</button>
+        <button class="iconBtn iDown" type="button">↓</button>
+        <button class="iconBtn iEdit" type="button">edit</button>
+        <button class="iconBtn iDelete textDanger" type="button">×</button>
       </div>
     </div>`;
+  const [up,down,edit,del]=[...d.querySelectorAll('.segment button')];
+  up.disabled=index===0;down.disabled=index===arr.length-1;
+  up.onclick=()=>moveItem(section.id,it.id,-1);down.onclick=()=>moveItem(section.id,it.id,1);
+  edit.onclick=()=>openItem(section.id,it.id);del.onclick=()=>removeItem(it.id);
   return d;
 }
 
@@ -391,123 +462,105 @@ function openPage(id=''){
   $('#pageSubtitle').value=p?.subtitle||'';
   $('#pageVisible').checked=p?!!p.is_visible:true;
   $('#pageDialogTitle').textContent=p?'Edit page':'New page';
+  $('#pageError').classList.remove('show');$('#pageError').textContent='';
+  $('#pageDanger').classList.toggle('hidden',!p);
   $('#pageDialog').showModal();
+  setTimeout(()=>$('#pageTitle').focus(),50);
 }
 $('#savePageBtn').onclick=async()=>{
-  const id=$('#pageId').value;
-  const data={title:$('#pageTitle').value.trim(),slug:$('#pageSlug').value.trim(),subtitle:$('#pageSubtitle').value.trim(),isVisible:$('#pageVisible').checked};
-  if(!data.title)return alert('先写页面标题哦');
+  const btn=$('#savePageBtn'),id=$('#pageId').value;
+  const title=$('#pageTitle').value.trim()||'Untitled page';
+  const data={title,slug:$('#pageSlug').value.trim(),subtitle:$('#pageSubtitle').value.trim(),isVisible:$('#pageVisible').checked};
+  btn.disabled=true;btn.textContent='saving…';
   try{
-    if(id) await api('/api/admin/pages/'+encodeURIComponent(id),jsonOpts('PATCH',data));
-    else {const j=await api('/api/admin/pages',jsonOpts('POST',data));currentPageId=j.id}
-    $('#pageDialog').close();toast('page saved');await load();
-  }catch(e){alert(e.message)}
+    if(id)await api('/api/admin/pages/'+encodeURIComponent(id),jsonOpts('PATCH',data));
+    else{const j=await api('/api/admin/pages',jsonOpts('POST',data));currentPageId=j.id}
+    closeDialog('pageDialog');toast('page saved');await load();
+  }catch(e){$('#pageError').textContent=e.message;$('#pageError').classList.add('show')}
+  finally{btn.disabled=false;btn.textContent='save page'}
+};
+$('#deletePageBtn').onclick=async()=>{
+  const id=$('#pageId').value;if(!id)return;
+  if(!confirm('确定删除这个页面以及它下面的所有区块和内容吗？'))return;
+  try{await api('/api/admin/pages/'+encodeURIComponent(id),{method:'DELETE'});currentPageId=null;closeDialog('pageDialog');toast('page deleted');await load()}catch(e){alert(e.message)}
 };
 
 function openSection(id=''){
-  const p=currentPage(); if(!p)return;
-  const s=(p.sections||[]).find(x=>x.id===id);
-  const d=s?.layout?.desktop||{}, m=s?.layout?.mobile||{};
-  $('#sectionId').value=s?.id||'';
-  $('#sectionTitle').value=s?.title||'';
-  $('#sectionSubtitle').value=s?.subtitle||'';
-  $('#desktopType').value=d.type||'grid';
-  $('#desktopColumns').value=String(d.columns||3);
-  $('#mobileType').value=m.type||'carousel';
-  $('#mobileVisible').value=String(m.visible||m.columns||2);
-  $('#sectionVisible').checked=s?!!s.is_visible:true;
-  $('#sectionDialogTitle').textContent=s?'Edit section':'New section';
-  $('#sectionDialog').showModal();
+  const p=currentPage();if(!p)return;
+  const s=(p.sections||[]).find(x=>x.id===id),d=s?.layout?.desktop||{},m=s?.layout?.mobile||{};
+  $('#sectionId').value=s?.id||'';$('#sectionTitle').value=s?.title||'';$('#sectionSubtitle').value=s?.subtitle||'';
+  $('#desktopType').value=d.type||'grid';$('#desktopColumns').value=String(d.columns||3);
+  $('#mobileType').value=m.type||'carousel';$('#mobileVisible').value=String(m.visible||m.columns||2);
+  $('#sectionVisible').checked=s?!!s.is_visible:true;$('#sectionDialogTitle').textContent=s?'Edit section':'New section';
+  $('#sectionDialog').showModal();setTimeout(()=>$('#sectionTitle').focus(),50);
 }
 $('#saveSectionBtn').onclick=async()=>{
-  const p=currentPage(),id=$('#sectionId').value;
+  const btn=$('#saveSectionBtn'),p=currentPage(),id=$('#sectionId').value;
   const data={
-    title:$('#sectionTitle').value.trim()||'New Section',
-    subtitle:$('#sectionSubtitle').value.trim(),
+    title:$('#sectionTitle').value.trim()||'Untitled section',subtitle:$('#sectionSubtitle').value.trim(),
     isVisible:$('#sectionVisible').checked,
-    layout:{
-      desktop:{type:$('#desktopType').value,columns:Number($('#desktopColumns').value)},
-      mobile:{type:$('#mobileType').value,visible:Number($('#mobileVisible').value)}
-    }
+    layout:{desktop:{type:$('#desktopType').value,columns:Number($('#desktopColumns').value)},mobile:{type:$('#mobileType').value,visible:Number($('#mobileVisible').value)}}
   };
   if(!id)data.pageId=p.id;
+  btn.disabled=true;btn.textContent='saving…';
   try{
     if(id)await api('/api/admin/sections/'+encodeURIComponent(id),jsonOpts('PATCH',data));
     else await api('/api/admin/sections',jsonOpts('POST',data));
-    $('#sectionDialog').close();toast('section saved');await load();
+    closeDialog('sectionDialog');toast('section saved');await load();
   }catch(e){alert(e.message)}
+  finally{btn.disabled=false;btn.textContent='save section'}
 };
 
-function findItem(sectionId,itemId){
-  return currentPage()?.sections?.find(s=>s.id===sectionId)?.items?.find(i=>i.id===itemId)
-}
+function findItem(sectionId,itemId){return currentPage()?.sections?.find(s=>s.id===sectionId)?.items?.find(i=>i.id===itemId)}
 function openItem(sectionId,itemId=''){
   const it=findItem(sectionId,itemId);
-  $('#itemId').value=it?.id||'';
-  $('#itemSectionId').value=sectionId;
-  $('#itemTitle').value=it?.title||'';
-  $('#itemSubtitle').value=it?.subtitle||'';
-  $('#itemBadge').value=it?.badge||'';
-  $('#itemHref').value=it?.href||'';
-  $('#itemContent').value=it?.content_text||'';
-  $('#itemVisible').checked=it?!!it.is_visible:true;
-  $('#itemImages').value='';
-  $('#itemDialogTitle').textContent=it?'Edit item':'New item';
-  renderCurrentMedia(it);
-  $('#itemDialog').showModal();
+  $('#itemId').value=it?.id||'';$('#itemSectionId').value=sectionId;$('#itemTitle').value=it?.title||'';
+  $('#itemSubtitle').value=it?.subtitle||'';$('#itemBadge').value=it?.badge||'';$('#itemHref').value=it?.href||'';
+  $('#itemContent').value=it?.content_text||'';$('#itemVisible').checked=it?!!it.is_visible:true;$('#itemImages').value='';
+  $('#itemDialogTitle').textContent=it?'Edit item':'New item';renderCurrentMedia(it);$('#itemDialog').showModal();
+  setTimeout(()=>$('#itemTitle').focus(),50);
 }
 function renderCurrentMedia(it){
   const box=$('#currentMedia');box.innerHTML='';
   (it?.media||[]).forEach(m=>{
     const d=document.createElement('div');d.className='thumb';
     d.innerHTML=`<img src="${attr(m.url)}" alt=""><button type="button">×</button>`;
-    d.querySelector('button').onclick=async()=>{if(!confirm('删除这张图片记录？'))return;try{await api('/api/admin/media/'+encodeURIComponent(m.id),{method:'DELETE'});toast('image removed');await load();openItem($('#itemSectionId').value,$('#itemId').value)}catch(e){alert(e.message)}};
+    d.querySelector('button').onclick=async()=>{
+      if(!confirm('删除这张图片记录？'))return;
+      try{await api('/api/admin/media/'+encodeURIComponent(m.id),{method:'DELETE'});toast('image removed');closeDialog('itemDialog');await load();openItem($('#itemSectionId').value,$('#itemId').value)}catch(e){alert(e.message)}
+    };
     box.appendChild(d);
   });
 }
 $('#saveItemBtn').onclick=async()=>{
-  const id=$('#itemId').value, sectionId=$('#itemSectionId').value;
-  const data={sectionId,title:$('#itemTitle').value.trim()||'New Item',subtitle:$('#itemSubtitle').value.trim(),badge:$('#itemBadge').value.trim(),href:$('#itemHref').value.trim(),content:$('#itemContent').value,isVisible:$('#itemVisible').checked};
-  const btn=$('#saveItemBtn');btn.disabled=true;btn.textContent='saving…';
+  const btn=$('#saveItemBtn'),id=$('#itemId').value,sectionId=$('#itemSectionId').value;
+  const data={sectionId,title:$('#itemTitle').value.trim()||'Untitled item',subtitle:$('#itemSubtitle').value.trim(),badge:$('#itemBadge').value.trim(),href:$('#itemHref').value.trim(),content:$('#itemContent').value,isVisible:$('#itemVisible').checked};
+  btn.disabled=true;btn.textContent='saving…';
   try{
     let itemId=id;
-    if(id) await api('/api/admin/items/'+encodeURIComponent(id),jsonOpts('PATCH',data));
-    else {const j=await api('/api/admin/items',jsonOpts('POST',data));itemId=j.id}
-    const fs=[...$('#itemImages').files];
-    for(const f of fs) await uploadImage(itemId,f);
-    $('#itemDialog').close();toast('item saved');await load();
+    if(id)await api('/api/admin/items/'+encodeURIComponent(id),jsonOpts('PATCH',data));
+    else{const j=await api('/api/admin/items',jsonOpts('POST',data));itemId=j.id}
+    for(const f of [...$('#itemImages').files])await uploadImage(itemId,f);
+    closeDialog('itemDialog');toast('item saved');await load();
   }catch(e){alert(e.message)}
   finally{btn.disabled=false;btn.textContent='save item'}
 };
-
 async function uploadImage(itemId,file){
-  const sig=await api('/api/admin/upload-signature',{method:'POST'});
-  const fd=new FormData();
-  fd.append('file',file);
-  fd.append('api_key',sig.apiKey);
-  fd.append('timestamp',sig.timestamp);
-  fd.append('signature',sig.signature);
-  fd.append('folder',sig.folder);
-  fd.append('upload_preset',sig.uploadPreset);
-  const r=await fetch(sig.uploadUrl,{method:'POST',body:fd});
-  const j=await r.json();
+  const sig=await api('/api/admin/upload-signature',{method:'POST'}),fd=new FormData();
+  fd.append('file',file);fd.append('api_key',sig.apiKey);fd.append('timestamp',sig.timestamp);fd.append('signature',sig.signature);fd.append('folder',sig.folder);fd.append('upload_preset',sig.uploadPreset);
+  const r=await fetch(sig.uploadUrl,{method:'POST',body:fd}),j=await r.json();
   if(!r.ok)throw new Error(j.error?.message||'图片上传失败');
-  await api('/api/admin/media',jsonOpts('POST',{
-    itemId,url:j.secure_url,publicId:j.public_id,width:j.width,height:j.height,mediaType:'image',alt:file.name
-  }));
+  await api('/api/admin/media',jsonOpts('POST',{itemId,url:j.secure_url,publicId:j.public_id,width:j.width,height:j.height,mediaType:'image',alt:file.name}));
 }
 
-async function removeSection(id){if(!confirm('删除这个区块以及其内容？'))return;try{await api('/api/admin/sections/'+encodeURIComponent(id),{method:'DELETE'});toast('section deleted');await load()}catch(e){alert(e.message)}}
+async function removeSection(id){if(!confirm('删除这个区块以及其中的内容？'))return;try{await api('/api/admin/sections/'+encodeURIComponent(id),{method:'DELETE'});toast('section deleted');await load()}catch(e){alert(e.message)}}
 async function removeItem(id){if(!confirm('删除这条内容？'))return;try{await api('/api/admin/items/'+encodeURIComponent(id),{method:'DELETE'});toast('item deleted');await load()}catch(e){alert(e.message)}}
-
 async function reorder(entity,ids){await api('/api/admin/reorder',jsonOpts('POST',{entity,ids}));await load()}
 function swap(arr,i,j){if(j<0||j>=arr.length)return null;const ids=arr.map(x=>x.id);[ids[i],ids[j]]=[ids[j],ids[i]];return ids}
 async function movePage(delta){const i=site.pages.findIndex(x=>x.id===currentPageId),ids=swap(site.pages,i,i+delta);if(ids)await reorder('pages',ids)}
-async function moveSection(id,delta){const a=currentPage().sections||[],i=a.findIndex(x=>x.id===id),ids=swap(a,i,i+delta);if(ids)await reorder('sections',ids)}
-async function moveItem(sectionId,id,delta){const a=currentPage().sections.find(s=>s.id===sectionId).items||[],i=a.findIndex(x=>x.id===id),ids=swap(a,i,i+delta);if(ids)await reorder('items',ids)}
+async function moveSection(id,delta){const a=currentPage()?.sections||[],i=a.findIndex(x=>x.id===id),ids=swap(a,i,i+delta);if(ids)await reorder('sections',ids)}
+async function moveItem(sectionId,id,delta){const a=currentPage()?.sections?.find(s=>s.id===sectionId)?.items||[],i=a.findIndex(x=>x.id===id),ids=swap(a,i,i+delta);if(ids)await reorder('items',ids)}
 
-function esc(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function attr(v=''){return esc(v)}
 checkLogin();
 </script>
 </body>

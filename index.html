@@ -3102,7 +3102,7 @@ const login=document.getElementById('login'),admin=document.getElementById('admi
 document.getElementById('owner').onclick=async()=>{
   try{
     const r=await fetch(`${API_BASE}/api/me`,{credentials:'include'});
-    if(r.ok){ location.href='/admin/'; return; }
+    if(r.ok){ location.href='/admin/index.html'; return; }
   }catch(e){}
   login.showModal();
 };
@@ -3124,7 +3124,7 @@ document.getElementById('loginbtn').onclick=async()=>{
     if(!r.ok||!j.ok)throw new Error(j.message||j.error||'登录失败');
     ownerAuthenticated=true;
     document.getElementById('pwd').value='';
-    login.close();toast('welcome, Qearl ♡');location.href='/admin/';window.location.href='/admin/';
+    login.close();toast('welcome, Qearl ♡');location.href='/admin/index.html';
   }catch(e){alert(e.message||'登录失败')}
   finally{btn.disabled=false;btn.textContent='enter owner mode'}
 };

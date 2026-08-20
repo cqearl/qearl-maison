@@ -2909,7 +2909,18 @@ async function loadPublishedData(){
 
 const reader=document.getElementById('reader'),rt=document.getElementById('rt'),rk=document.getElementById('rk'),rb=document.getElementById('rb');
 
-function ownerOn(){return !!sessionStorage.getItem(OWNER)}
+let ownerAuthenticated=false;
+function ownerOn(){return ownerAuthenticated}
+async function refreshOwnerSession(){
+  try{
+    const r=await fetch(`${API_BASE}/api/me`,{credentials:'include',cache:'no-store'});
+    const j=await r.json().catch(()=>({}));
+    ownerAuthenticated=!!(r.ok && j.loggedIn);
+  }catch(e){ownerAuthenticated=false}
+  ownerUI();
+  renderUsers();
+  return ownerAuthenticated;
+}
 function ownerUI(){
   const on=ownerOn();
   document.body.classList.toggle('owner-mode',on);
@@ -3098,12 +3109,14 @@ document.getElementById('loginbtn').onclick=async()=>{
   btn.disabled=true;btn.textContent='verifying…';
   try{
     const r=await fetch(`${API_BASE}/api/login`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',
+      credentials:'include',
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({id,password})
     });
     const j=await r.json().catch(()=>({}));
-    if(!r.ok||!j.token)throw new Error(j.error||'登录失败');
-    sessionStorage.setItem(OWNER,j.token);
+    if(!r.ok||!j.ok)throw new Error(j.message||j.error||'登录失败');
+    ownerAuthenticated=true;
     document.getElementById('pwd').value='';
     login.close();ownerUI();renderUsers();toast('welcome, Qearl ♡');
   }catch(e){alert(e.message||'登录失败')}
@@ -3128,11 +3141,11 @@ document.getElementById('save').onclick=async()=>{
   try{
     const r=await fetch(`${API_BASE}/api/publish`,{
       method:'POST',
-      headers:{'Authorization':`Bearer ${sessionStorage.getItem(OWNER)}`},
+      credentials:'include',
       body:fd
     });
     const j=await r.json().catch(()=>({}));
-    if(r.status===401){sessionStorage.removeItem(OWNER);ownerUI();throw new Error(j.error||'登录已过期，请重新登录')}
+    if(r.status===401){ownerAuthenticated=false;ownerUI();throw new Error(j.message||j.error||'登录已过期，请重新登录')}
     if(!r.ok)throw new Error(j.detail||j.error||'发布失败');
     document.getElementById('nt').value='';
     document.getElementById('nx').value='';
@@ -3144,10 +3157,14 @@ document.getElementById('save').onclick=async()=>{
   finally{btn.disabled=false;btn.textContent='发布到网站'}
 };
 function renderUsers(){let g=document.getElementById('usergrid');g.innerHTML='';data.cards.forEach(c=>{let e=document.createElement('article');e.className='usercard';e.innerHTML=`${ownerOn()?'<button class="del">×</button>':''}<h3>${esc(c.title)}</h3><p style="font-size:12px;color:#84899b">later added to Qearl atelier.</p>`;e.onclick=x=>{if(x.target.classList.contains('del'))return;openDoc(c.id)};if(ownerOn())e.querySelector('.del').onclick=x=>{x.stopPropagation();alert('线上删除功能下一步再接，先避免误删内容。')};g.appendChild(e)})}
-document.getElementById('logout').onclick=()=>{sessionStorage.removeItem(OWNER);admin.close();ownerUI();renderUsers();toast('visitor mode')};
+document.getElementById('logout').onclick=async()=>{
+  try{await fetch(`${API_BASE}/api/logout`,{method:'POST',credentials:'include'});}catch(e){}
+  ownerAuthenticated=false;
+  admin.close();ownerUI();renderUsers();toast('visitor mode');
+};
 document.getElementById('export').onclick=()=>{if(!ownerOn())return;let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='qearl-atelier-backup.json';a.click()};
 document.getElementById('import').onchange=e=>{e.target.value='';alert('线上导入暂未开放，请先使用发布功能。')};
-ownerUI();loadPublishedData();
+ownerUI();loadPublishedData();refreshOwnerSession();
 </script>
 
 <script id="qearl-luxe-motion">

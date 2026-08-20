@@ -485,7 +485,112 @@ function renderSequential(bs,page){
   return o;
 }
 const labels={typebook:'TYPE BOOK',custom:'CUSTOM KEYS',case:'THEME CASE',mist:'MISTBOUND NOTES',island:'NOCTURNE ISLE',moss:'MOSS AFTER TEARS',jasmine:'SELF-CUT',others:'QEARL MISCELLANY'};
-function openDoc(s){
+
+const QEARL_DOC_ROUTES={
+  typebook:'typebook',
+  custom:'customkeys',
+  case:'theme-case',
+  mist:'mist',
+  island:'insomnia',
+  moss:'moss',
+  jasmine:'jasmine',
+  others:'miscellany'
+};
+const QEARL_ROUTE_DOC=Object.fromEntries(Object.entries(QEARL_DOC_ROUTES).map(([k,v])=>[v,k]));
+
+function qearlCleanSlug(v){
+  return String(v||'').trim().replace(/^\/+|\/+$/g,'').toLowerCase();
+}
+function qearlPathForDoc(id){
+  const slug=QEARL_DOC_ROUTES[id]||qearlCleanSlug(id);
+  return slug?`/${slug}`:'/';
+}
+function qearlSetPath(path,replace=false){
+  if(!path)path='/';
+  const method=replace?'replaceState':'pushState';
+  if(location.pathname!==path || location.search){
+    history[method]({qearl:true},'',path);
+  }
+}
+function qearlCloudBlocks(page){
+  const blocks=[];
+  (page?.sections||[]).forEach(section=>{
+    if(section.title)blocks.push({type:'text',text:section.title});
+    if(section.subtitle)blocks.push({type:'text',text:section.subtitle});
+    (section.items||[]).forEach(item=>{
+      if(item.title)blocks.push({type:'text',text:item.title});
+      if(item.subtitle)blocks.push({type:'text',text:item.subtitle});
+      if(item.content_text)blocks.push({type:'text',text:item.content_text});
+      if(item.href)blocks.push({type:'text',text:item.href});
+      (item.media||[]).forEach(m=>{
+        if(m.url)blocks.push({type:'image',src:m.url,w:m.width||0,h:m.height||0});
+      });
+    });
+  });
+  return blocks;
+}
+async function qearlOpenCloudSlug(slug,{replace=false}={}){
+  try{
+    const r=await fetch(`${API_BASE}/api/public/site?page=${encodeURIComponent(slug)}`,{credentials:'include'});
+    const j=await r.json().catch(()=>({}));
+    const page=j?.data;
+    if(!r.ok||!page)return false;
+    current=`cloud:${slug}`;
+    reader.dataset.page='cloud';
+    rt.textContent=page.title||'Archive';
+    rk.textContent=(page.subtitle||'QEARL ARCHIVE').toUpperCase();
+    rb.innerHTML=renderSequential(qearlCloudBlocks(page),'cloud');
+    renderTOC(window.__currentTOC||[]);
+    reader.classList.add('open');
+    reader.scrollTop=0;
+    document.body.style.overflow='hidden';
+    qearlSetPath(`/${slug}`,replace);
+    return true;
+  }catch(e){return false}
+}
+async function qearlOpenRoute(rawPath,{replace=false}={}){
+  const slug=qearlCleanSlug(rawPath);
+  if(!slug)return false;
+  const docId=QEARL_ROUTE_DOC[slug];
+  if(docId&&DOCS[docId]){
+    openDoc(docId,{updateUrl:false});
+    qearlSetPath(`/${slug}`,replace);
+    return true;
+  }
+  return await qearlOpenCloudSlug(slug,{replace});
+}
+function qearlCloseReader({updateUrl=true}={}){
+  reader.classList.remove('open');
+  if(tocPanel)tocPanel.classList.remove('open');
+  document.body.style.overflow='';
+  current=null;
+  if(updateUrl)qearlSetPath('/');
+}
+async function qearlBootRoute(){
+  const params=new URLSearchParams(location.search);
+  const forwarded=params.get('__route');
+  let raw=forwarded||location.pathname;
+  if(forwarded){
+    try{
+      const u=new URL(forwarded,location.origin);
+      raw=u.pathname;
+    }catch(e){}
+  }
+  const slug=qearlCleanSlug(raw);
+  if(!slug||slug==='index.html'||slug==='admin'||slug==='admin/index.html')return;
+  const ok=await qearlOpenRoute(raw,{replace:true});
+  if(!ok&&forwarded)history.replaceState({qearl:true},'','/');
+}
+window.addEventListener('popstate',async()=>{
+  const slug=qearlCleanSlug(location.pathname);
+  if(!slug){
+    if(reader.classList.contains('open'))qearlCloseReader({updateUrl:false});
+    return;
+  }
+  await qearlOpenRoute(location.pathname,{replace:true});
+});
+
+function openDoc(s,opts={}){
   current=s;reader.dataset.page=s;
   const d=DOCS[s];
   rt.textContent=d?d.title:(data.cards.find(x=>x.id===s)?.title||'Archive');
@@ -495,7 +600,7 @@ function openDoc(s){
   if(!d){let c=data.cards.find(x=>x.id===s);bs=c?c.blocks:[]}
   rb.innerHTML=renderSequential(bs,s);
   renderTOC(window.__currentTOC||[]);
-  reader.classList.add('open');reader.scrollTop=0;document.body.style.overflow='hidden';ownerUI()
+  reader.classList.add('open');reader.scrollTop=0;document.body.style.overflow='hidden';ownerUI();if(opts.updateUrl!==false)qearlSetPath(qearlPathForDoc(s))
 }
 
 const tocPanel=document.getElementById('tocPanel'),tocHandle=document.getElementById('tocHandle'),tocList=document.getElementById('tocList');
@@ -560,7 +665,7 @@ function syncTOCActive(){
 reader.addEventListener('scroll',syncTOCActive,{passive:true});
 
 document.querySelectorAll('[data-open]').forEach(e=>e.onclick=()=>openDoc(e.dataset.open));
-document.getElementById('back').onclick=()=>{reader.classList.remove('open');if(tocPanel)tocPanel.classList.remove('open');document.body.style.overflow='';current=null}
+document.getElementById('back').onclick=()=>qearlCloseReader();
 
 const login=document.getElementById('login'),admin=document.getElementById('admin');
 document.getElementById('owner').onclick=async()=>{
@@ -847,6 +952,8 @@ ownerUI();renderUsers();
     renderDynamicPages();
   })();
 })();
+
+qearlBootRoute();
 </script>
 
 </body></html>

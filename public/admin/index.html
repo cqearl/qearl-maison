@@ -187,6 +187,11 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
   .field.full{grid-column:auto}.hero{padding-top:18px}.panelHead,.sectionTop{align-items:flex-start}
   .modalFooter{align-items:flex-start;flex-direction:column}.footerActions{width:100%}.footerActions .btn{flex:1}
 }
+
+.shareLine{margin-top:15px;padding:12px 13px;border-radius:15px;border:1px solid rgba(255,255,255,.72);background:rgba(255,255,255,.28);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.shareUrl{min-width:0;font:italic 11px Georgia,serif;color:#777d94;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.copyBtn{flex:0 0 auto;border:1px solid rgba(255,255,255,.82);background:rgba(255,255,255,.46);border-radius:12px;padding:7px 10px;color:#6c7188}
+
 </style>
 </head>
 <body>
@@ -236,7 +241,7 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
       <input type="hidden" id="pageId">
       <div class="formGrid pageIdentityGrid">
         <div class="field titleField"><label>TITLE</label><input id="pageTitle" placeholder="例如：Home / Keyboard archive"><div class="hint" aria-hidden="true">占位</div></div>
-        <div class="field slugField"><label>SLUG</label><input id="pageSlug" placeholder="home"><div class="hint">网址标识；留空时由系统自动生成。</div></div>
+        <div class="field slugField"><label>SLUG</label><input id="pageSlug" placeholder="home"><div class="hint">分享网址标识；例如 customkeys → qearlune.xyz/customkeys。留空时自动生成。</div></div>
         <div class="field full"><label>SUBTITLE</label><input id="pageSubtitle" placeholder="可留空"></div>
         <label class="switchline full"><input type="checkbox" id="pageVisible" checked> visible on site</label>
       </div>
@@ -394,10 +399,19 @@ function renderPage(){
         <button class="iconBtn" id="newSection" type="button">＋ section</button>
       </div>
     </div>
-    <div class="panelSub">${esc(p.subtitle||'没有副标题。')}</div>`;
+    <div class="panelSub">${esc(p.subtitle||'没有副标题。')}</div>
+    <div class="shareLine">
+      <div class="shareUrl">https://qearlune.xyz/${esc(p.slug||'')}</div>
+      <button class="copyBtn" id="copyPageLink" type="button">copy link</button>
+    </div>`;
   $('#pageUp').disabled=idx<=0;$('#pageDown').disabled=idx>=site.pages.length-1;
   $('#pageUp').onclick=()=>movePage(-1);$('#pageDown').onclick=()=>movePage(1);
   $('#editPage').onclick=()=>openPage(p.id);$('#newSection').onclick=()=>openSection();
+  const copyBtn=$('#copyPageLink');
+  if(copyBtn)copyBtn.onclick=async()=>{
+    const url=`https://qearlune.xyz/${p.slug||''}`;
+    try{await navigator.clipboard.writeText(url);toast('link copied')}catch(e){prompt('复制这个网址',url)}
+  };
 }
 
 function renderSections(){

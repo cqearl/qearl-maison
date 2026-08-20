@@ -3118,7 +3118,7 @@ document.getElementById('loginbtn').onclick=async()=>{
     if(!r.ok||!j.ok)throw new Error(j.message||j.error||'登录失败');
     ownerAuthenticated=true;
     document.getElementById('pwd').value='';
-    login.close();ownerUI();renderUsers();toast('welcome, Qearl ♡');
+    login.close();ownerUI();renderUsers();toast('welcome, Qearl ♡');window.location.href='/admin/';
   }catch(e){alert(e.message||'登录失败')}
   finally{btn.disabled=false;btn.textContent='enter owner mode'}
 };

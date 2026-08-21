@@ -2800,56 +2800,102 @@ body.owner-mode .ownerOnly{display:block!important}
 </style>
 
 
-<style id="qearl-v52-ios-safari-reader-fix">
-@supports (-webkit-touch-callout: none) {
-  @media (max-width: 820px) {
-    html { scroll-behavior:auto!important; }
+<style id="qearl-v53-mobile-reader-flow">
+/* V53 — mobile subpages become normal document flow, not a fixed overlay.
+   This avoids real iOS/WebKit visual-viewport offsets across Safari/Chrome/Edge. */
+@media (max-width: 680px){
+  body.qearl-reader-flow{
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    position:static!important;
+    height:auto!important;
+    min-height:100%!important;
+  }
 
-    #reader.reader{
-      position:fixed!important;
-      top:0!important;
-      right:0!important;
-      bottom:0!important;
-      left:0!important;
-      width:100%!important;
-      height:auto!important;
-      min-height:0!important;
-      max-height:none!important;
-      overflow-x:hidden!important;
-      overflow-y:auto!important;
-      -webkit-overflow-scrolling:touch!important;
-      overscroll-behavior:contain!important;
-      transform:translate3d(0,0,0)!important;
-    }
+  body.qearl-reader-flow > nav,
+  body.qearl-reader-flow > main,
+  body.qearl-reader-flow > footer{
+    display:none!important;
+  }
 
-    #reader .rnav{
-      position:sticky!important;
-      top:0!important;
-      left:auto!important;
-      right:auto!important;
-      height:calc(50px + env(safe-area-inset-top))!important;
-      padding-top:env(safe-area-inset-top)!important;
-      z-index:10020!important;
-      transform:none!important;
-    }
+  body.qearl-reader-flow #reader.reader,
+  body.qearl-reader-flow #reader.reader.open{
+    display:block!important;
+    position:relative!important;
+    inset:auto!important;
+    top:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    left:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:100svh!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:visible!important;
+    transform:none!important;
+    contain:none!important;
+  }
 
-    #reader .rbar{height:50px!important;}
+  body.qearl-reader-flow #reader .rnav{
+    position:sticky!important;
+    top:0!important;
+    left:auto!important;
+    right:auto!important;
+    width:100%!important;
+    height:calc(50px + env(safe-area-inset-top))!important;
+    padding-top:env(safe-area-inset-top)!important;
+    margin:0!important;
+    transform:none!important;
+    z-index:10020!important;
+  }
 
-    #reader .rmain{
-      position:relative!important;
-      top:auto!important;
-      left:auto!important;
-      transform:none!important;
-      width:calc(100% - 20px)!important;
-      margin:0 auto!important;
-      padding:8px 0 calc(58px + env(safe-area-inset-bottom))!important;
-    }
+  body.qearl-reader-flow #reader .rbar{
+    height:50px!important;
+  }
 
-    #reader .rhero{
-      margin-top:0!important;
-      padding-top:10px!important;
-      transform:none!important;
-    }
+  body.qearl-reader-flow #reader .rmain{
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    width:calc(100% - 20px)!important;
+    max-width:none!important;
+    margin:0 auto!important;
+    padding:12px 0 calc(56px + env(safe-area-inset-bottom))!important;
+    transform:none!important;
+  }
+
+  body.qearl-reader-flow #reader .rhero{
+    position:relative!important;
+    top:auto!important;
+    margin:0 0 16px!important;
+    padding:10px 0 16px!important;
+    min-height:0!important;
+    height:auto!important;
+    transform:none!important;
+  }
+
+  body.qearl-reader-flow #reader .rhero h2{
+    min-height:0!important;
+    height:auto!important;
+    margin:0!important;
+    padding:0!important;
+    align-items:flex-start!important;
+    justify-content:flex-start!important;
+  }
+
+  body.qearl-reader-flow #reader .scriptHeroWrap{
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+  }
+
+  body.qearl-reader-flow #reader .tocHandle,
+  body.qearl-reader-flow #reader .tocPanel{
+    position:fixed!important;
   }
 }
 </style>
@@ -3413,38 +3459,34 @@ ownerUI();loadPublishedData();refreshOwnerSession();qearlBootRoute();
 </script>
 
 
-<script id="qearl-v52-ios-scroll-fix">
-(function(){
-  if('scrollRestoration' in history) history.scrollRestoration='manual';
-
-  const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent) ||
-    (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-
-  if(!isIOS) return;
-
+<script id="qearl-v53-mobile-reader-flow-js">
+(()=>{
   const reader=document.getElementById('reader');
   if(!reader) return;
+  const mobile=()=>window.matchMedia('(max-width:680px)').matches;
 
-  const resetReaderTop=()=>{
-    requestAnimationFrame(()=>{
+  const sync=()=>{
+    const open=reader.classList.contains('open');
+    if(open && mobile()){
+      document.body.classList.add('qearl-reader-flow');
+      document.body.style.removeProperty('overflow');
       reader.scrollTop=0;
-      reader.scrollTo(0,0);
-      requestAnimationFrame(()=>{ reader.scrollTop=0; });
-    });
+      window.scrollTo({top:0,left:0,behavior:'auto'});
+      requestAnimationFrame(()=>{
+        window.scrollTo(0,0);
+        reader.scrollTop=0;
+      });
+    }else{
+      document.body.classList.remove('qearl-reader-flow');
+      if(!open) document.body.style.removeProperty('overflow');
+    }
   };
 
-  const obs=new MutationObserver(()=>{
-    if(reader.classList.contains('open')) resetReaderTop();
-  });
-
-  obs.observe(reader,{
-    attributes:true,
-    attributeFilter:['class','data-page']
-  });
-
-  window.addEventListener('pageshow',()=>{
-    if(reader.classList.contains('open')) resetReaderTop();
-  });
+  const obs=new MutationObserver(sync);
+  obs.observe(reader,{attributes:true,attributeFilter:['class','data-page']});
+  window.addEventListener('resize',sync,{passive:true});
+  window.addEventListener('pageshow',sync);
+  sync();
 })();
 </script>
 

@@ -434,6 +434,564 @@ body.owner-mode .glass:hover .dynamicOwnerTools{display:block}
 }
 </style>
 
+
+
+<style id="qearl-v56-custom-layout">
+.reader[data-page="custom"] .flow{
+  max-width:920px;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  padding:0;
+  backdrop-filter:none;
+}
+.reader[data-page="custom"] .rhero{margin-bottom:24px}
+.reader[data-page="custom"] .rhero:after{
+  content:"made in little details.";
+  display:block;
+  margin-top:14px;
+  font:italic 11px Georgia,serif;
+  letter-spacing:.17em;
+  color:#9a9dad;
+}
+.customStudio{display:grid;gap:14px}
+.customGlass{
+  border:1px solid rgba(255,255,255,.74);
+  background:
+    radial-gradient(circle at 10% 5%,rgba(255,255,255,.72),transparent 34%),
+    linear-gradient(145deg,rgba(255,255,255,.36),rgba(217,221,232,.11));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 16px 44px rgba(48,53,82,.05);
+  backdrop-filter:blur(18px);
+  border-radius:24px;
+}
+.customTop{
+  display:grid;
+  grid-template-columns:1.12fr .88fr;
+  gap:14px;
+}
+.customPrice{padding:21px 22px}
+.customKicker{
+  font:italic 9px Georgia,serif;
+  letter-spacing:.18em;
+  color:#979bac;
+  margin-bottom:8px
+}
+.customTitle{
+  font:italic 28px/1.05 "Snell Roundhand","Apple Chancery",cursive;
+  color:#454a62;
+  margin:0 0 17px
+}
+.priceRow{
+  display:flex;justify-content:space-between;gap:14px;align-items:baseline;
+  padding:10px 0;border-top:1px solid rgba(91,96,122,.09);
+  font-size:13px;color:#555b72
+}
+.priceRow:first-of-type{border-top:0}
+.priceRow strong{
+  font:italic 16px Georgia,serif;
+  font-weight:400;color:#3f445c;white-space:nowrap
+}
+
+.customSideStack{display:grid;gap:12px}
+.customSideCard{
+  padding:17px 18px;
+  min-height:0;
+}
+.customSideHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-bottom:9px;
+  margin-bottom:8px;
+  border-bottom:1px solid rgba(91,96,122,.08);
+}
+.customSideHead h4{
+  margin:0;
+  font:italic 18px "Snell Roundhand","Apple Chancery",cursive;
+  font-weight:400;
+  color:#4b5068;
+}
+.customSideHead span{
+  font:italic 8px Georgia,serif;
+  letter-spacing:.16em;
+  color:#a1a5b4;
+}
+.customCompactList{
+  display:grid;
+  gap:7px;
+}
+.customCompactRow{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  font-size:12px;
+  line-height:1.7;
+  color:#6f7489;
+}
+.customCompactRow b{
+  font-weight:400;
+  color:#4f556d;
+  white-space:nowrap;
+}
+.customMultiplier{font-weight:700;color:#454b64;letter-spacing:.01em}
+.customCompactRow .price{
+  font:italic 12px Georgia,serif;
+  color:#575d75;
+  white-space:nowrap;
+}
+
+.customNote{
+  padding:18px 20px;
+  display:block;
+}
+.customNoteHead{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:11px;
+}
+.customNoteNo{
+  font:italic 8px Georgia,serif;
+  letter-spacing:.16em;
+  color:#a1a5b4;
+}
+.customNote h4{
+  margin:0;
+  font:italic 17px Georgia,serif;
+  font-weight:400;
+  color:#4c5167;
+}
+.customNote .copy{
+  font-size:12px;
+  line-height:1.9;
+  color:#6d7287;
+  display:grid;
+  gap:2px;
+}
+.customNote .copy p{margin:0}
+
+.customFlow{padding:21px 22px}
+.customFlowTitle{
+  text-align:center;font:italic 9px Georgia,serif;letter-spacing:.2em;
+  color:#9095a8;margin-bottom:18px
+}
+.flowTrack{
+  display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:0 2px 8px;
+  scrollbar-width:none
+}
+.flowTrack::-webkit-scrollbar{display:none}
+.flowStep{min-width:116px;flex:1;text-align:center;position:relative;padding:0 5px}
+.flowStep:before{
+  content:"";position:absolute;top:10px;left:calc(-50% + 13px);
+  width:calc(100% - 26px);height:1px;background:rgba(91,96,122,.16)
+}
+.flowStep:first-child:before{display:none}
+.flowDot{
+  width:20px;height:20px;margin:0 auto 9px;border-radius:50%;
+  border:1px solid rgba(91,96,122,.20);background:rgba(255,255,255,.68);
+  display:grid;place-items:center;font:italic 8px Georgia,serif;color:#777d94;
+  position:relative;z-index:2
+}
+.flowStep b{display:block;font-size:11px;font-weight:400;color:#555a70;white-space:nowrap}
+.flowStep small{display:block;margin-top:4px;font-size:9px;line-height:1.45;color:#9a9eae}
+.customLead{
+  text-align:center;padding:5px 15px 1px;
+  font:italic 11px Georgia,serif;letter-spacing:.14em;color:#999cad
+}
+.customRules{padding:8px 0}
+.customRule{
+  border-top:1px solid rgba(91,96,122,.10);
+  background:rgba(255,255,255,.13)
+}
+.customRule:first-child{border-top:0}
+.customRule summary{
+  list-style:none;cursor:pointer;padding:18px 21px;
+  display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center
+}
+.customRule summary::-webkit-details-marker{display:none}
+.customRule .num{
+  font:italic 10px Georgia,serif;color:#a0a4b3;letter-spacing:.08em
+}
+.customRule .sumTitle{
+  font:italic 19px/1.1 "Snell Roundhand","Apple Chancery",cursive;
+  color:#484d65
+}
+.customRule .sumSub{display:block;margin-top:4px;font:11px/1.5 "Songti SC","STSong",serif;color:#9599aa}
+.customRule .plus{
+  width:28px;height:28px;border-radius:50%;border:1px solid rgba(91,96,122,.13);
+  display:grid;place-items:center;color:#8a8fa3;font-size:16px;transition:.18s
+}
+.customRule[open] .plus{transform:rotate(45deg)}
+.ruleBody{
+  padding:0 21px 21px 67px;
+  font-size:12px;line-height:1.9;color:#666c82
+}
+.ruleBody p{margin:0 0 7px}
+.refundGrid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 15px
+}
+.refundCell{
+  padding:13px 10px;border-radius:15px;
+  border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.30);
+  text-align:center
+}
+.refundCell b{display:block;font:italic 17px Georgia,serif;font-weight:400;color:#4b5068;margin-bottom:4px}
+.refundCell span{font-size:10px;line-height:1.5;color:#858a9e}
+.usageGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.usageCell{
+  padding:14px;border-radius:15px;border:1px solid rgba(255,255,255,.62);
+  background:rgba(255,255,255,.25)
+}
+.usageCell b{display:block;font-size:11px;font-weight:400;color:#4f556d;margin-bottom:7px}
+.usageCell p{font-size:10px;line-height:1.7;margin:0;color:#808599}
+.customAgreement{
+  padding:25px 20px;text-align:center;border-radius:24px;
+  border:1px solid rgba(255,255,255,.74);
+  background:linear-gradient(145deg,rgba(255,255,255,.42),rgba(219,222,232,.16));
+  box-shadow:inset 0 1px 0 white
+}
+.customAgreement .big{
+  font:italic 25px "Snell Roundhand","Apple Chancery",cursive;color:#4a4f66;
+  margin-bottom:7px
+}
+.customAgreement p{margin:0;font-size:11px;line-height:1.8;color:#85899c}
+.customAgreement small{
+  display:block;margin-top:15px;font:italic 9px Georgia,serif;
+  letter-spacing:.17em;color:#aaaeba
+}
+@media(max-width:820px){
+  .reader[data-page="custom"] .rhero{margin-bottom:18px}
+  .customStudio{gap:12px}
+  .customTop{grid-template-columns:1fr}
+  .customSideStack{grid-template-columns:1fr 1fr}
+  .customPrice{padding:18px}
+  .customFlow{padding:18px 12px}
+  .flowStep{min-width:100px}
+  .customRule summary{padding:17px 16px;grid-template-columns:30px 1fr auto}
+  .ruleBody{padding:0 16px 18px 56px}
+  .refundGrid,.usageGrid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .customSideStack{grid-template-columns:1fr}
+}
+@media(max-width:430px){
+  .priceRow{font-size:12px}
+  .priceRow strong{font-size:15px}
+  .customRule .sumTitle{font-size:18px}
+}
+</style>
+
+
+
+<style id="qearl-v58-mobile-customkeys">
+@media (max-width: 820px){
+  .reader[data-page="custom"] .rmain{
+    width:calc(100% - 18px)!important;
+  }
+
+  .reader[data-page="custom"] .rhero{
+    padding-left:4px!important;
+    padding-right:4px!important;
+    margin-bottom:16px!important;
+  }
+
+  .reader[data-page="custom"] .rhero h1{
+    font-size:clamp(42px,12vw,58px)!important;
+    line-height:.96!important;
+  }
+
+  .reader[data-page="custom"] .rhero:after{
+    margin-top:10px!important;
+    font-size:9px!important;
+    letter-spacing:.13em!important;
+  }
+
+  .customStudio{
+    gap:11px!important;
+  }
+
+  .customTop{
+    display:block!important;
+  }
+
+  .customPrice{
+    padding:17px 16px!important;
+    border-radius:20px!important;
+  }
+
+  .customTitle{
+    font-size:25px!important;
+    margin-bottom:13px!important;
+  }
+
+  .priceRow{
+    padding:11px 0!important;
+    font-size:12px!important;
+  }
+
+  .priceRow strong{
+    font-size:15px!important;
+  }
+
+  .customSideStack{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    margin-top:10px!important;
+  }
+
+  .customSideCard{
+    padding:15px 15px!important;
+    border-radius:19px!important;
+  }
+
+  .customSideHead{
+    padding-bottom:7px!important;
+    margin-bottom:8px!important;
+  }
+
+  .customSideHead h4{
+    font-size:18px!important;
+  }
+
+  .customCompactList{
+    gap:6px!important;
+  }
+
+  .customCompactRow{
+    font-size:11px!important;
+    line-height:1.65!important;
+    align-items:center!important;
+  }
+
+  .customMultiplier{
+    margin-top:3px!important;
+    padding-top:8px!important;
+    border-top:1px dashed rgba(91,96,122,.13)!important;
+    font-weight:700!important;
+    color:#454b64!important;
+  }
+
+  .customNote{
+    padding:15px 15px!important;
+    border-radius:19px!important;
+  }
+
+  .customNoteHead{
+    margin-bottom:9px!important;
+  }
+
+  .customNote h4{
+    font-size:16px!important;
+  }
+
+  .customNote .copy{
+    font-size:11px!important;
+    line-height:1.8!important;
+  }
+
+  .customFlow{
+    padding:16px 14px!important;
+    border-radius:20px!important;
+  }
+
+  .customFlowTitle{
+    margin-bottom:13px!important;
+    font-size:8px!important;
+    letter-spacing:.16em!important;
+  }
+
+  .flowTrack{
+    display:grid!important;
+    gap:0!important;
+    overflow:visible!important;
+    padding:0!important;
+  }
+
+  .flowStep{
+    min-width:0!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:30px 1fr!important;
+    grid-template-rows:auto auto!important;
+    column-gap:10px!important;
+    text-align:left!important;
+    padding:0 0 15px 0!important;
+    position:relative!important;
+  }
+
+  .flowStep:last-child{
+    padding-bottom:0!important;
+  }
+
+  .flowStep:before{
+    content:""!important;
+    position:absolute!important;
+    left:9px!important;
+    top:20px!important;
+    width:1px!important;
+    height:calc(100% - 10px)!important;
+    background:rgba(91,96,122,.16)!important;
+  }
+
+  .flowStep:last-child:before{
+    display:none!important;
+  }
+
+  .flowDot{
+    grid-column:1!important;
+    grid-row:1 / span 2!important;
+    width:20px!important;
+    height:20px!important;
+    margin:0!important;
+    align-self:start!important;
+  }
+
+  .flowStep b{
+    grid-column:2!important;
+    grid-row:1!important;
+    font-size:11px!important;
+    line-height:1.35!important;
+    white-space:normal!important;
+    margin-top:1px!important;
+  }
+
+  .flowStep small{
+    grid-column:2!important;
+    grid-row:2!important;
+    font-size:9px!important;
+    margin-top:3px!important;
+    line-height:1.5!important;
+  }
+
+  .customLead{
+    padding:4px 8px 0!important;
+    font-size:9px!important;
+    letter-spacing:.08em!important;
+    line-height:1.7!important;
+  }
+
+  .customRules{
+    padding:0!important;
+    border-radius:20px!important;
+    overflow:hidden!important;
+  }
+
+  .customRule summary{
+    padding:15px 14px!important;
+    grid-template-columns:26px 1fr 28px!important;
+    gap:8px!important;
+  }
+
+  .customRule .num{
+    font-size:9px!important;
+  }
+
+  .customRule .sumTitle{
+    font-size:18px!important;
+  }
+
+  .customRule .sumSub{
+    font-size:10px!important;
+    margin-top:3px!important;
+  }
+
+  .customRule .plus{
+    width:26px!important;
+    height:26px!important;
+    font-size:14px!important;
+  }
+
+  .ruleBody{
+    padding:0 14px 16px 48px!important;
+    font-size:11px!important;
+    line-height:1.82!important;
+  }
+
+  .refundGrid{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+    margin:10px 0 12px!important;
+  }
+
+  .refundCell{
+    display:grid!important;
+    grid-template-columns:58px 1fr!important;
+    align-items:center!important;
+    text-align:left!important;
+    padding:11px 12px!important;
+    border-radius:14px!important;
+  }
+
+  .refundCell b{
+    margin:0!important;
+    font-size:16px!important;
+  }
+
+  .refundCell span{
+    font-size:9px!important;
+    line-height:1.55!important;
+  }
+
+  .usageGrid{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+    margin-top:10px!important;
+  }
+
+  .usageCell{
+    padding:12px 13px!important;
+    border-radius:14px!important;
+  }
+
+  .usageCell b{
+    font-size:11px!important;
+    margin-bottom:5px!important;
+  }
+
+  .usageCell p{
+    font-size:9.5px!important;
+    line-height:1.65!important;
+  }
+
+  .customAgreement{
+    padding:20px 15px!important;
+    border-radius:20px!important;
+  }
+
+  .customAgreement .big{
+    font-size:22px!important;
+  }
+
+  .customAgreement p{
+    font-size:10px!important;
+  }
+
+  .customAgreement small{
+    margin-top:11px!important;
+    font-size:8px!important;
+    letter-spacing:.12em!important;
+  }
+}
+
+@media (max-width: 430px){
+  .reader[data-page="custom"] .rmain{
+    width:calc(100% - 14px)!important;
+  }
+
+  .customPrice,
+  .customSideCard,
+  .customNote,
+  .customFlow,
+  .customRules,
+  .customAgreement{
+    border-radius:18px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav><div class="navin"><span class="brand">QEARL ATELIER.</span><button class="btn" id="owner">owner entrance ୨୧</button></div></nav>
@@ -515,7 +1073,7 @@ body.owner-mode .glass:hover .dynamicOwnerTools{display:block}
 <div class="toast" id="toast">saved ♡</div>
 
 <script>
-const DOCS={"home": {"title": "Qearl atelier.", "blocks": [{"type": "text", "text": "𓂃 ࣪˖ 𓈒", "links": []}, {"type": "text", "text": "branch atelier", "links": []}, {"type": "text", "text": "枝", "links": []}, {"type": "text", "text": "keyboard · aesthetic", "links": []}, {"type": "text", "text": "customized design", "links": []}, {"type": "text", "text": "since 2026", "links": []}, {"type": "text", "text": "♡ order guide ♡", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "自助下单 · 默认24h内出图", "links": []}, {"type": "text", "text": "在线基本秒出", "links": []}, {"type": "text", "text": "加急 ×1.5", "links": []}, {"type": "text", "text": "首次下单请提供IP录屏", "links": []}, {"type": "text", "text": "（聊天页 → 小红书主页 → 微博主页）", "links": []}, {"type": "text", "text": "键盘均为打标发货，请提供QQ号 & VX号", "links": []}, {"type": "text", "text": "转账 / 红包 / 扫码均可", "links": []}, {"type": "text", "text": "收款码见最下方", "links": []}, {"type": "text", "text": "有任何问题欢迎私聊♡", "links": []}, {"type": "text", "text": "♡ keyboard ♡", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "video preview available on xhs", "links": []}, {"type": "text", "text": "墨冬島尋枝", "links": []}, {"type": "text", "text": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "links": []}, {"type": "text", "text": "⁺｡꒰১ set ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "links": []}, {"type": "text", "text": "⁺｡꒰১ theme ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "°⑅♡#薄雾集♡⑅ °", "links": []}, {"type": "text", "text": "-°⑅♡#失眠岛♡⑅ °", "links": []}, {"type": "text", "text": "°⑅♡#淚生苔♡⑅ °", "links": []}, {"type": "text", "text": "⁺｡꒰১ self-cut ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "#茉莉信†﹡预览", "links": []}, {"type": "text", "text": "⁺｡꒰১ others ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "°⑅♡枝间拾遗♡⑅ °", "links": []}, {"type": "text", "text": "✦ Branch & Bloom 🌿", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "消费满 𝟹𝟻 可私聊进群 𓂃", "links": []}, {"type": "text", "text": "携带｜xhs主页 · 云黑码 · 网盘主页 · 微博主页 · 购买记录", "links": []}, {"type": "text", "text": "𝖬𝖾𝗆𝖻𝖾𝗋 𝗈𝗇𝗅𝗒 ♡", "links": []}, {"type": "text", "text": "专属掉落 · 福利抽奖 · 提前上新 · 新品尝鲜", "links": []}, {"type": "text", "text": "◌  payment ◌", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "thank you♡", "links": []}, {"type": "text", "text": "感谢每一份喜欢。", "links": []}, {"type": "text", "text": "付款后请把截图发送给我，", "links": []}, {"type": "text", "text": "会尽快开始制作♡", "links": []}, {"type": "image", "src": "assets/qearl-187c1c7412c610.webp", "w": 1400, "h": 1400}]}, "typebook": {"title": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "blocks": [{"type": "text", "text": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "links": []}, {"type": "text", "text": "☆̸★下单默认已读", "links": []}, {"type": "text", "text": "• 呆呆小程序/菜瓜星球 小程序同步在售", "links": []}, {"type": "text", "text": "• 音效可在xhs：墨冬岛寻枝 查看", "links": []}, {"type": "text", "text": "• 手作产物 有瑕疵 强迫症完美主义宝宝慎重购买哦", "links": []}, {"type": "text", "text": "• 不教兑换和使用！！xhs上可以搜教程滴", "links": []}, {"type": "text", "text": "• 打标出图 下单需要提供ip录屏+vx号+qq号哦", "links": []}, {"type": "text", "text": "†桜莓ふわ﹡（福利款已下架）", "links": []}, {"type": "image", "src": "assets/qearl-e6f458dec29230.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†天使小叽﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送头像和壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡）12.88", "links": []}, {"type": "image", "src": "assets/qearl-aadea69e3bcc53.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†夢境兎﹡", "links": []}, {"type": "text", "text": "☘︎ 单键盘3.88", "links": []}, {"type": "image", "src": "assets/qearl-8bbca3f898080a.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†灰烬的圣歌﹡", "links": []}, {"type": "text", "text": "☘︎ 单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5fc1c8ec1c1928.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†青苹果乐园﹡", "links": []}, {"type": "text", "text": "☘︎ 键盘6.88（赠送壁纸）", "links": []}, {"type": "image", "src": "assets/qearl-374a8304b43c46.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†Kitty甜品屋﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送头像和壁纸", "links": []}, {"type": "text", "text": "☘︎ 直购价6.88", "links": []}, {"type": "text", "text": "需要壁纸的宝宝下单时备注双人单字署名即可（默认顺序从左到右，也可出同一署名，无署名默认不需要哦）", "links": []}, {"type": "text", "text": "需要头像的宝宝下单时需要自带两层密集水印哦，贴膜出图", "links": []}, {"type": "image", "src": "assets/qearl-b81e0a1c021051.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-b6d0813bcf1aef.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†鳥の詩﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡）12.88", "links": []}, {"type": "image", "src": "assets/qearl-82f1e966a1ea3a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c3118410a49adc.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†恋恋熊咪﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "需要壁纸的宝宝下单时备注单字署名即可（无备注署名默认不需要哦）", "links": []}, {"type": "image", "src": "assets/qearl-f451a76fb8ac87.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-e31e8aaaf72359.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†无尽夏之梦﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 双背景 单键盘7.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡+转账）14.88", "links": []}, {"type": "image", "src": "assets/qearl-247e256c3b4982.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-073ad9bac4be4f.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†蓝的独白﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5e70d9dc156a8e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6bbe8e52fdbc5b.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†冬日记忆﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-0ed08a747d1d15.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-27f60958d5c87f.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†浮羽集﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 三音效闷闷&脆脆&特殊音  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5b52c5ecebd712.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-2e43f7bb7c0e4a.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†低像素天使﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 三音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-254523563bd404.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-460e4fc2fb8dd1.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†灰福玫账簿﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-e97e94645e1533.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-a1066bf5e4c324.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†圣诞恋歌﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-69c087a056ee47.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†累累滴﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包6.88", "links": []}, {"type": "image", "src": "assets/qearl-92034986e9e353.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-69efe07d4d89a4.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†福团迎岁﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘5.88 双音效打包8.88", "links": []}, {"type": "image", "src": "assets/qearl-4bce5376824c78.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†星穹摇篮曲﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘8.88 双音效打包15.88", "links": []}, {"type": "image", "src": "assets/qearl-334d3a19f9f217.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-30001b32bc618f.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†Muted Lambs﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-c6b4ec683ce301.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-16d14c2d353053.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†月渡寒汀﹡（已下架绝版）", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-f4be9483e9fe2e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-2dce9f03ed0925.webp", "w": 1080, "h": 1080}, {"type": "image", "src": "assets/qearl-d2c20936f416f1.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†绿野的晨祷﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-fc285017cf6651.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-6769dfbc25b5b6.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†雨帘垂落之前﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-13b11e1ffbaaa8.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†베어.mood﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包8.88", "links": []}, {"type": "text", "text": "☘︎ ios加购无背景 单音效2.88 双音效 3.88", "links": []}, {"type": "image", "src": "assets/qearl-cc09efd988ffc4.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†#雨帘垂落之前﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-13b11e1ffbaaa8.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†#空白花语﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包8.88", "links": []}, {"type": "text", "text": "☘︎ ios有背景+无背景打包9.88", "links": []}, {"type": "image", "src": "assets/qearl-47c8fc756300c7.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c93f947e48c050.webp", "w": 1400, "h": 1000}]}, "custom": {"title": "𝖰.𝖢𝖴𝖲𝖳𝖮𝖬𝖪𝖤𝖸𝖲୨୧", "blocks": [{"type": "text", "text": "𝖰. 𝖢𝖴𝖲𝖳𝖮𝖬 𝖪𝖤𝖸𝖲 ୨୧", "links": []}, {"type": "text", "text": "𝘮𝘢𝘥𝘦 𝘪𝘯 𝘭𝘪𝘵𝘵𝘭𝘦 𝘥𝘦𝘵𝘢𝘪𝘭𝘴.", "links": []}, {"type": "text", "text": "⌇ 𝖯𝖱𝖨𝖢𝖤", "links": []}, {"type": "text", "text": "自带完整素材 ¥50+", "links": []}, {"type": "text", "text": "仅提供主体   ¥55+", "links": []}, {"type": "text", "text": "素材由我整理 ¥60+", "links": []}, {"type": "text", "text": "♡ 𝖨𝗇𝖼𝗅𝗎𝖽𝖾𝖽", "links": []}, {"type": "text", "text": "日常页面 + 暗黑页面 + 单音效", "links": []}, {"type": "text", "text": "♡ 𝖠𝖽𝖽 𝖮𝗇", "links": []}, {"type": "text", "text": "壁纸 +¥3 ｜ 增加音效 +¥15 / 个｜ 暗黑独立设计 +¥30", "links": []}, {"type": "text", "text": "加急 ×1.5 ｜ 商用 ×2          ｜ 买断 ×3", "links": []}, {"type": "text", "text": "〔 𝖬𝖺𝗍𝖾𝗋𝗂𝖺𝗅 𝖭𝗈𝗍𝖾 〕", "links": []}, {"type": "text", "text": "自带素材尽量准备高清 / 透明底 / 易抠图版本，", "links": []}, {"type": "text", "text": "主体、图标、漂浮及装饰小素材都可以一起打包给我。", "links": []}, {"type": "text", "text": "素材由我整理时，会围绕主题与整体氛围进行搭配，", "links": []}, {"type": "text", "text": "以实际可获取素材为准，不保证指定素材均可找到。", "links": []}, {"type": "text", "text": "复杂排版 / 大量素材处理 / 特殊需求可能适当浮价，", "links": []}, {"type": "text", "text": "所有费用都会在排单前确认 ♡", "links": []}, {"type": "text", "text": "〔 𝖱𝗎𝗌𝗁 𝖭𝗈𝗍𝖾 〕", "links": []}, {"type": "text", "text": "加急约 1–2 天，需提前确认是否有加急档期。", "links": []}, {"type": "text", "text": "加急为额外安排制作时间，", "links": []}, {"type": "text", "text": "不会占用普通订单原有排期，", "links": []}, {"type": "text", "text": "也不会影响已经排单或正在制作的键盘。", "links": []}, {"type": "text", "text": "※ 加急不默认随时可接，也不等于当天交付。", "links": []}, {"type": "text", "text": "୨୧ ───── 𝖮𝖱𝖣𝖤𝖱 𝖥𝖫𝖮𝖶 ───── ୨୧", "links": []}, {"type": "text", "text": "私聊确认需求 → 全款排单 → 等待排期 → 开工通知 →", "links": []}, {"type": "text", "text": "正式制作 → 首版预览 → 修改确认 → 封包上机 → 网盘交付 ♡", "links": []}, {"type": "text", "text": "普通制作｜约 5–7 天", "links": []}, {"type": "text", "text": "加急制作｜约 1–2 天", "links": []}, {"type": "text", "text": "排到你的订单后，我会主动发消息通知，", "links": []}, {"type": "text", "text": "并正式开始制作你的键盘 ♡", "links": []}, {"type": "text", "text": "普通订单按照排单顺序依次制作；", "links": []}, {"type": "text", "text": "加急则会另外安排时间完成，不占用原有排期。", "links": []}, {"type": "text", "text": "※ 制作工期从发送「开工通知」起计算，", "links": []}, {"type": "text", "text": "等待排期及等待确认的时间不包含在内。", "links": []}, {"type": "text", "text": "𝘧𝘳𝘰𝘮 𝘢𝘯 𝘪𝘥𝘦𝘢, 𝘪𝘯𝘵𝘰 𝘴𝘰𝘮𝘦𝘵𝘩𝘪𝘯𝘨 𝘺𝘰𝘶𝘳𝘴.", "links": []}, {"type": "text", "text": "୨୧ ─────── 𝖰. 𝖭𝖮𝖳𝖤𝖲 ─────── ୨୧", "links": []}, {"type": "text", "text": "定制前の小约定 ♡", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖨𝖽𝖾𝖺𝗌", "links": []}, {"type": "text", "text": "关于你的想法", "links": []}, {"type": "text", "text": "主题 / 配色 / 素材 / 喜好 / 雷点，", "links": []}, {"type": "text", "text": "以及音效、动效等特殊需求，", "links": []}, {"type": "text", "text": "请尽量在排单时一次告诉我。", "links": []}, {"type": "text", "text": "有明确想法可以尽可能说细；", "links": []}, {"type": "text", "text": "只有大概的感觉也没关系，", "links": []}, {"type": "text", "text": "可以给我留一些自由发挥的空间 ♡", "links": []}, {"type": "text", "text": "参考图仅用于确认喜欢的方向，不做 1:1 复刻。", "links": []}, {"type": "text", "text": "定制会保留我的个人审美与制作习惯，", "links": []}, {"type": "text", "text": "不擅长或无法达到预期的主题会提前说明。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖤𝖽𝗂𝗍𝗌", "links": []}, {"type": "text", "text": "关于预览与修改", "links": []}, {"type": "text", "text": "制作过程中会发送预览确认，", "links": []}, {"type": "text", "text": "包含 2 轮免费修改。", "links": []}, {"type": "text", "text": "「1轮」＝一次集中反馈，", "links": []}, {"type": "text", "text": "同一轮可以一起提出多个细节调整。", "links": []}, {"type": "text", "text": "位置 / 大小 / 局部素材等均可正常调整；", "links": []}, {"type": "text", "text": "原需求中没有提出的新增内容，", "links": []}, {"type": "text", "text": "或确认方向后重新更换风格 / 配色 / 大面积重做，", "links": []}, {"type": "text", "text": "会根据增加的制作量补差。", "links": []}, {"type": "text", "text": "收到预览后可以先仔细看看，", "links": []}, {"type": "text", "text": "整理好想调整的地方再一次告诉我 ♡", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖱𝖾𝖿𝗎𝗇𝖽𝗌", "links": []}, {"type": "text", "text": "关于排单与退单", "links": []}, {"type": "text", "text": "确认需求与价格并支付全款后，", "links": []}, {"type": "text", "text": "订单正式进入等待排期。", "links": []}, {"type": "text", "text": "收到我的「开工通知」前，", "links": []}, {"type": "text", "text": "都属于未开始制作阶段。", "links": []}, {"type": "text", "text": "未收到开工通知       全额退款", "links": []}, {"type": "text", "text": "已通知开工 · 尚未发送预览  退款 50%", "links": []}, {"type": "text", "text": "26键 / 9键 / 123键全部完成", "links": []}, {"type": "text", "text": "并发送预览后        退款 30%", "links": []}, {"type": "text", "text": "「开工通知」为正式开始制作的节点。", "links": []}, {"type": "text", "text": "排到你的订单后我会主动联系，", "links": []}, {"type": "text", "text": "通知发出后即进入制作阶段 ♡", "links": []}, {"type": "text", "text": "完整预览发送后如选择退单，", "links": []}, {"type": "text", "text": "定制文件不再交付；", "links": []}, {"type": "text", "text": "作品会恢复为非独占状态，", "links": []}, {"type": "text", "text": "我可在重新修改 / 调整后进行展示、上架或售卖。", "links": []}, {"type": "text", "text": "如因我的原因无法继续完成，", "links": []}, {"type": "text", "text": "会根据实际情况退还对应费用。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖣𝖾𝗅𝗂𝗏𝖾𝗋𝗒", "links": []}, {"type": "text", "text": "关于封包与交付", "links": []}, {"type": "text", "text": "全部页面及修改确认完成后，", "links": []}, {"type": "text", "text": "会进行封包并提供实际上机预览。", "links": []}, {"type": "text", "text": "封包前请确认好最终效果 ♡", "links": []}, {"type": "text", "text": "确认封包后如需再次调整：", "links": []}, {"type": "text", "text": "普通细节修改 ¥5 / 轮", "links": []}, {"type": "text", "text": "大改 / 新增内容 按实际工作量另计", "links": []}, {"type": "text", "text": "更换音效 / 转系统 / 新增页面等，", "links": []}, {"type": "text", "text": "属于新的制作需求，不包含在原定制范围内。", "links": []}, {"type": "text", "text": "确认无误后通过网盘交付，", "links": []}, {"type": "text", "text": "收到文件后请及时转存，", "links": []}, {"type": "text", "text": "文件不作永久补档。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖴𝗌𝖾", "links": []}, {"type": "text", "text": "关于使用范围", "links": []}, {"type": "text", "text": "♡ 个人定制", "links": []}, {"type": "text", "text": "默认仅供本人使用，", "links": []}, {"type": "text", "text": "可私下分享给 3 位亲友。", "links": []}, {"type": "text", "text": "禁止公开二传 / 转售 / 二改后出售，", "links": []}, {"type": "text", "text": "不可通过群聊、公开链接等形式传播。", "links": []}, {"type": "text", "text": "♡ 商用 ×2", "links": []}, {"type": "text", "text": "可用于掉落 / 福利 / 引流，", "links": []}, {"type": "text", "text": "不可直接转售定制文件。", "links": []}, {"type": "text", "text": "♡ 买断 ×3", "links": []}, {"type": "text", "text": "成品不再展示、上架或重复出售，", "links": []}, {"type": "text", "text": "除制作权外，该定制成品的使用权归买家。", "links": []}, {"type": "text", "text": "※ 商用 / 买断仅针对我的设计与成品，", "links": []}, {"type": "text", "text": "不包含第三方素材、字体等原始版权。", "links": []}, {"type": "text", "text": "⌇ 𝖫𝗂𝗍𝗍𝗅𝖾 𝖭𝗈𝗍𝖾", "links": []}, {"type": "text", "text": "一些放在最后的小提醒 ୨୧", "links": []}, {"type": "text", "text": "· 自带素材请自行确认来源及可使用范围，", "links": []}, {"type": "text", "text": "因提供素材产生的版权 / 授权问题需自行负责。", "links": []}, {"type": "text", "text": "· 非买断定制默认保留成品展示权，", "links": []}, {"type": "text", "text": "可能用于作品展示 / 定制案例；", "links": []}, {"type": "text", "text": "介意公开或需要保密，请在排单前告诉我。", "links": []}, {"type": "text", "text": "· 预览发出后请尽量及时确认。", "links": []}, {"type": "text", "text": "超过 48h 未回复，订单会暂时停留在当前进度；", "links": []}, {"type": "text", "text": "再次联系后根据当时排期重新安排，", "links": []}, {"type": "text", "text": "原定交付时间也会相应顺延。", "links": []}, {"type": "text", "text": "· 因设备 / 系统版本 / 第三方软件更新等", "links": []}, {"type": "text", "text": "非成品本身导致的兼容问题，", "links": []}, {"type": "text", "text": "不属于免费修改范围。", "links": []}, {"type": "text", "text": "· 不同定制可能使用相同题材、配色或公开素材，", "links": []}, {"type": "text", "text": "非买断订单不保证后续作品完全不出现相似元素。", "links": []}, {"type": "text", "text": "· 未成年宝宝请在监护人知情并同意后下单。", "links": []}, {"type": "text", "text": "𝖯𝖺𝗒𝗆𝖾𝗇𝗍 = 𝖺𝗀𝗋𝖾𝖾𝗆𝖾𝗇𝗍 ୨୧", "links": []}, {"type": "text", "text": "付款即默认已阅读并接受以上定制规则。", "links": []}, {"type": "text", "text": "° 𝖰. 𝖺𝗋𝖼𝗁𝗂𝗏𝖾", "links": []}, {"type": "text", "text": "𝘴𝘮𝘢𝘭𝘭 𝘵𝘩𝘪𝘯𝘨𝘴, 𝘬𝘦𝘱𝘵 𝘸𝘪𝘵𝘩 𝘤𝘢𝘳𝘦.", "links": []}]}, "case": {"title": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "blocks": [{"type": "text", "text": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "links": []}, {"type": "text", "text": "☆̸★下单默认已读", "links": []}, {"type": "text", "text": "• 手作产物 有瑕疵 强迫症完美主义宝宝慎重购买哦", "links": []}, {"type": "text", "text": "• 非主题 仅为配套 不教使用！！xhs上可以搜教程滴", "links": []}, {"type": "text", "text": "• 打标出图 下单需要提供ip录屏+vx号+qq号哦", "links": []}, {"type": "text", "text": "• 为8048版本展示 其他版本可能会出现图标位置不同的情况", "links": []}, {"type": "text", "text": "• 纯手作产物 气泡会出现拉伸 介意宝宝请勿下单", "links": []}, {"type": "text", "text": "†天使小叽﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 单键盘6.88  全套12.88", "links": []}, {"type": "image", "src": "assets/qearl-6f5031c06783e5.webp", "w": 1179, "h": 2556}, {"type": "image", "src": "assets/qearl-080247db5648ba.webp", "w": 1179, "h": 2556}, {"type": "image", "src": "assets/qearl-aadea69e3bcc53.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "copy_19715E9C-434B-48F7-ACE9-4DB2E6E607F5.MOV", "links": []}, {"type": "text", "text": "†鳥の詩﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 脆脆&闷闷 单音效键盘6.88  全套12.88（不含转账）", "links": []}, {"type": "image", "src": "assets/qearl-82f1e966a1ea3a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c3118410a49adc.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "copy_2BDE265A-6273-40E1-9B71-C8177D49F203.MOV", "links": []}, {"type": "text", "text": "†无尽夏之梦﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 脆脆&闷闷 单音效键盘6.88  全套14.88", "links": []}, {"type": "text", "text": "copy_A550F45A-250A-44B1-9ACE-54F63D917B09.MOV", "links": []}, {"type": "image", "src": "assets/qearl-247e256c3b4982.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-073ad9bac4be4f.webp", "w": 1400, "h": 997}]}, "mist": {"title": "薄雾集", "blocks": [{"type": "text", "text": "°⑅♡#薄雾集♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入20.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-db8dbbe577464b.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-fd8d4bbf3cb1aa.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-6aebe0a14ee31d.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "image", "src": "assets/qearl-03db7b71cfef3e.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第一套：花境谜语，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-ff77abd2849262.webp", "w": 1280, "h": 912}, {"type": "text", "text": "第二套：藤枝雨，已掉落专属配套主题盒子", "links": []}, {"type": "text", "text": "第三套：梦是柔软的绷带，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-88f0d8fcf7ed17.webp", "w": 1400, "h": 997}, {"type": "image", "src": "assets/qearl-7f31ddcb371794.webp", "w": 1400, "h": 997}, {"type": "text", "text": "第四套：Mintchoc喵，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-4a7fee4ee8d167.webp", "w": 1280, "h": 1280}]}, "island": {"title": "失眠岛", "blocks": [{"type": "text", "text": "°⑅♡#失眠岛♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入23.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "image", "src": "assets/qearl-abbee2f90430a1.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-140f5318dbc1d0.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6ff6d9af88c997.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-313a791388c088.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-34799327a7ab59.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†掉落键盘预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-8100c3a573b3bc.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-f74ec47055d32a.webp", "w": 1280, "h": 2781}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-fa6391be865ced.webp", "w": 1179, "h": 1544}, {"type": "image", "src": "assets/qearl-f69a4548d1873c.webp", "w": 1179, "h": 1544}, {"type": "image", "src": "assets/qearl-b3410b29040f13.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "text", "text": "第一套：阿芙洛的湖畔少女，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-4cb85d50d8a36b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-43a02d0357efef.webp", "w": 1400, "h": 998}, {"type": "text", "text": "第二套：雨あと、苔，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-79564de2dd62b4.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-764918dd6dca90.webp", "w": 1400, "h": 998}, {"type": "text", "text": "第三套：蕾丝少女偶，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-bfbf812a694bc9.webp", "w": 1400, "h": 787}, {"type": "text", "text": "第四套：Mintchoc喵，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-acd6003ac25c36.webp", "w": 1280, "h": 1280}]}, "moss": {"title": "淚生苔", "blocks": [{"type": "text", "text": "°⑅♡#淚生苔♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入23.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "image", "src": "assets/qearl-abbee2f90430a1.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-9cb4a28ce85ed9.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-31810280d41645.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-db9e57fbae9b6f.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†掉落键盘预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-b9e779383c57c7.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-8cf12079df6a06.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-80ddd73ef0f06a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-a1352f5cb828b0.webp", "w": 1080, "h": 1080}, {"type": "image", "src": "assets/qearl-5c86492e3b2415.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "text", "text": "第一套：晚春的叹息，已掉落专属配套盒子", "links": []}, {"type": "image", "src": "assets/qearl-c55f142db83fa3.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-fab6e8708477b2.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第二套：Lacrimosa，带专署配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-15c44f69a4cb9b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-ad477431ab4119.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第三套：慢半拍雨季，赠送配套壁纸", "links": []}, {"type": "text", "text": "第四套：Mint곰，赠送配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-0e2d420402c33b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-65f2572f3c57d9.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-2c03d6caa6a701.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-3bceea63a9c704.webp", "w": 1280, "h": 1280}]}, "jasmine": {"title": "#茉莉信†﹡", "blocks": [{"type": "text", "text": "#茉莉信†﹡", "links": []}, {"type": "text", "text": "# 此文档为会内自截预览", "links": []}, {"type": "text", "text": "# 保底1500＋ 只多不少", "links": []}, {"type": "text", "text": "# 风格不固定 「低保和、古早之类 欢迎大人品尝っω<｡」", "links": []}, {"type": "text", "text": "# 入会请联系Llie_eovo", "links": []}, {"type": "text", "text": "# 感谢大人们支持(*´ω｀)p", "links": []}, {"type": "text", "text": "☆ 头像预览：", "links": []}, {"type": "image", "src": "assets/qearl-5296126d5fa3b4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-ad36714cfda63c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-7ed7481d7e536c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-0c83cec732a580.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9d0c9a1aa81b6c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-bc3f5f6566c7b4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-892c3d6491f713.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-91594493b8c6f7.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-b609820a941c9a.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-265d82887b2460.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-87cb77ea29dba5.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-dd81ece732e253.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-177372127a28e6.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-c276debf0c9fe4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-edfe61d39e41d1.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-31453e3268cc9c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-53f90abfd41770.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-77da894bd09f95.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-12474e807836fb.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-3165a6e5e422ba.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6adb5d3fd57b02.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-faea20ca7c8816.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-e62ebdf782e2bb.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-cfea6999fc5b43.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-970ea2cd464c4e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-2a4480c424e891.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-f85280d8595619.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9899e019da0373.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-3d4778e60f7678.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-0fca89dbc78452.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-ce9487b1598733.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-eee9bf6cdb91cd.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-414f65e5efbcad.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-f0f16cf903ef9f.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-07b7a83c9d76f4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-a6473d0cbd51c0.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-7e1fdf3d182ac4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9b4703f3f9f31c.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "☆ 掉落预览：", "links": []}, {"type": "text", "text": "† 字体预览：", "links": []}, {"type": "image", "src": "assets/qearl-ab0cd5f3038171.webp", "w": 1200, "h": 1600}, {"type": "text", "text": "† 名片预览：", "links": []}, {"type": "image", "src": "assets/qearl-4ab21809f74c57.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "「其余掉落加工中..」", "links": []}, {"type": "text", "text": "☆ 推人预览：", "links": []}, {"type": "text", "text": "推1「字体」：", "links": []}, {"type": "image", "src": "assets/qearl-3e2ee6d7688ffc.webp", "w": 1280, "h": 1449}, {"type": "text", "text": "推3「壁纸+键盘+字体」：", "links": []}, {"type": "image", "src": "assets/qearl-277f4bae62a925.webp", "w": 1324, "h": 2868}]}, "others": {"title": "°⑅♡ 枝间拾遗 ♡⑅°", "blocks": [{"type": "text", "text": "°⑅♡枝间拾遗♡⑅ °", "links": []}, {"type": "text", "text": "★/★下单默认已读", "links": []}, {"type": "text", "text": "因为内存原因无法在文档内进行预览", "links": []}, {"type": "text", "text": "可以通过236623390空间进行查看选款", "links": []}, {"type": "text", "text": "相册没有标注价格的可以私聊我进行询问哦~", "links": []}, {"type": "text", "text": "也可以在pyq进行查看预览~", "links": []}, {"type": "text", "text": "上述方法都不想使用的宝宝也可以私聊我发送相册进行查看~", "links": []}, {"type": "text", "text": "视频名片预览：#小程序://腾讯相册/0hTQVuNVBQ61xXD", "links": []}, {"type": "text", "text": "水印预览：#小程序://腾讯相册/a8UzlbZtNur1gWm", "links": []}, {"type": "text", "text": "名片预览：#小程序://腾讯相册/Jkq7WBQqXFAxP2w", "links": []}, {"type": "text", "text": "表情预览：#小程序://腾讯相册/MpvhXZGcRGwkBKn", "links": []}]}},KEY='qearl_atelier_custom_v1',OWNER='qearl_owner_preview';
+const DOCS={"home": {"title": "Qearl atelier.", "blocks": [{"type": "text", "text": "𓂃 ࣪˖ 𓈒", "links": []}, {"type": "text", "text": "branch atelier", "links": []}, {"type": "text", "text": "枝", "links": []}, {"type": "text", "text": "keyboard · aesthetic", "links": []}, {"type": "text", "text": "customized design", "links": []}, {"type": "text", "text": "since 2026", "links": []}, {"type": "text", "text": "♡ order guide ♡", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "自助下单 · 默认24h内出图", "links": []}, {"type": "text", "text": "在线基本秒出", "links": []}, {"type": "text", "text": "加急 ×1.5", "links": []}, {"type": "text", "text": "首次下单请提供IP录屏", "links": []}, {"type": "text", "text": "（聊天页 → 小红书主页 → 微博主页）", "links": []}, {"type": "text", "text": "键盘均为打标发货，请提供QQ号 & VX号", "links": []}, {"type": "text", "text": "转账 / 红包 / 扫码均可", "links": []}, {"type": "text", "text": "收款码见最下方", "links": []}, {"type": "text", "text": "有任何问题欢迎私聊♡", "links": []}, {"type": "text", "text": "♡ keyboard ♡", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "video preview available on xhs", "links": []}, {"type": "text", "text": "墨冬島尋枝", "links": []}, {"type": "text", "text": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "links": []}, {"type": "text", "text": "⁺｡꒰১ set ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "links": []}, {"type": "text", "text": "⁺｡꒰১ theme ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "°⑅♡#薄雾集♡⑅ °", "links": []}, {"type": "text", "text": "-°⑅♡#失眠岛♡⑅ °", "links": []}, {"type": "text", "text": "°⑅♡#淚生苔♡⑅ °", "links": []}, {"type": "text", "text": "⁺｡꒰১ self-cut ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "#茉莉信†﹡预览", "links": []}, {"type": "text", "text": "⁺｡꒰১ others ໒꒱｡⁺", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "°⑅♡枝间拾遗♡⑅ °", "links": []}, {"type": "text", "text": "✦ Branch & Bloom 🌿", "links": []}, {"type": "text", "text": "────────", "links": []}, {"type": "text", "text": "消费满 𝟹𝟻 可私聊进群 𓂃", "links": []}, {"type": "text", "text": "携带｜xhs主页 · 云黑码 · 网盘主页 · 微博主页 · 购买记录", "links": []}, {"type": "text", "text": "𝖬𝖾𝗆𝖻𝖾𝗋 𝗈𝗇𝗅𝗒 ♡", "links": []}, {"type": "text", "text": "专属掉落 · 福利抽奖 · 提前上新 · 新品尝鲜", "links": []}, {"type": "text", "text": "◌  payment ◌", "links": []}, {"type": "text", "text": "──────────────", "links": []}, {"type": "text", "text": "thank you♡", "links": []}, {"type": "text", "text": "感谢每一份喜欢。", "links": []}, {"type": "text", "text": "付款后请把截图发送给我，", "links": []}, {"type": "text", "text": "会尽快开始制作♡", "links": []}, {"type": "image", "src": "assets/qearl-187c1c7412c610.webp", "w": 1400, "h": 1400}]}, "typebook": {"title": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "blocks": [{"type": "text", "text": "𝖰𝖾𝖺𝗋𝗅’𝗌 𝖳𝗒𝗉𝖾 𝖡𝗈𝗈𝗄 ♡", "links": []}, {"type": "text", "text": "☆̸★下单默认已读", "links": []}, {"type": "text", "text": "• 呆呆小程序/菜瓜星球 小程序同步在售", "links": []}, {"type": "text", "text": "• 音效可在xhs：墨冬岛寻枝 查看", "links": []}, {"type": "text", "text": "• 手作产物 有瑕疵 强迫症完美主义宝宝慎重购买哦", "links": []}, {"type": "text", "text": "• 不教兑换和使用！！xhs上可以搜教程滴", "links": []}, {"type": "text", "text": "• 打标出图 下单需要提供ip录屏+vx号+qq号哦", "links": []}, {"type": "text", "text": "†桜莓ふわ﹡（福利款已下架）", "links": []}, {"type": "image", "src": "assets/qearl-e6f458dec29230.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†天使小叽﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送头像和壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡）12.88", "links": []}, {"type": "image", "src": "assets/qearl-aadea69e3bcc53.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†夢境兎﹡", "links": []}, {"type": "text", "text": "☘︎ 单键盘3.88", "links": []}, {"type": "image", "src": "assets/qearl-8bbca3f898080a.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†灰烬的圣歌﹡", "links": []}, {"type": "text", "text": "☘︎ 单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5fc1c8ec1c1928.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†青苹果乐园﹡", "links": []}, {"type": "text", "text": "☘︎ 键盘6.88（赠送壁纸）", "links": []}, {"type": "image", "src": "assets/qearl-374a8304b43c46.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†Kitty甜品屋﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送头像和壁纸", "links": []}, {"type": "text", "text": "☘︎ 直购价6.88", "links": []}, {"type": "text", "text": "需要壁纸的宝宝下单时备注双人单字署名即可（默认顺序从左到右，也可出同一署名，无署名默认不需要哦）", "links": []}, {"type": "text", "text": "需要头像的宝宝下单时需要自带两层密集水印哦，贴膜出图", "links": []}, {"type": "image", "src": "assets/qearl-b81e0a1c021051.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-b6d0813bcf1aef.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†鳥の詩﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡）12.88", "links": []}, {"type": "image", "src": "assets/qearl-82f1e966a1ea3a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c3118410a49adc.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†恋恋熊咪﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 单键盘6.88", "links": []}, {"type": "text", "text": "需要壁纸的宝宝下单时备注单字署名即可（无备注署名默认不需要哦）", "links": []}, {"type": "image", "src": "assets/qearl-f451a76fb8ac87.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-e31e8aaaf72359.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†无尽夏之梦﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆 双背景 单键盘7.88", "links": []}, {"type": "text", "text": "☘︎ 大全套（双音效+图标+气泡+转账）14.88", "links": []}, {"type": "image", "src": "assets/qearl-247e256c3b4982.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-073ad9bac4be4f.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†蓝的独白﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5e70d9dc156a8e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6bbe8e52fdbc5b.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†冬日记忆﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-0ed08a747d1d15.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-27f60958d5c87f.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†浮羽集﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 三音效闷闷&脆脆&特殊音  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-5b52c5ecebd712.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-2e43f7bb7c0e4a.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†低像素天使﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 三音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-254523563bd404.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-460e4fc2fb8dd1.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†灰福玫账簿﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-e97e94645e1533.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-a1066bf5e4c324.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†圣诞恋歌﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效闷闷&脆脆  单键盘6.88", "links": []}, {"type": "image", "src": "assets/qearl-69c087a056ee47.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†累累滴﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包6.88", "links": []}, {"type": "image", "src": "assets/qearl-92034986e9e353.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-69efe07d4d89a4.webp", "w": 1400, "h": 1396}, {"type": "text", "text": "†福团迎岁﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘5.88 双音效打包8.88", "links": []}, {"type": "image", "src": "assets/qearl-4bce5376824c78.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "†星穹摇篮曲﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘8.88 双音效打包15.88", "links": []}, {"type": "image", "src": "assets/qearl-334d3a19f9f217.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-30001b32bc618f.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†Muted Lambs﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-c6b4ec683ce301.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-16d14c2d353053.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†月渡寒汀﹡（已下架绝版）", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-f4be9483e9fe2e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-2dce9f03ed0925.webp", "w": 1080, "h": 1080}, {"type": "image", "src": "assets/qearl-d2c20936f416f1.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†绿野的晨祷﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-fc285017cf6651.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-6769dfbc25b5b6.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†雨帘垂落之前﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-13b11e1ffbaaa8.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†베어.mood﹡", "links": []}, {"type": "text", "text": "☘︎  ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包8.88", "links": []}, {"type": "text", "text": "☘︎ ios加购无背景 单音效2.88 双音效 3.88", "links": []}, {"type": "image", "src": "assets/qearl-cc09efd988ffc4.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†#雨帘垂落之前﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘6.88 双音效打包12.88", "links": []}, {"type": "image", "src": "assets/qearl-13b11e1ffbaaa8.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†#空白花语﹡", "links": []}, {"type": "text", "text": "☘︎ ios键盘 安卓键盘 下单请先说明系统哦 如需双系统请提供双机记录 本次赠送壁纸", "links": []}, {"type": "text", "text": "☘︎ 双音效 单音效键盘4.88 双音效打包8.88", "links": []}, {"type": "text", "text": "☘︎ ios有背景+无背景打包9.88", "links": []}, {"type": "image", "src": "assets/qearl-47c8fc756300c7.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c93f947e48c050.webp", "w": 1400, "h": 1000}]}, "custom": {"title": "𝖰.𝖢𝖴𝖲𝖳𝖮𝖬𝖪𝖤𝖸𝖲୨୧", "blocks": [{"type": "text", "text": "𝖰. 𝖢𝖴𝖲𝖳𝖮𝖬 𝖪𝖤𝖸𝖲 ୨୧", "links": []}, {"type": "text", "text": "𝘮𝘢𝘥𝘦 𝘪𝘯 𝘭𝘪𝘵𝘵𝘭𝘦 𝘥𝘦𝘵𝘢𝘪𝘭𝘴.", "links": []}, {"type": "text", "text": "⌇ 𝖯𝖱𝖨𝖢𝖤", "links": []}, {"type": "text", "text": "自带完整素材 ¥50+", "links": []}, {"type": "text", "text": "仅提供主体   ¥55+", "links": []}, {"type": "text", "text": "素材由我提供 ¥60+", "links": []}, {"type": "text", "text": "♡ 𝖨𝗇𝖼𝗅𝗎𝖽𝖾𝖽", "links": []}, {"type": "text", "text": "日常页面 + 暗黑页面 + 单音效", "links": []}, {"type": "text", "text": "♡ 𝖠𝖽𝖽 𝖮𝗇", "links": []}, {"type": "text", "text": "壁纸 +¥3 ｜ 增加音效 +¥15 / 个｜ 暗黑独立设计 +¥30", "links": []}, {"type": "text", "text": "加急 ×1.5 ｜ 商用 ×2          ｜ 买断 ×3", "links": []}, {"type": "text", "text": "〔 𝖬𝖺𝗍𝖾𝗋𝗂𝖺𝗅 𝖭𝗈𝗍𝖾 〕", "links": []}, {"type": "text", "text": "自带素材尽量准备高清 / 透明底 / 易抠图版本，", "links": []}, {"type": "text", "text": "主体、图标、漂浮及装饰小素材都可以一起打包给我。", "links": []}, {"type": "text", "text": "素材由我提供时，会围绕主题与整体氛围进行搭配，", "links": []}, {"type": "text", "text": "以实际可获取素材为准，不保证指定素材均可找到。", "links": []}, {"type": "text", "text": "复杂排版 / 大量素材处理 / 特殊需求可能适当浮价，", "links": []}, {"type": "text", "text": "所有费用都会在排单前确认 ♡", "links": []}, {"type": "text", "text": "〔 𝖱𝗎𝗌𝗁 𝖭𝗈𝗍𝖾 〕", "links": []}, {"type": "text", "text": "加急约 1–2 天，需提前确认是否有加急档期。", "links": []}, {"type": "text", "text": "加急为额外安排制作时间，", "links": []}, {"type": "text", "text": "不会占用普通订单原有排期，", "links": []}, {"type": "text", "text": "也不会影响已经排单或正在制作的键盘。", "links": []}, {"type": "text", "text": "※ 加急不默认随时可接，也不等于当天交付。", "links": []}, {"type": "text", "text": "୨୧ ───── 𝖮𝖱𝖣𝖤𝖱 𝖥𝖫𝖮𝖶 ───── ୨୧", "links": []}, {"type": "text", "text": "私聊确认需求 → 全款排单 → 等待排期 → 开工通知 →", "links": []}, {"type": "text", "text": "正式制作 → 首版预览 → 修改确认 → 封包上机 → 网盘交付 ♡", "links": []}, {"type": "text", "text": "普通制作｜约 5–7 天", "links": []}, {"type": "text", "text": "加急制作｜约 1–2 天", "links": []}, {"type": "text", "text": "排到你的订单后，我会主动发消息通知，", "links": []}, {"type": "text", "text": "并正式开始制作你的键盘 ♡", "links": []}, {"type": "text", "text": "普通订单按照排单顺序依次制作；", "links": []}, {"type": "text", "text": "加急则会另外安排时间完成，不占用原有排期。", "links": []}, {"type": "text", "text": "※ 制作工期从发送「开工通知」起计算，", "links": []}, {"type": "text", "text": "等待排期及等待确认的时间不包含在内。", "links": []}, {"type": "text", "text": "𝘧𝘳𝘰𝘮 𝘢𝘯 𝘪𝘥𝘦𝘢, 𝘪𝘯𝘵𝘰 𝘴𝘰𝘮𝘦𝘵𝘩𝘪𝘯𝘨 𝘺𝘰𝘶𝘳𝘴.", "links": []}, {"type": "text", "text": "୨୧ ─────── 𝖰. 𝖭𝖮𝖳𝖤𝖲 ─────── ୨୧", "links": []}, {"type": "text", "text": "定制前の小约定 ♡", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖨𝖽𝖾𝖺𝗌", "links": []}, {"type": "text", "text": "关于你的想法", "links": []}, {"type": "text", "text": "主题 / 配色 / 素材 / 喜好 / 雷点，", "links": []}, {"type": "text", "text": "以及音效、动效等特殊需求，", "links": []}, {"type": "text", "text": "请尽量在排单时一次告诉我。", "links": []}, {"type": "text", "text": "有明确想法可以尽可能说细；", "links": []}, {"type": "text", "text": "只有大概的感觉也没关系，", "links": []}, {"type": "text", "text": "可以给我留一些自由发挥的空间 ♡", "links": []}, {"type": "text", "text": "参考图仅用于确认喜欢的方向，不做 1:1 复刻。", "links": []}, {"type": "text", "text": "定制会保留我的个人审美与制作习惯，", "links": []}, {"type": "text", "text": "不擅长或无法达到预期的主题会提前说明。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖤𝖽𝗂𝗍𝗌", "links": []}, {"type": "text", "text": "关于预览与修改", "links": []}, {"type": "text", "text": "制作过程中会发送预览确认，", "links": []}, {"type": "text", "text": "包含 2 轮免费修改。", "links": []}, {"type": "text", "text": "「1轮」＝一次集中反馈，", "links": []}, {"type": "text", "text": "同一轮可以一起提出多个细节调整。", "links": []}, {"type": "text", "text": "位置 / 大小 / 局部素材等均可正常调整；", "links": []}, {"type": "text", "text": "原需求中没有提出的新增内容，", "links": []}, {"type": "text", "text": "或确认方向后重新更换风格 / 配色 / 大面积重做，", "links": []}, {"type": "text", "text": "会根据增加的制作量补差。", "links": []}, {"type": "text", "text": "收到预览后可以先仔细看看，", "links": []}, {"type": "text", "text": "整理好想调整的地方再一次告诉我 ♡", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖱𝖾𝖿𝗎𝗇𝖽𝗌", "links": []}, {"type": "text", "text": "关于排单与退单", "links": []}, {"type": "text", "text": "确认需求与价格并支付全款后，", "links": []}, {"type": "text", "text": "订单正式进入等待排期。", "links": []}, {"type": "text", "text": "收到我的「开工通知」前，", "links": []}, {"type": "text", "text": "都属于未开始制作阶段。", "links": []}, {"type": "text", "text": "未收到开工通知       全额退款", "links": []}, {"type": "text", "text": "已通知开工 · 尚未发送预览  退款 50%", "links": []}, {"type": "text", "text": "26键 / 9键 / 123键全部完成", "links": []}, {"type": "text", "text": "并发送预览后        退款 30%", "links": []}, {"type": "text", "text": "「开工通知」为正式开始制作的节点。", "links": []}, {"type": "text", "text": "排到你的订单后我会主动联系，", "links": []}, {"type": "text", "text": "通知发出后即进入制作阶段 ♡", "links": []}, {"type": "text", "text": "完整预览发送后如选择退单，", "links": []}, {"type": "text", "text": "定制文件不再交付；", "links": []}, {"type": "text", "text": "作品会恢复为非独占状态，", "links": []}, {"type": "text", "text": "我可在重新修改 / 调整后进行展示、上架或售卖。", "links": []}, {"type": "text", "text": "如因我的原因无法继续完成，", "links": []}, {"type": "text", "text": "会根据实际情况退还对应费用。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖣𝖾𝗅𝗂𝗏𝖾𝗋𝗒", "links": []}, {"type": "text", "text": "关于封包与交付", "links": []}, {"type": "text", "text": "全部页面及修改确认完成后，", "links": []}, {"type": "text", "text": "会进行封包并提供实际上机预览。", "links": []}, {"type": "text", "text": "封包前请确认好最终效果 ♡", "links": []}, {"type": "text", "text": "确认封包后如需再次调整：", "links": []}, {"type": "text", "text": "普通细节修改 ¥5 / 轮", "links": []}, {"type": "text", "text": "大改 / 新增内容 按实际工作量另计", "links": []}, {"type": "text", "text": "更换音效 / 转系统 / 新增页面等，", "links": []}, {"type": "text", "text": "属于新的制作需求，不包含在原定制范围内。", "links": []}, {"type": "text", "text": "确认无误后通过网盘交付，", "links": []}, {"type": "text", "text": "收到文件后请及时转存，", "links": []}, {"type": "text", "text": "文件不作永久补档，仅默认保留5天。", "links": []}, {"type": "text", "text": "⌇ 𝖠𝖻𝗈𝗎𝗍 𝖴𝗌𝖾", "links": []}, {"type": "text", "text": "关于使用范围", "links": []}, {"type": "text", "text": "♡ 个人定制", "links": []}, {"type": "text", "text": "默认仅供本人使用，", "links": []}, {"type": "text", "text": "可私下分享给 3 位亲友。", "links": []}, {"type": "text", "text": "禁止公开二传 / 转售 / 二改后出售，", "links": []}, {"type": "text", "text": "不可通过群聊、公开链接等形式传播。", "links": []}, {"type": "text", "text": "♡ 商用 ×2", "links": []}, {"type": "text", "text": "可用于掉落 / 福利 / 引流，", "links": []}, {"type": "text", "text": "不可直接转售定制文件。", "links": []}, {"type": "text", "text": "♡ 买断 ×3", "links": []}, {"type": "text", "text": "成品不再展示", "links": []}, {"type": "text", "text": "除制作权外，该定制成品的使用权归买家。", "links": []}, {"type": "text", "text": "※ 商用 / 买断仅针对我的设计与成品，", "links": []}, {"type": "text", "text": "不包含第三方素材、字体等原始版权。", "links": []}, {"type": "text", "text": "⌇ 𝖫𝗂𝗍𝗍𝗅𝖾 𝖭𝗈𝗍𝖾", "links": []}, {"type": "text", "text": "一些放在最后的小提醒 ୨୧", "links": []}, {"type": "text", "text": "· 自带素材请自行确认来源及可使用范围，", "links": []}, {"type": "text", "text": "因提供素材产生的版权 / 授权问题需自行负责。", "links": []}, {"type": "text", "text": "· 非买断定制默认保留成品展示权，", "links": []}, {"type": "text", "text": "可能用于作品展示 / 定制案例；", "links": []}, {"type": "text", "text": "介意公开或需要保密，请在排单前告诉我。", "links": []}, {"type": "text", "text": "· 预览发出后请尽量及时确认。", "links": []}, {"type": "text", "text": "超过 48h 未回复，订单会暂时停留在当前进度；", "links": []}, {"type": "text", "text": "再次联系后根据当时排期重新安排，", "links": []}, {"type": "text", "text": "原定交付时间也会相应顺延。", "links": []}, {"type": "text", "text": "· 因设备 / 系统版本 / 第三方软件更新等", "links": []}, {"type": "text", "text": "非成品本身导致的兼容问题，", "links": []}, {"type": "text", "text": "不属于免费修改范围。", "links": []}, {"type": "text", "text": "· 不同定制可能使用相同题材、配色或公开素材，", "links": []}, {"type": "text", "text": "非买断订单不保证后续作品完全不出现相似元素。", "links": []}, {"type": "text", "text": "· 未成年宝宝请在监护人知情并同意后下单。", "links": []}, {"type": "text", "text": "𝖯𝖺𝗒𝗆𝖾𝗇𝗍 = 𝖺𝗀𝗋𝖾𝖾𝗆𝖾𝗇𝗍 ୨୧", "links": []}, {"type": "text", "text": "付款即默认已阅读并接受以上定制规则。", "links": []}, {"type": "text", "text": "° 𝖰. 𝖺𝗋𝖼𝗁𝗂𝗏𝖾", "links": []}, {"type": "text", "text": "𝘴𝘮𝘢𝘭𝘭 𝘵𝘩𝘪𝘯𝘨𝘴, 𝘬𝘦𝘱𝘵 𝘸𝘪𝘵𝘩 𝘤𝘢𝘳𝘦.", "links": []}]}, "case": {"title": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "blocks": [{"type": "text", "text": "𝖰. 𝖳𝗁𝖾𝗆𝖾 𝖢𝖺𝗌𝖾 ♡", "links": []}, {"type": "text", "text": "☆̸★下单默认已读", "links": []}, {"type": "text", "text": "• 手作产物 有瑕疵 强迫症完美主义宝宝慎重购买哦", "links": []}, {"type": "text", "text": "• 非主题 仅为配套 不教使用！！xhs上可以搜教程滴", "links": []}, {"type": "text", "text": "• 打标出图 下单需要提供ip录屏+vx号+qq号哦", "links": []}, {"type": "text", "text": "• 为8048版本展示 其他版本可能会出现图标位置不同的情况", "links": []}, {"type": "text", "text": "• 纯手作产物 气泡会出现拉伸 介意宝宝请勿下单", "links": []}, {"type": "text", "text": "†天使小叽﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 单键盘6.88  全套12.88", "links": []}, {"type": "image", "src": "assets/qearl-6f5031c06783e5.webp", "w": 1179, "h": 2556}, {"type": "image", "src": "assets/qearl-080247db5648ba.webp", "w": 1179, "h": 2556}, {"type": "image", "src": "assets/qearl-aadea69e3bcc53.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "copy_19715E9C-434B-48F7-ACE9-4DB2E6E607F5.MOV", "links": []}, {"type": "text", "text": "†鳥の詩﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 脆脆&闷闷 单音效键盘6.88  全套12.88（不含转账）", "links": []}, {"type": "image", "src": "assets/qearl-82f1e966a1ea3a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-c3118410a49adc.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "copy_2BDE265A-6273-40E1-9B71-C8177D49F203.MOV", "links": []}, {"type": "text", "text": "†无尽夏之梦﹡", "links": []}, {"type": "text", "text": "☘︎ 直购 脆脆&闷闷 单音效键盘6.88  全套14.88", "links": []}, {"type": "text", "text": "copy_A550F45A-250A-44B1-9ACE-54F63D917B09.MOV", "links": []}, {"type": "image", "src": "assets/qearl-247e256c3b4982.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-073ad9bac4be4f.webp", "w": 1400, "h": 997}]}, "mist": {"title": "薄雾集", "blocks": [{"type": "text", "text": "°⑅♡#薄雾集♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入20.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-db8dbbe577464b.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-fd8d4bbf3cb1aa.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-6aebe0a14ee31d.webp", "w": 1400, "h": 997}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "image", "src": "assets/qearl-03db7b71cfef3e.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第一套：花境谜语，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-ff77abd2849262.webp", "w": 1280, "h": 912}, {"type": "text", "text": "第二套：藤枝雨，已掉落专属配套主题盒子", "links": []}, {"type": "text", "text": "第三套：梦是柔软的绷带，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-88f0d8fcf7ed17.webp", "w": 1400, "h": 997}, {"type": "image", "src": "assets/qearl-7f31ddcb371794.webp", "w": 1400, "h": 997}, {"type": "text", "text": "第四套：Mintchoc喵，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-4a7fee4ee8d167.webp", "w": 1280, "h": 1280}]}, "island": {"title": "失眠岛", "blocks": [{"type": "text", "text": "°⑅♡#失眠岛♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入23.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "image", "src": "assets/qearl-abbee2f90430a1.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-140f5318dbc1d0.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6ff6d9af88c997.webp", "w": 1400, "h": 998}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-313a791388c088.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-34799327a7ab59.webp", "w": 1080, "h": 1080}, {"type": "text", "text": "†掉落键盘预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-8100c3a573b3bc.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-f74ec47055d32a.webp", "w": 1280, "h": 2781}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-fa6391be865ced.webp", "w": 1179, "h": 1544}, {"type": "image", "src": "assets/qearl-f69a4548d1873c.webp", "w": 1179, "h": 1544}, {"type": "image", "src": "assets/qearl-b3410b29040f13.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "text", "text": "第一套：阿芙洛的湖畔少女，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-4cb85d50d8a36b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-43a02d0357efef.webp", "w": 1400, "h": 998}, {"type": "text", "text": "第二套：雨あと、苔，已掉落专属配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-79564de2dd62b4.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-764918dd6dca90.webp", "w": 1400, "h": 998}, {"type": "text", "text": "第三套：蕾丝少女偶，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-bfbf812a694bc9.webp", "w": 1400, "h": 787}, {"type": "text", "text": "第四套：Mintchoc喵，已掉落专属配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-acd6003ac25c36.webp", "w": 1280, "h": 1280}]}, "moss": {"title": "淚生苔", "blocks": [{"type": "text", "text": "°⑅♡#淚生苔♡⑅ °", "links": []}, {"type": "text", "text": "混更会，完结补入23.88", "links": []}, {"type": "text", "text": "☆̸★入会默认已读", "links": []}, {"type": "text", "text": "♡̴不教使用，手工制品键盘默认微瑕! 强迫症完美主义宝宝勿入！", "links": []}, {"type": "text", "text": "♡̴键盘视频预览在xhs：墨冬岛寻枝", "links": []}, {"type": "image", "src": "assets/qearl-abbee2f90430a1.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†入会赠预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-9cb4a28ce85ed9.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†推1预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-31810280d41645.webp", "w": 1179, "h": 1544}, {"type": "text", "text": "†推3预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-db9e57fbae9b6f.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†掉落键盘预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-b9e779383c57c7.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-8cf12079df6a06.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "†掉落美化产物预览﹡", "links": []}, {"type": "image", "src": "assets/qearl-80ddd73ef0f06a.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-a1352f5cb828b0.webp", "w": 1080, "h": 1080}, {"type": "image", "src": "assets/qearl-5c86492e3b2415.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "𐂐会专预览", "links": []}, {"type": "text", "text": "第一套：晚春的叹息，已掉落专属配套盒子", "links": []}, {"type": "image", "src": "assets/qearl-c55f142db83fa3.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-fab6e8708477b2.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第二套：Lacrimosa，带专署配套主题盒子", "links": []}, {"type": "image", "src": "assets/qearl-15c44f69a4cb9b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-ad477431ab4119.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "第三套：慢半拍雨季，赠送配套壁纸", "links": []}, {"type": "text", "text": "第四套：Mint곰，赠送配套壁纸", "links": []}, {"type": "image", "src": "assets/qearl-0e2d420402c33b.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-65f2572f3c57d9.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-2c03d6caa6a701.webp", "w": 1280, "h": 1280}, {"type": "image", "src": "assets/qearl-3bceea63a9c704.webp", "w": 1280, "h": 1280}]}, "jasmine": {"title": "#茉莉信†﹡", "blocks": [{"type": "text", "text": "#茉莉信†﹡", "links": []}, {"type": "text", "text": "# 此文档为会内自截预览", "links": []}, {"type": "text", "text": "# 保底1500＋ 只多不少", "links": []}, {"type": "text", "text": "# 风格不固定 「低保和、古早之类 欢迎大人品尝っω<｡」", "links": []}, {"type": "text", "text": "# 入会请联系Llie_eovo", "links": []}, {"type": "text", "text": "# 感谢大人们支持(*´ω｀)p", "links": []}, {"type": "text", "text": "☆ 头像预览：", "links": []}, {"type": "image", "src": "assets/qearl-5296126d5fa3b4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-ad36714cfda63c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-7ed7481d7e536c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-0c83cec732a580.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9d0c9a1aa81b6c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-bc3f5f6566c7b4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-892c3d6491f713.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-91594493b8c6f7.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-b609820a941c9a.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-265d82887b2460.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-87cb77ea29dba5.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-dd81ece732e253.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-177372127a28e6.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-c276debf0c9fe4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-edfe61d39e41d1.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-31453e3268cc9c.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-53f90abfd41770.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-77da894bd09f95.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-12474e807836fb.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-3165a6e5e422ba.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-6adb5d3fd57b02.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-faea20ca7c8816.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-e62ebdf782e2bb.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-cfea6999fc5b43.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-970ea2cd464c4e.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-2a4480c424e891.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-f85280d8595619.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9899e019da0373.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-3d4778e60f7678.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-0fca89dbc78452.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-ce9487b1598733.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-eee9bf6cdb91cd.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-414f65e5efbcad.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-f0f16cf903ef9f.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-07b7a83c9d76f4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-a6473d0cbd51c0.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-7e1fdf3d182ac4.webp", "w": 1400, "h": 1400}, {"type": "image", "src": "assets/qearl-9b4703f3f9f31c.webp", "w": 1400, "h": 1400}, {"type": "text", "text": "☆ 掉落预览：", "links": []}, {"type": "text", "text": "† 字体预览：", "links": []}, {"type": "image", "src": "assets/qearl-ab0cd5f3038171.webp", "w": 1200, "h": 1600}, {"type": "text", "text": "† 名片预览：", "links": []}, {"type": "image", "src": "assets/qearl-4ab21809f74c57.webp", "w": 1280, "h": 1280}, {"type": "text", "text": "「其余掉落加工中..」", "links": []}, {"type": "text", "text": "☆ 推人预览：", "links": []}, {"type": "text", "text": "推1「字体」：", "links": []}, {"type": "image", "src": "assets/qearl-3e2ee6d7688ffc.webp", "w": 1280, "h": 1449}, {"type": "text", "text": "推3「壁纸+键盘+字体」：", "links": []}, {"type": "image", "src": "assets/qearl-277f4bae62a925.webp", "w": 1324, "h": 2868}]}, "others": {"title": "°⑅♡ 枝间拾遗 ♡⑅°", "blocks": [{"type": "text", "text": "°⑅♡枝间拾遗♡⑅ °", "links": []}, {"type": "text", "text": "★/★下单默认已读", "links": []}, {"type": "text", "text": "因为内存原因无法在文档内进行预览", "links": []}, {"type": "text", "text": "可以通过236623390空间进行查看选款", "links": []}, {"type": "text", "text": "相册没有标注价格的可以私聊我进行询问哦~", "links": []}, {"type": "text", "text": "也可以在pyq进行查看预览~", "links": []}, {"type": "text", "text": "上述方法都不想使用的宝宝也可以私聊我发送相册进行查看~", "links": []}, {"type": "text", "text": "视频名片预览：#小程序://腾讯相册/0hTQVuNVBQ61xXD", "links": []}, {"type": "text", "text": "水印预览：#小程序://腾讯相册/a8UzlbZtNur1gWm", "links": []}, {"type": "text", "text": "名片预览：#小程序://腾讯相册/Jkq7WBQqXFAxP2w", "links": []}, {"type": "text", "text": "表情预览：#小程序://腾讯相册/MpvhXZGcRGwkBKn", "links": []}]}},KEY='qearl_atelier_custom_v1',OWNER='qearl_owner_preview';
 let data=JSON.parse(localStorage.getItem(KEY)||'{"cards":[],"append":{}}'),current=null;
 const reader=document.getElementById('reader'),rt=document.getElementById('rt'),rk=document.getElementById('rk'),rb=document.getElementById('rb');
 
@@ -565,6 +1123,132 @@ function isTocHeading(t,page){
 
   return false;
 }
+
+function renderCustomPage(bs){
+  const text=i=>esc(bs[i]?.text||'');
+  const lines=(a,b)=>Array.from({length:b-a+1},(_,k)=>`<p>${text(a+k)}</p>`).join('');
+
+  window.__currentTOC=[
+    {id:'custom-price',text:'⌇ 𝖯𝖱𝖨𝖢𝖤'},
+    {id:'custom-flow',text:'୨୧ 𝖮𝖱𝖣𝖤𝖱 𝖥𝖫𝖮𝖶'},
+    {id:'custom-ideas',text:'⌇ 𝖠𝖻𝗈𝗎𝗍 𝖨𝖽𝖾𝖺𝗌'},
+    {id:'custom-edits',text:'⌇ 𝖠𝖻𝗈𝗎𝗍 𝖤𝖽𝗂𝗍𝗌'},
+    {id:'custom-refunds',text:'⌇ 𝖠𝖻𝗈𝗎𝗍 𝖱𝖾𝖿𝗎𝗇𝖽𝗌'},
+    {id:'custom-delivery',text:'⌇ 𝖠𝖻𝗈𝗎𝗍 𝖣𝖾𝗅𝗂𝗏𝖾𝗋𝗒'},
+    {id:'custom-use',text:'⌇ 𝖠𝖻𝗈𝗎𝗍 𝖴𝗌𝖾'},
+    {id:'custom-little',text:'⌇ 𝖫𝗂𝗍𝗍𝗅𝖾 𝖭𝗈𝗍𝖾'}
+  ];
+
+  const flow=[
+    ['01','确认需求','私聊沟通'],
+    ['02','全款排单','进入队列'],
+    ['03','开工通知','工期开始'],
+    ['04','正式制作','5–7 天'],
+    ['05','首版预览','集中反馈'],
+    ['06','封包上机','确认最终'],
+    ['07','网盘交付','及时转存']
+  ].map(x=>`<div class="flowStep"><div class="flowDot">${x[0]}</div><b>${x[1]}</b><small>${x[2]}</small></div>`).join('');
+
+  return `
+  <div class="customStudio">
+    <section class="customTop" id="custom-price">
+      <div class="customGlass customPrice">
+        <div class="customKicker">${text(2)}</div>
+        <h3 class="customTitle">Custom pricing</h3>
+        <div class="priceRow"><span>自带完整素材</span><strong>¥50+</strong></div>
+        <div class="priceRow"><span>仅提供主体</span><strong>¥55+</strong></div>
+        <div class="priceRow"><span>素材由我提供</span><strong>¥60+</strong></div>
+      </div>
+
+      <div class="customSideStack">
+        <div class="customGlass customSideCard">
+          <div class="customSideHead"><h4>${text(6)}</h4><span>INCLUDED</span></div>
+          <div class="customCompactList">
+            <div class="customCompactRow"><span>日常页面</span><b>＋</b></div>
+            <div class="customCompactRow"><span>暗黑页面</span><b>＋</b></div>
+            <div class="customCompactRow"><span>单音效</span><b>♡</b></div>
+          </div>
+        </div>
+
+        <div class="customGlass customSideCard">
+          <div class="customSideHead"><h4>${text(8)}</h4><span>ADD ON</span></div>
+          <div class="customCompactList">
+            <div class="customCompactRow"><span>壁纸</span><span class="price">+¥3</span></div>
+            <div class="customCompactRow"><span>增加音效 / 个</span><span class="price">+¥15</span></div>
+            <div class="customCompactRow"><span>暗黑独立设计</span><span class="price">+¥30</span></div>
+            <div class="customCompactRow customMultiplier"><span>加急 ×1.5 · 商用 ×2 · 买断 ×3</span><span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="customGlass customNote">
+      <div class="customNoteHead"><span class="customNoteNo">01</span><h4>${text(11)}</h4></div>
+      <div class="copy">${lines(12,17)}</div>
+    </section>
+    <section class="customGlass customNote">
+      <div class="customNoteHead"><span class="customNoteNo">02</span><h4>${text(18)}</h4></div>
+      <div class="copy">${lines(19,23)}</div>
+    </section>
+
+    <section class="customGlass customFlow" id="custom-flow">
+      <div class="customFlowTitle">୨୧ ───── ORDER FLOW ───── ୨୧</div>
+      <div class="flowTrack">${flow}</div>
+      <div class="customLead" style="margin-top:12px">${text(35)}</div>
+    </section>
+
+    <div class="customLead">${text(36)}<br>${text(37)}</div>
+
+    <section class="customGlass customRules">
+      <details class="customRule" id="custom-ideas" open>
+        <summary><span class="num">01</span><span><span class="sumTitle">${text(38)}</span><span class="sumSub">${text(39)}</span></span><span class="plus">＋</span></summary>
+        <div class="ruleBody">${lines(40,48)}</div>
+      </details>
+      <details class="customRule" id="custom-edits">
+        <summary><span class="num">02</span><span><span class="sumTitle">${text(49)}</span><span class="sumSub">${text(50)}</span></span><span class="plus">＋</span></summary>
+        <div class="ruleBody">${lines(51,60)}</div>
+      </details>
+      <details class="customRule" id="custom-refunds">
+        <summary><span class="num">03</span><span><span class="sumTitle">${text(61)}</span><span class="sumSub">${text(62)}</span></span><span class="plus">＋</span></summary>
+        <div class="ruleBody">
+          ${lines(63,66)}
+          <div class="refundGrid">
+            <div class="refundCell"><b>100%</b><span>未收到开工通知<br>全额退款</span></div>
+            <div class="refundCell"><b>50%</b><span>已通知开工<br>尚未发送预览</span></div>
+            <div class="refundCell"><b>30%</b><span>26 / 9 / 123 键完成<br>并发送预览后</span></div>
+          </div>
+          ${lines(71,79)}
+        </div>
+      </details>
+      <details class="customRule" id="custom-delivery">
+        <summary><span class="num">04</span><span><span class="sumTitle">${text(80)}</span><span class="sumSub">${text(81)}</span></span><span class="plus">＋</span></summary>
+        <div class="ruleBody">${lines(82,92)}</div>
+      </details>
+      <details class="customRule" id="custom-use">
+        <summary><span class="num">05</span><span><span class="sumTitle">${text(93)}</span><span class="sumSub">${text(94)}</span></span><span class="plus">＋</span></summary>
+        <div class="ruleBody">
+          <div class="usageGrid">
+            <div class="usageCell"><b>${text(95)}</b><p>${text(96)}<br>${text(97)}<br>${text(98)}<br>${text(99)}</p></div>
+            <div class="usageCell"><b>${text(100)}</b><p>${text(101)}<br>${text(102)}</p></div>
+            <div class="usageCell"><b>${text(103)}</b><p>${text(104)}<br>${text(105)}</p></div>
+          </div>
+          <p style="margin-top:12px">${text(106)}<br>${text(107)}</p>
+        </div>
+      </details>
+      <details class="customRule" id="custom-little">
+        <summary><span class="num">06</span><span><span class="sumTitle">${text(108)}</span><span class="sumSub">${text(109)}</span></span><span class="plus">＋</span></summary>
+        <div class="ruleBody">${lines(110,124)}</div>
+      </details>
+    </section>
+
+    <section class="customAgreement">
+      <div class="big">${text(125)}</div>
+      <p>${text(126)}</p>
+      <small>${text(127)} · ${text(128)}</small>
+    </section>
+  </div>`;
+}
+
 function renderSequential(bs,page){
   let o='',toc=[];
   (bs||[]).forEach((b,bi)=>{
@@ -699,7 +1383,7 @@ function openDoc(s,opts={}){
   let bs=d?[...d.blocks]:[];
   if(data.append[s])bs=bs.concat(data.append[s]);
   if(!d){let c=data.cards.find(x=>x.id===s);bs=c?c.blocks:[]}
-  rb.innerHTML=renderSequential(bs,s);
+  rb.innerHTML=(s==='custom'?renderCustomPage(bs):renderSequential(bs,s));
   renderTOC(window.__currentTOC||[]);
   reader.classList.add('open');reader.scrollTop=0;document.body.style.overflow='hidden';ownerUI();if(opts.updateUrl!==false)qearlSetPath(qearlPathForDoc(s))
 }

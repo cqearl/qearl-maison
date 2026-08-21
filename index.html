@@ -3426,67 +3426,26 @@ ownerUI();loadPublishedData();refreshOwnerSession();qearlBootRoute();
 </script>
 
 
-<script id="qearl-v37-reader-open-reset">
-(()=>{
-  const reader=document.getElementById('reader');
-  if(!reader) return;
-
-  const resetReader=()=>{
-    if(!window.matchMedia('(max-width:680px)').matches) return;
-    reader.scrollTop=0;
-    const main=reader.querySelector('.rmain');
-    const hero=reader.querySelector('.rhero');
-    if(main){
-      main.style.setProperty('padding-top','58px','important');
-      main.style.setProperty('top','0','important');
-      main.style.setProperty('transform','none','important');
-    }
-    if(hero){
-      hero.style.setProperty('margin-top','0','important');
-      hero.style.setProperty('padding-top','12px','important');
-      hero.style.setProperty('min-height','0','important');
-      hero.style.setProperty('height','auto','important');
-      hero.style.setProperty('transform','none','important');
-    }
-    requestAnimationFrame(()=>{ reader.scrollTop=0; });
-  };
-
-  const obs=new MutationObserver(()=>{
-    if(reader.classList.contains('open')) resetReader();
-  });
-  obs.observe(reader,{attributes:true,attributeFilter:['class']});
-})();
-</script>
-
-
-<script id="qearl-v53-mobile-reader-flow-js">
+<script id="qearl-v54-mobile-reader-flow-js">
 (()=>{
   const reader=document.getElementById('reader');
   if(!reader) return;
   const mobile=()=>window.matchMedia('(max-width:680px)').matches;
-
-  const sync=()=>{
+  const syncLayout=()=>{
     const open=reader.classList.contains('open');
     if(open && mobile()){
       document.body.classList.add('qearl-reader-flow');
       document.body.style.removeProperty('overflow');
-      reader.scrollTop=0;
-      window.scrollTo({top:0,left:0,behavior:'auto'});
-      requestAnimationFrame(()=>{
-        window.scrollTo(0,0);
-        reader.scrollTop=0;
-      });
     }else{
       document.body.classList.remove('qearl-reader-flow');
       if(!open) document.body.style.removeProperty('overflow');
     }
   };
-
-  const obs=new MutationObserver(sync);
+  const obs=new MutationObserver(syncLayout);
   obs.observe(reader,{attributes:true,attributeFilter:['class','data-page']});
-  window.addEventListener('resize',sync,{passive:true});
-  window.addEventListener('pageshow',sync);
-  sync();
+  window.addEventListener('resize',syncLayout,{passive:true});
+  window.addEventListener('pageshow',syncLayout);
+  syncLayout();
 })();
 </script>
 

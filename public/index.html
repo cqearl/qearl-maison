@@ -1403,10 +1403,19 @@ function renderTOC(items){
         const jump=()=>{
           const nav=document.querySelector('.rnav');
           const navH=nav?nav.offsetHeight:62;
-          const rr=reader.getBoundingClientRect();
-          const tr=target.getBoundingClientRect();
-          const top=reader.scrollTop+(tr.top-rr.top)-navH-22;
-          reader.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+          const mobileFlow=document.body.classList.contains('qearl-reader-flow');
+
+          if(mobileFlow){
+            /* V53+ mobile reader uses the document as the scroll container. */
+            const top=window.scrollY+target.getBoundingClientRect().top-navH-18;
+            window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+          }else{
+            /* Desktop reader keeps its own scroll container. */
+            const rr=reader.getBoundingClientRect();
+            const tr=target.getBoundingClientRect();
+            const top=reader.scrollTop+(tr.top-rr.top)-navH-22;
+            reader.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+          }
         };
         requestAnimationFrame(()=>requestAnimationFrame(jump));
         document.querySelectorAll('.tocItem').forEach(x=>x.classList.remove('active'));

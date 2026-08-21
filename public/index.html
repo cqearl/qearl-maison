@@ -333,6 +333,61 @@ body.owner-mode .glass:hover .dynamicOwnerTools{display:block}
 .cloudStatus{font-size:11px;color:#8b8fa1;margin-top:8px}
 </style>
 
+
+<style id="qearl-v52-ios-safari-reader-fix">
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 820px) {
+    html { scroll-behavior:auto!important; }
+
+    #reader.reader{
+      position:fixed!important;
+      top:0!important;
+      right:0!important;
+      bottom:0!important;
+      left:0!important;
+      width:100%!important;
+      height:auto!important;
+      min-height:0!important;
+      max-height:none!important;
+      overflow-x:hidden!important;
+      overflow-y:auto!important;
+      -webkit-overflow-scrolling:touch!important;
+      overscroll-behavior:contain!important;
+      transform:translate3d(0,0,0)!important;
+    }
+
+    #reader .rnav{
+      position:sticky!important;
+      top:0!important;
+      left:auto!important;
+      right:auto!important;
+      height:calc(50px + env(safe-area-inset-top))!important;
+      padding-top:env(safe-area-inset-top)!important;
+      z-index:10020!important;
+      transform:none!important;
+    }
+
+    #reader .rbar{height:50px!important;}
+
+    #reader .rmain{
+      position:relative!important;
+      top:auto!important;
+      left:auto!important;
+      transform:none!important;
+      width:calc(100% - 20px)!important;
+      margin:0 auto!important;
+      padding:8px 0 calc(58px + env(safe-area-inset-bottom))!important;
+    }
+
+    #reader .rhero{
+      margin-top:0!important;
+      padding-top:10px!important;
+      transform:none!important;
+    }
+  }
+}
+</style>
+
 </head>
 <body>
 <nav><div class="navin"><span class="brand">QEARL ATELIER.</span><button class="btn" id="owner">owner entrance ୨୧</button></div></nav>
@@ -954,6 +1009,42 @@ ownerUI();renderUsers();
 })();
 
 qearlBootRoute();
+</script>
+
+
+<script id="qearl-v52-ios-scroll-fix">
+(function(){
+  if('scrollRestoration' in history) history.scrollRestoration='manual';
+
+  const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent) ||
+    (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+
+  if(!isIOS) return;
+
+  const reader=document.getElementById('reader');
+  if(!reader) return;
+
+  const resetReaderTop=()=>{
+    requestAnimationFrame(()=>{
+      reader.scrollTop=0;
+      reader.scrollTo(0,0);
+      requestAnimationFrame(()=>{ reader.scrollTop=0; });
+    });
+  };
+
+  const obs=new MutationObserver(()=>{
+    if(reader.classList.contains('open')) resetReaderTop();
+  });
+
+  obs.observe(reader,{
+    attributes:true,
+    attributeFilter:['class','data-page']
+  });
+
+  window.addEventListener('pageshow',()=>{
+    if(reader.classList.contains('open')) resetReaderTop();
+  });
+})();
 </script>
 
 </body></html>

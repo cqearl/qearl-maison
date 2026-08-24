@@ -110,7 +110,7 @@ async function handleState(env){
 }
 
 async function handleBlock(request,env){
-  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401);
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
   if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
   const b=await readJson(request);
   if(request.method==="POST"){
@@ -142,23 +142,23 @@ async function handleBlock(request,env){
     if(!validPage(b.page)||!Number.isInteger(b.blockIndex))return json({error:"Invalid data"},400);
     await env.DB.prepare(`INSERT INTO content_overrides(page,block_index,deleted) VALUES(?,?,1)
       ON CONFLICT(page,block_index) DO UPDATE SET deleted=1,updated_at=CURRENT_TIMESTAMP`).bind(b.page,b.blockIndex).run();
-    return json({ok:true});
+    return json({ok:true},200,{},request);
   }
-  return json({error:"Method not allowed"},405);
+  return json({error:"Method not allowed"},405,{},request);
 }
 
 
 async function handlePublish(request,env){
   const a=await readSession(request,env);
-  if(!a)return json({error:"Unauthorized"},401);
+  if(!a)return json({error:"Unauthorized"},401,{},request);
   if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
 
   const form=await request.formData();
   const page=String(form.get("target")||"").trim();
   const title=String(form.get("title")||"").trim();
   const text=String(form.get("text")||"").trim();
-  if(!validPage(page))return json({error:"Invalid page"},400);
-  if(!title)return json({error:"Title required"},400);
+  if(!validPage(page))return json({error:"Invalid page"},400,{},request);
+  if(!title)return json({error:"Title required"},400,{},request);
 
   let next=(await env.DB.prepare(
     "SELECT COALESCE(MAX(sort_order),0)+1 n FROM additions WHERE page=?"
@@ -185,8 +185,8 @@ async function handlePublish(request,env){
   let total=0;
   for(const file of files){
     total+=file.size;
-    if(file.size>950000)return json({error:"单张图片压缩后仍超过 950KB"},413);
-    if(total>2800000)return json({error:"本次图片总大小超过 2.8MB"},413);
+    if(file.size>950000)return json({error:"单张图片压缩后仍超过 950KB"},413,{},request);
+    if(total>2800000)return json({error:"本次图片总大小超过 2.8MB"},413,{},request);
 
     const buf=new Uint8Array(await file.arrayBuffer());
     let binary="";
@@ -430,16 +430,16 @@ async function uploadSignature(request,env){
 }
 
 async function handlePage(request,env){
-  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401);
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
   if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
   const b=await readJson(request);
   if(request.method==="POST"){
     const title=String(b.title||"").trim();
-    if(!title||title.length>100)return json({error:"Invalid title"},400);
+    if(!title||title.length>100)return json({error:"Invalid title"},400,{},request);
     const slug="q-"+Date.now().toString(36)+"-"+crypto.randomUUID().slice(0,6);
     const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM custom_pages").first();
     await env.DB.prepare("INSERT INTO custom_pages(slug,title,sort_order,published) VALUES(?,?,?,1)").bind(slug,title,row?.n||1).run();
-    return json({ok:true,slug,title});
+    return json({ok:true,slug,title},200,{},request);
   }
   if(request.method==="DELETE"){
     await env.DB.batch([
@@ -474,6 +474,7 @@ export default {
       if(p==="/api/admin/items"||p.startsWith("/api/admin/items/")) return await adminItems(request,env,p);
       if(p==="/api/admin/media"||p.startsWith("/api/admin/media/")) return await adminMedia(request,env,p);
 
+      if(p==="/api/health" && request.method==="GET") return json({ok:true,service:"qearl-maison",version:"V64.1"},200,{},request);
       if((p==="/api/session" || p==="/api/me") && request.method==="GET"){
         const s=await readSession(request,env); return json({authenticated:!!s,ok:!!s},s?200:401,{},request);
       }
@@ -481,12 +482,12 @@ export default {
         if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
         const b=await readJson(request);
         const loginName=b.username??b.id; const ok=safeEqualString(loginName,env.ADMIN_USERNAME)&&safeEqualString(b.password,env.ADMIN_PASSWORD);
-        if(!ok)return json({error:"Invalid credentials"},401);
+        if(!ok)return json({error:"Invalid credentials"},401,{},request);
         const token=await makeSession(loginName,env);
-        return json({ok:true},200,{"Set-Cookie":sessionCookie(token)});
+        return json({ok:true},200,{"Set-Cookie":sessionCookie(token)},request);
       }
       if(p==="/api/logout" && request.method==="POST"){
-        return json({ok:true},200,{"Set-Cookie":clearCookie()});
+        return json({ok:true},200,{"Set-Cookie":clearCookie()},request);
       }
       if(p==="/api/state" && request.method==="GET") return await handleState(env);
       if(p==="/api/publish" && request.method==="POST") return await handlePublish(request,env);
@@ -494,7 +495,7 @@ export default {
       if(p==="/api/page") return await handlePage(request,env);
       return env.ASSETS.fetch(request);
     }catch(e){
-      console.error(e); return json({error:"Server error"},500);
+      console.error(e); return json({error:"Server error"},500,{},request);
     }
   }
 };

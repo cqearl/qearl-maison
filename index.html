@@ -3557,6 +3557,24 @@ body.owner-mode .ownerOnly{display:block!important}
 @media(max-width:820px){.blockImg{contain-intrinsic-size:360px 360px}}
 </style>
 
+
+<style id="qearl-v643-inline-owner-add">
+#admin .currentPageHint{
+  display:none;margin:-2px 0 12px;padding:9px 12px;
+  border:1px solid rgba(255,255,255,.72);border-radius:14px;
+  background:rgba(250,250,253,.48);color:#777d94;
+  font-size:11px;line-height:1.55;
+}
+#admin.cloudAdd .currentPageHint{display:block}
+#admin.cloudAdd .targetField{display:none}
+@media(max-width:820px){
+  #reader #append{
+    min-height:36px!important;padding:0 12px!important;
+    border-radius:999px!important;font-size:11px!important;white-space:nowrap!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav>
@@ -3646,7 +3664,7 @@ body.owner-mode .ownerOnly{display:block!important}
 </section>
 
 <dialog id="login"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / owner entrance</span><button class="close" data-close="login">×</button></div><h2 style="font:italic 30px Georgia,serif">Private access ୨୧</h2><div class="field"><label>OWNER ID</label><input id="uid" autocomplete="username"></div><div class="field"><label>PASSWORD</label><input id="pwd" type="password" autocomplete="current-password"></div><button class="btn" id="loginbtn">enter owner mode</button><p class="small">管理员登录后可直接发布到网站；发布后 GitHub Pages 会自动更新。</p></div></dialog>
-<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><div class="field"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">发布到网站</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
+<dialog id="admin"><div class="modal"><div class="mh"><span class="eyebrow">Qearl / archive editor</span><button class="close" data-close="admin">×</button></div><h2 style="font:italic 30px Georgia,serif">Add to archive.</h2><div class="currentPageHint"></div><div class="field targetField"><label>栏目</label><select id="target"><option value="new">新建主页栏目</option><option value="typebook">Type Book</option><option value="custom">Custom Keys</option><option value="case">Theme Case</option><option value="mist">薄雾集</option><option value="island">失眠岛</option><option value="moss">淚生苔</option><option value="jasmine">茉莉信</option><option value="others">其他美化产物</option></select></div><div class="field"><label>标题</label><input id="nt"></div><div class="field"><label>正文</label><textarea id="nx"></textarea></div><div class="field"><label>图片</label><input id="ni" type="file" accept="image/*" multiple></div><div class="acts"><button class="btn" id="save">发布到网站</button><button class="btn" id="export">导出备份</button><label class="btn">导入备份<input id="import" type="file" accept=".json" hidden></label><button class="btn" id="logout">退出 Owner</button></div></div></dialog>
 <div class="toast" id="toast">saved ♡</div>
 
 <script>
@@ -3740,7 +3758,7 @@ async function refreshOwnerSession(){
   try{
     const r=await fetch(`${API_BASE}/api/me`,{credentials:'include',cache:'no-store'});
     const j=await r.json().catch(()=>({}));
-    ownerAuthenticated=!!(r.ok && j.loggedIn);
+    ownerAuthenticated=!!(r.ok && (j.loggedIn||j.authenticated||j.ok));
   }catch(e){ownerAuthenticated=false}
   ownerUI();
   renderUsers();
@@ -3752,7 +3770,7 @@ function ownerUI(){
   document.getElementById('owner').textContent=on?'✦ owner mode':'owner entrance ୨୧';
   const append=document.getElementById('append');
   append.style.display=on?'inline-block':'none';
-  append.textContent=current==='typebook'?'＋ 新增键盘目录':'＋ 新增内容';
+  append.textContent=currentCloudPage?'＋ 当前页新增':(current==='typebook'?'＋ 新增键盘目录':'＋ 新增内容');
   document.getElementById('addpage').style.display=on?'inline-block':'none';
 }
 function esc(s){return(s||'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
@@ -4028,6 +4046,7 @@ async function qearlOpenCloudSlug(slug,{replace=false}={}){
     const j=await r.json().catch(()=>({}));
     const page=j?.page||j?.data;
     if(!r.ok||!page)return false;
+    currentCloudPage=page;
     current=`cloud:${slug}`;
     reader.dataset.page='cloud';
     rt.textContent=page.title||'Archive';
@@ -4065,7 +4084,7 @@ function qearlCloseReader({updateUrl=true}={}){
   reader.classList.remove('open');
   if(tocPanel)tocPanel.classList.remove('open');
   document.body.style.overflow='';
-  current=null;
+  current=null;currentCloudPage=null;
   if(updateUrl)qearlSetPath('/');
 }
 async function qearlBootRoute(){
@@ -4093,6 +4112,7 @@ window.addEventListener('popstate',async()=>{
 });
 
 function openDoc(s,opts={}){
+  currentCloudPage=null;
   current=s;reader.dataset.page=s;
   const d=DOCS[s];
   const scriptHero={
@@ -4193,6 +4213,83 @@ document.querySelectorAll('[data-open]').forEach(e=>e.onclick=()=>openDoc(e.data
 document.getElementById('back').onclick=()=>qearlCloseReader();
 
 const login=document.getElementById('login'),admin=document.getElementById('admin');
+
+let currentCloudPage=null;
+const QEARL_TARGET_OPTIONS=document.getElementById('target').innerHTML;
+
+function qearlCloudAddMode(on){
+  admin.classList.toggle('cloudAdd',!!on);
+  const hint=admin.querySelector('.currentPageHint');
+  if(hint && on && currentCloudPage){
+    hint.textContent=`将直接新增到当前页面：${currentCloudPage.title||currentCloudPage.slug}`;
+  }
+}
+
+async function qearlFrontUploadImage(itemId,file){
+  const compressed=await qearlCompressForPublish(file);
+  const sigRes=await fetch(`${API_BASE}/api/admin/upload-signature`,{
+    method:'POST',credentials:'include'
+  });
+  const sig=await sigRes.json().catch(()=>({}));
+  if(!sigRes.ok)throw new Error(sig.message||sig.error||`图片上传配置异常（HTTP ${sigRes.status}）`);
+
+  const fd=new FormData();
+  fd.append('file',compressed);
+  fd.append('api_key',sig.apiKey);
+  fd.append('timestamp',sig.timestamp);
+  fd.append('signature',sig.signature);
+  fd.append('folder',sig.folder);
+  if(sig.uploadPreset)fd.append('upload_preset',sig.uploadPreset);
+
+  const up=await fetch(sig.uploadUrl,{method:'POST',body:fd});
+  const uj=await up.json().catch(()=>({}));
+  if(!up.ok)throw new Error(uj?.error?.message||`图片上传失败（HTTP ${up.status}）`);
+
+  const mr=await fetch(`${API_BASE}/api/admin/media`,{
+    method:'POST',credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      itemId,url:uj.secure_url,publicId:uj.public_id||'',
+      width:uj.width||0,height:uj.height||0,mediaType:'image',alt:file.name||''
+    })
+  });
+  const mj=await mr.json().catch(()=>({}));
+  if(!mr.ok)throw new Error(mj.message||mj.error||`保存图片失败（HTTP ${mr.status}）`);
+}
+
+async function qearlAddToCurrentCloudPage(title,text,imageFiles){
+  if(!currentCloudPage)throw new Error('当前页面信息已失效，请重新打开页面');
+  let section=currentCloudPage.sections?.[0];
+
+  if(!section){
+    const sr=await fetch(`${API_BASE}/api/admin/sections`,{
+      method:'POST',credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        pageId:currentCloudPage.id,title:'',subtitle:'',
+        layout:{desktop:{type:'list',columns:1},mobile:{type:'stack',visible:1}},
+        isVisible:true
+      })
+    });
+    const sj=await sr.json().catch(()=>({}));
+    if(!sr.ok)throw new Error(sj.message||sj.error||`创建区块失败（HTTP ${sr.status}）`);
+    section={id:sj.id,items:[]};
+  }
+
+  const ir=await fetch(`${API_BASE}/api/admin/items`,{
+    method:'POST',credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      sectionId:section.id,title,subtitle:'',badge:'',href:'',content:text,isVisible:true
+    })
+  });
+  const ij=await ir.json().catch(()=>({}));
+  if(!ir.ok)throw new Error(ij.message||ij.error||`新增内容失败（HTTP ${ir.status}）`);
+
+  for(const file of imageFiles)await qearlFrontUploadImage(ij.id,file);
+  return ij.id;
+}
+
 document.getElementById('owner').onclick=async()=>{
   try{
     const r=await fetch(`${API_BASE}/api/me`,{credentials:'include'});
@@ -4200,7 +4297,7 @@ document.getElementById('owner').onclick=async()=>{
   }catch(e){}
   login.showModal();
 };
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.close).close());
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{document.getElementById(b.dataset.close).close();if(b.dataset.close==='admin')qearlCloudAddMode(false)});
 document.getElementById('loginbtn').onclick=async()=>{
   const btn=document.getElementById('loginbtn');
   const id=document.getElementById('uid').value.trim();
@@ -4222,8 +4319,19 @@ document.getElementById('loginbtn').onclick=async()=>{
   }catch(e){alert(e.message||'登录失败')}
   finally{btn.disabled=false;btn.textContent='enter owner mode'}
 };
-function openAdmin(t='new'){if(!ownerOn()){login.showModal();return}document.getElementById('target').value=t;admin.showModal()}
-document.getElementById('append').onclick=()=>openAdmin(current||'new');document.getElementById('addpage').onclick=()=>openAdmin('new');
+function openAdmin(t='new'){
+  if(!ownerOn()){login.showModal();return}
+  const target=document.getElementById('target');
+  target.disabled=false;target.innerHTML=QEARL_TARGET_OPTIONS;
+  qearlCloudAddMode(!!currentCloudPage);
+  if(currentCloudPage){
+    target.innerHTML=`<option value="__cloud">${esc(currentCloudPage.title||currentCloudPage.slug)}</option>`;
+    target.value='__cloud';target.disabled=true;
+  }else target.value=t;
+  admin.showModal();
+}
+document.getElementById('append').onclick=()=>openAdmin(current||'new');
+document.getElementById('addpage').onclick=()=>openAdmin('new');
 function files(fs){return Promise.all([...fs].map(f=>new Promise(r=>{let x=new FileReader();x.onload=()=>r({type:'image',src:x.result});x.readAsDataURL(f)})))}
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1300)}
 document.getElementById('save').onclick=async()=>{
@@ -4234,28 +4342,41 @@ document.getElementById('save').onclick=async()=>{
   const text=document.getElementById('nx').value.trim();
   const imageFiles=[...document.getElementById('ni').files];
   if(!title){alert('先填写标题哦');return}
-  const fd=new FormData();
-  fd.append('target',target);fd.append('title',title);fd.append('text',text);
-  for(const original of imageFiles){
-      const f=await qearlCompressForPublish(original);
-      fd.append('images',f,f.name);
-    }
+
   btn.disabled=true;btn.textContent='发布中…';
   try{
-    const r=await fetch(`${API_BASE}/api/publish`,{
-      method:'POST',
-      credentials:'include',
-      body:fd
-    });
-    const j=await r.json().catch(()=>({}));
-    if(r.status===401){ownerAuthenticated=false;ownerUI();throw new Error(j.message||j.error||'登录已过期，请重新登录')}
-    if(!r.ok)throw new Error(j.detail||j.message||j.error||`发布失败（HTTP ${r.status} · ${API_BASE}）`);
-    document.getElementById('nt').value='';
-    document.getElementById('nx').value='';
-    document.getElementById('ni').value='';
-    admin.close();
-    toast('已发布，等待部署 ♡');
-    setTimeout(loadPublishedData,450);
+    if(currentCloudPage && target==='__cloud'){
+      const slug=currentCloudPage.slug;
+      await qearlAddToCurrentCloudPage(title,text,imageFiles);
+      document.getElementById('nt').value='';
+      document.getElementById('nx').value='';
+      document.getElementById('ni').value='';
+      admin.close();qearlCloudAddMode(false);
+      toast('已新增到当前页面 ♡');
+      await qearlOpenCloudSlug(slug,{replace:true});
+    }else{
+      const fd=new FormData();
+      fd.append('target',target);fd.append('title',title);fd.append('text',text);
+      for(const original of imageFiles){
+        const f=await qearlCompressForPublish(original);
+        fd.append('images',f,f.name);
+      }
+      const r=await fetch(`${API_BASE}/api/publish`,{
+        method:'POST',credentials:'include',body:fd
+      });
+      const j=await r.json().catch(()=>({}));
+      if(r.status===401){
+        ownerAuthenticated=false;ownerUI();
+        throw new Error(j.message||j.error||'登录已过期，请重新登录');
+      }
+      if(!r.ok)throw new Error(j.detail||j.message||j.error||`发布失败（HTTP ${r.status} · ${API_BASE}）`);
+      document.getElementById('nt').value='';
+      document.getElementById('nx').value='';
+      document.getElementById('ni').value='';
+      admin.close();qearlCloudAddMode(false);
+      toast('已发布 ♡');
+      setTimeout(loadPublishedData,450);
+    }
   }catch(e){alert(e.message||'发布失败')}
   finally{btn.disabled=false;btn.textContent='发布到网站'}
 };

@@ -720,25 +720,89 @@ function renderCurrentMedia(it){
 }
 $('#saveItemBtn').onclick=async()=>{
   const btn=$('#saveItemBtn'),id=$('#itemId').value,sectionId=$('#itemSectionId').value;
-  const data={sectionId,title:$('#itemTitle').value.trim()||'Untitled item',subtitle:$('#itemSubtitle').value.trim(),badge:$('#itemBadge').value.trim(),href:$('#itemHref').value.trim(),content:$('#itemContent').value,isVisible:$('#itemVisible').checked};
+  const files=[...$('#itemImages').files];
+  const data={
+    sectionId,
+    title:$('#itemTitle').value.trim()||'Untitled item',
+    subtitle:$('#itemSubtitle').value.trim(),
+    badge:$('#itemBadge').value.trim(),
+    href:$('#itemHref').value.trim(),
+    content:$('#itemContent').value,
+    isVisible:$('#itemVisible').checked
+  };
+
   btn.disabled=true;btn.textContent='saving…';
+  let itemId=id;
+  let textSaved=false;
   try{
-    let itemId=id;
-    if(id)await api('/api/admin/items/'+encodeURIComponent(id),jsonOpts('PATCH',data));
-    else{const j=await api('/api/admin/items',jsonOpts('POST',data));itemId=j.id}
-    for(const f of [...$('#itemImages').files])await uploadImage(itemId,f);
-    closeDialog('itemDialog');toast('item saved');await load();
-  }catch(e){alert(e.message)}
-  finally{btn.disabled=false;btn.textContent='save item'}
+    if(id){
+      await api('/api/admin/items/'+encodeURIComponent(id),jsonOpts('PATCH',data));
+    }else{
+      const j=await api('/api/admin/items',jsonOpts('POST',data));
+      itemId=j.id;
+    }
+    textSaved=true;
+
+    if(files.length){
+      btn.textContent=`uploading 0/${files.length}…`;
+      for(let i=0;i<files.length;i++){
+        btn.textContent=`uploading ${i+1}/${files.length}…`;
+        await uploadImage(itemId,files[i]);
+      }
+    }
+
+    closeDialog('itemDialog');
+    toast(files.length?'item + images saved':'item saved');
+    await load();
+  }catch(e){
+    if(textSaved){
+      await load().catch(()=>{});
+      alert(`文字内容已经保存，但图片上传没有完成：\n${e.message||'未知错误'}\n\n可以重新打开这条内容，只补传图片，不需要重新填写文字。`);
+    }else{
+      alert(`保存失败：${e.message||'未知错误'}`);
+    }
+  }finally{
+    btn.disabled=false;btn.textContent='save item';
+  }
 };
 async function uploadImage(itemId,file){
   const compressed=await adminCompressImage(file);
-  const sig=await api('/api/admin/upload-signature',{method:'POST'}),fd=new FormData();
-  fd.append('file',compressed);fd.append('api_key',sig.apiKey);fd.append('timestamp',sig.timestamp);fd.append('signature',sig.signature);fd.append('folder',sig.folder);
+  let sig;
+  try{
+    sig=await api('/api/admin/upload-signature',{method:'POST'});
+  }catch(e){
+    throw new Error(`无法获取图片上传凭证：${e.message}`);
+  }
+  if(!sig?.uploadUrl||!sig?.apiKey||!sig?.signature){
+    throw new Error('Cloudinary 上传配置不完整');
+  }
+
+  const fd=new FormData();
+  fd.append('file',compressed);
+  fd.append('api_key',sig.apiKey);
+  fd.append('timestamp',sig.timestamp);
+  fd.append('signature',sig.signature);
+  fd.append('folder',sig.folder);
   if(sig.uploadPreset)fd.append('upload_preset',sig.uploadPreset);
-  const r=await fetch(sig.uploadUrl,{method:'POST',body:fd}),j=await r.json();
-  if(!r.ok)throw new Error(j.error?.message||`图片上传失败（HTTP ${r.status}）`);
-  await api('/api/admin/media',jsonOpts('POST',{itemId,url:j.secure_url,publicId:j.public_id,width:j.width,height:j.height,mediaType:'image',alt:file.name}));
+
+  let r,j;
+  try{
+    r=await fetch(sig.uploadUrl,{method:'POST',body:fd});
+    j=await r.json().catch(()=>({}));
+  }catch(e){
+    throw new Error(`连接图片服务失败：${e.message}`);
+  }
+  if(!r.ok)throw new Error(j?.error?.message||`Cloudinary 上传失败（HTTP ${r.status}）`);
+  if(!j.secure_url)throw new Error('Cloudinary 未返回图片地址');
+
+  try{
+    await api('/api/admin/media',jsonOpts('POST',{
+      itemId,url:j.secure_url,publicId:j.public_id||'',
+      width:j.width||0,height:j.height||0,mediaType:'image',alt:file.name
+    }));
+  }catch(e){
+    throw new Error(`图片已经上传，但保存图片记录失败：${e.message}`);
+  }
 }
 
 async function removeSection(id){if(!confirm('删除这个区块以及其中的内容？'))return;try{await api('/api/admin/sections/'+encodeURIComponent(id),{method:'DELETE'});toast('section deleted');await load()}catch(e){alert(e.message)}}

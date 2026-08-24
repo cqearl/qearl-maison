@@ -3575,6 +3575,20 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+<style id="qearl-v66-toc">
+.tocEmpty{padding:18px 4px;color:rgba(93,98,119,.58);font-size:11px;line-height:1.7}
+#reader .blockText.heading{
+  font-size:clamp(17px,2vw,22px);
+  line-height:1.35;
+  margin-top:28px;
+  margin-bottom:12px;
+  font-weight:500;
+  letter-spacing:.01em;
+}
+@media(max-width:820px){
+  #reader .blockText.heading{font-size:17px;margin-top:24px;margin-bottom:10px}
+}
+</style>
 </head>
 <body>
 <nav>
@@ -3972,7 +3986,7 @@ function renderSequential(bs,page){
     if(b.type==='text'){
       let t=linkify(b.text);
       if(b.links)b.links.forEach(([l,u])=>{if(l&&u)t=t.replace(esc(l),`<a class="lnk" target="_blank" href="${esc(u)}">${esc(l)}</a>`)});
-      const heading=isTocHeading(b.text,page);
+      const heading=!!b.heading || isTocHeading(b.text,page);
       const id=heading?`${page}-block-${bi}`:'';
       if(heading)toc.push({id,text:b.text,blockIndex:bi});
       o+=`<p ${id?`id="${id}"`:''} class="blockText ${heading?'heading':''}" data-block="${bi}">${t}</p>`;
@@ -4026,10 +4040,10 @@ function qearlSetPath(path,replace=false){
 function qearlCloudBlocks(page){
   const blocks=[];
   (page?.sections||[]).forEach(section=>{
-    if(section.title)blocks.push({type:'text',text:section.title});
+    if(section.title)blocks.push({type:'text',text:section.title,heading:true});
     if(section.subtitle)blocks.push({type:'text',text:section.subtitle});
     (section.items||[]).forEach(item=>{
-      if(item.title)blocks.push({type:'text',text:item.title});
+      if(item.title)blocks.push({type:'text',text:item.title,heading:true,itemId:item.id});
       if(item.subtitle)blocks.push({type:'text',text:item.subtitle});
       if(item.content_text)blocks.push({type:'text',text:item.content_text});
       if(item.href)blocks.push({type:'text',text:item.href});
@@ -4134,6 +4148,12 @@ case:'<span class="scriptHeroWrap" aria-label="Qearl’s Theme Case ♡"><svg cl
 
 const tocPanel=document.getElementById('tocPanel'),tocHandle=document.getElementById('tocHandle'),tocList=document.getElementById('tocList');
 function renderTOC(items){
+  const qearlTocEmpty=!items||!items.length;
+  if(qearlTocEmpty){
+    const list=document.getElementById('tocList');
+    if(list)list.innerHTML='<div class="tocEmpty">当前页面还没有可定位标题。</div>';
+    return;
+  }
   if(!tocList)return;
   tocList.innerHTML='';
   (items||[]).forEach((it,i)=>{

@@ -274,7 +274,7 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
 </style>
 
 </head>
-<body>
+<body data-admin-version="V69.2">
 <nav class="topbar glass">
   <div class="topin">
     <span class="brand">QEARL MAISON · ADMIN</span>
@@ -336,7 +336,7 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
       <div class="footerNote">关闭或取消不会保存任何修改。</div>
       <div class="footerActions">
         <button class="btn" type="button" data-close="pageDialog">cancel</button>
-        <button class="btn primary" type="button" id="savePageBtn">save page</button>
+        <div class="v69mini"><button class="btn" type="button" id="savePageBtn">保存草稿</button><button class="btn" type="button" id="previewPageDraftBtn">预览</button><button class="btn primary" type="button" id="publishPageDraftBtn">发布</button></div>
       </div>
     </div>
   </div>
@@ -393,7 +393,7 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
       <div class="footerNote">已有图片可单独移除；新图片会在保存时上传。</div>
       <div class="footerActions">
         <button class="btn" type="button" data-close="itemDialog">cancel</button>
-        <button class="btn primary" type="button" id="saveItemBtn">save item</button>
+        <div class="v69mini"><button class="btn" type="button" id="saveItemBtn">保存草稿</button><button class="btn primary" type="button" id="publishItemDraftBtn">发布</button></div>
       </div>
     </div>
   </div>
@@ -473,8 +473,8 @@ async function checkLogin(){
     location.replace('https://qearlune.xyz');
   }
 }
-$('#logoutBtn').onclick=async()=>{try{await api('/api/logout',{method:'POST'})}catch{} location.replace('https://qearlune.xyz')};
-$('#backSite').onclick=()=>location.href='https://qearlune.xyz';
+const __v692Logout=$('#logoutBtn'); if(__v692Logout)__v692Logout.onclick=async()=>{try{await api('/api/logout',{method:'POST'})}catch{} location.replace('https://qearlune.xyz')};
+const __v692Back=$('#backSite'); if(__v692Back)__v692Back.onclick=()=>location.href='https://qearlune.xyz';
 
 
 async function qearlSystemStatus(){
@@ -624,7 +624,7 @@ function itemNode(section,it,index){
   return d;
 }
 
-$('#newPageBtn').onclick=()=>openPage();
+const __v692NewPage=$('#newPageBtn'); if(__v692NewPage)__v692NewPage.onclick=()=>openPage();
 function openPage(id='',presetParent=''){
   const p=site.pages.find(x=>x.id===id);
   $('#pageId').value=p?.id||'';
@@ -665,14 +665,14 @@ async function v69SavePageDraft(){
   }catch(e){showError('pageError',e.message)}
   finally{btn.disabled=false;btn.textContent='保存草稿'}
 }
-$('#savePageBtn').onclick=v69SavePageDraft;
-$('#previewPageDraftBtn').onclick=async()=>{
+const __v692SavePageBtn=$('#savePageBtn'); if(__v692SavePageBtn)__v692SavePageBtn.onclick=v69SavePageDraft;
+const __v69PreviewBtn=$('#previewPageDraftBtn'); if(__v69PreviewBtn)__v69PreviewBtn.onclick=async()=>{
   const id=$('#pageId').value;if(!id){alert('请先创建页面');return}
   await v69SavePageDraft();
   const d=v69PagePayload();
   window.open(`https://qearlune.xyz/${d.slug}?preview=1`,'_blank');
 };
-$('#publishPageDraftBtn').onclick=async()=>{
+const __v69PublishPageBtn=$('#publishPageDraftBtn'); if(__v69PublishPageBtn)__v69PublishPageBtn.onclick=async()=>{
   const id=$('#pageId').value;if(!id){alert('请先创建页面');return}
   const btn=$('#publishPageDraftBtn');btn.disabled=true;btn.textContent='publishing…';
   try{await v69SavePageDraft();await api('/api/admin/drafts/publish-page',jsonOpts('POST',{pageId:id}));closeDialog('pageDialog');toast('published');await load()}
@@ -775,8 +775,8 @@ async function v69SaveItemDraft(){
   }catch(e){alert(`保存草稿失败：${e.message}`)}
   finally{btn.disabled=false;btn.textContent='保存草稿'}
 }
-$('#saveItemBtn').onclick=v69SaveItemDraft;
-$('#publishItemDraftBtn').onclick=async()=>{
+const __v692SaveItemBtn=$('#saveItemBtn'); if(__v692SaveItemBtn)__v692SaveItemBtn.onclick=v69SaveItemDraft;
+const __v69PublishItemBtn=$('#publishItemDraftBtn'); if(__v69PublishItemBtn)__v69PublishItemBtn.onclick=async()=>{
   const btn=$('#publishItemDraftBtn'),id=$('#itemId').value;
   btn.disabled=true;btn.textContent='publishing…';
   try{
@@ -836,7 +836,19 @@ async function movePage(delta){const i=site.pages.findIndex(x=>x.id===currentPag
 async function moveSection(id,delta){const a=currentPage()?.sections||[],i=a.findIndex(x=>x.id===id),ids=swap(a,i,i+delta);if(ids)await reorder('sections',ids)}
 async function moveItem(sectionId,id,delta){const a=currentPage()?.sections?.find(s=>s.id===sectionId)?.items||[],i=a.findIndex(x=>x.id===id),ids=swap(a,i,i+delta);if(ids)await reorder('items',ids)}
 
-checkLogin();
+(async()=>{
+  try{
+    console.info('[Qearl Admin] V69.2 boot');
+    await checkLogin();
+  }catch(e){
+    console.error('[Qearl Admin] boot failed',e);
+    const gate=document.getElementById('gate');
+    if(gate){
+      gate.innerHTML='<div style="max-width:520px;margin:18vh auto;padding:22px;border-radius:22px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.82);font:13px/1.75 system-ui;color:#6f7488">Admin 启动失败：'+String(e&&e.message||e)+'<br><small>V69.2</small></div>';
+      gate.classList.remove('hidden');
+    }
+  }
+})();
 </script>
 </body>
 </html>

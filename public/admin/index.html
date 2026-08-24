@@ -410,20 +410,25 @@ const esc=(v='')=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'
 const attr=esc;
 
 async function ensureLegacyArchive(){
-  if(sessionStorage.getItem('qearl_legacy_checked_v642'))return false;
-  sessionStorage.setItem('qearl_legacy_checked_v642','1');
+  if(sessionStorage.getItem('qearl_legacy_checked_v644'))return false;
+  sessionStorage.setItem('qearl_legacy_checked_v644','1');
+
   try{
+    const status=await api('/api/admin/migration-status');
+    if(status.version==='V64.2')return false;
+
     const r=await fetch('/data/legacy-seed.json?v=642',{cache:'no-store'});
     if(!r.ok)return false;
     const seed=await r.json();
     const j=await api('/api/admin/import-legacy',jsonOpts('POST',seed));
+
     const changed=(j.imported||0)+(j.itemsAdded||0)+(j.mediaAdded||0);
-    if(changed>0){
-      toast(`archive synced · +${j.itemsAdded||0} items`);
-      return true;
-    }
-  }catch(e){console.warn('legacy sync skipped',e)}
-  return false;
+    if(changed>0)toast(`archive synced · +${j.itemsAdded||0} items`);
+    return changed>0;
+  }catch(e){
+    console.warn('legacy migration check skipped',e);
+    return false;
+  }
 }
 async function adminCompressImage(file){
   if(!file?.type?.startsWith('image/'))return file;
@@ -463,8 +468,20 @@ async function checkLogin(){
 $('#logoutBtn').onclick=async()=>{try{await api('/api/logout',{method:'POST'})}catch{} location.replace('https://qearlune.xyz')};
 $('#backSite').onclick=()=>location.href='https://qearlune.xyz';
 
+
+async function qearlSystemStatus(){
+  try{
+    const st=await api('/api/admin/system-status');
+    if(!st.cloudinary?.configured){
+      console.warn('Cloudinary incomplete',st.cloudinary);
+      toast('图片上传配置未完成 · 文字编辑仍可使用');
+    }
+  }catch(e){console.warn('system status unavailable',e)}
+}
+
 async function load(){
-  const j=await api('/api/admin/bootstrap');
+  qearlSystemStatus();
+  const j=await api('/api/admin/bootstrap').catch(e=>{throw new Error(`Admin load failed: ${e.message}`)});
   site=j.data||{pages:[]};
   const imported=await ensureLegacyArchive();
   if(imported){const again=await api('/api/admin/bootstrap');site=again.data||{pages:[]}}

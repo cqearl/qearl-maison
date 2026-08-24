@@ -4045,7 +4045,7 @@ async function qearlOpenCloudSlug(slug,{replace=false}={}){
     const r=await fetch(`${API_BASE}/api/public/site?page=${encodeURIComponent(slug)}`,{credentials:'include',cache:'no-store'});
     const j=await r.json().catch(()=>({}));
     const page=j?.page||j?.data;
-    if(!r.ok||!page)return false;
+    if(!r.ok||!page){console.warn('cloud page unavailable',slug,r.status);return false;}
     currentCloudPage=page;
     current=`cloud:${slug}`;
     reader.dataset.page='cloud';
@@ -4217,6 +4217,70 @@ const login=document.getElementById('login'),admin=document.getElementById('admi
 let currentCloudPage=null;
 const QEARL_TARGET_OPTIONS=document.getElementById('target').innerHTML;
 
+const QEARL_MANAGED_TARGET_SLUG={
+  typebook:'typebook',
+  case:'theme-case',
+  mist:'mist',
+  island:'insomnia',
+  moss:'moss',
+  jasmine:'jasmine',
+  others:'miscellany'
+};
+
+async function qearlUploadImagesFirst(imageFiles){
+  if(!imageFiles.length)return [];
+
+  const sigRes=await fetch(`${API_BASE}/api/admin/upload-signature`,{
+    method:'POST',credentials:'include'
+  });
+  const sig=await sigRes.json().catch(()=>({}));
+  if(!sigRes.ok){
+    if(sig.missing?.length){
+      throw new Error(`图片上传尚未配置：缺少 ${sig.missing.join(' / ')}`);
+    }
+    throw new Error(sig.message||sig.error||`图片上传配置异常（HTTP ${sigRes.status}）`);
+  }
+
+  const media=[];
+  for(const original of imageFiles){
+    const file=await qearlCompressForPublish(original);
+    const fd=new FormData();
+    fd.append('file',file);
+    fd.append('api_key',sig.apiKey);
+    fd.append('timestamp',sig.timestamp);
+    fd.append('signature',sig.signature);
+    fd.append('folder',sig.folder);
+    if(sig.uploadPreset)fd.append('upload_preset',sig.uploadPreset);
+
+    const up=await fetch(sig.uploadUrl,{method:'POST',body:fd});
+    const uj=await up.json().catch(()=>({}));
+    if(!up.ok)throw new Error(uj?.error?.message||`图片上传失败（HTTP ${up.status}）`);
+
+    media.push({
+      url:uj.secure_url,publicId:uj.public_id||'',
+      width:uj.width||0,height:uj.height||0,alt:original.name||''
+    });
+  }
+  return media;
+}
+
+async function qearlManagedPublish(slug,title,text,imageFiles){
+  const media=await qearlUploadImagesFirst(imageFiles);
+  const r=await fetch(`${API_BASE}/api/admin/quick-publish`,{
+    method:'POST',credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({slug,title,content:text,media})
+  });
+  const j=await r.json().catch(()=>({}));
+  if(r.status===401){
+    ownerAuthenticated=false;ownerUI();
+    throw new Error('登录已过期，请重新登录');
+  }
+  if(!r.ok)throw new Error(j.detail||j.message||j.error||`发布失败（HTTP ${r.status}）`);
+  return j;
+}
+
+
 function qearlCloudAddMode(on){
   admin.classList.toggle('cloudAdd',!!on);
   const hint=admin.querySelector('.currentPageHint');
@@ -4259,36 +4323,9 @@ async function qearlFrontUploadImage(itemId,file){
 
 async function qearlAddToCurrentCloudPage(title,text,imageFiles){
   if(!currentCloudPage)throw new Error('当前页面信息已失效，请重新打开页面');
-  let section=currentCloudPage.sections?.[0];
-
-  if(!section){
-    const sr=await fetch(`${API_BASE}/api/admin/sections`,{
-      method:'POST',credentials:'include',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        pageId:currentCloudPage.id,title:'',subtitle:'',
-        layout:{desktop:{type:'list',columns:1},mobile:{type:'stack',visible:1}},
-        isVisible:true
-      })
-    });
-    const sj=await sr.json().catch(()=>({}));
-    if(!sr.ok)throw new Error(sj.message||sj.error||`创建区块失败（HTTP ${sr.status}）`);
-    section={id:sj.id,items:[]};
-  }
-
-  const ir=await fetch(`${API_BASE}/api/admin/items`,{
-    method:'POST',credentials:'include',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      sectionId:section.id,title,subtitle:'',badge:'',href:'',content:text,isVisible:true
-    })
-  });
-  const ij=await ir.json().catch(()=>({}));
-  if(!ir.ok)throw new Error(ij.message||ij.error||`新增内容失败（HTTP ${ir.status}）`);
-
-  for(const file of imageFiles)await qearlFrontUploadImage(ij.id,file);
-  return ij.id;
+  return await qearlManagedPublish(currentCloudPage.slug,title,text,imageFiles);
 }
+
 
 document.getElementById('owner').onclick=async()=>{
   try{
@@ -4345,40 +4382,38 @@ document.getElementById('save').onclick=async()=>{
 
   btn.disabled=true;btn.textContent='发布中…';
   try{
+    let slug=null;
     if(currentCloudPage && target==='__cloud'){
-      const slug=currentCloudPage.slug;
-      await qearlAddToCurrentCloudPage(title,text,imageFiles);
-      document.getElementById('nt').value='';
-      document.getElementById('nx').value='';
-      document.getElementById('ni').value='';
-      admin.close();qearlCloudAddMode(false);
-      toast('已新增到当前页面 ♡');
-      await qearlOpenCloudSlug(slug,{replace:true});
+      slug=currentCloudPage.slug;
     }else{
-      const fd=new FormData();
-      fd.append('target',target);fd.append('title',title);fd.append('text',text);
-      for(const original of imageFiles){
-        const f=await qearlCompressForPublish(original);
-        fd.append('images',f,f.name);
-      }
-      const r=await fetch(`${API_BASE}/api/publish`,{
-        method:'POST',credentials:'include',body:fd
-      });
-      const j=await r.json().catch(()=>({}));
-      if(r.status===401){
-        ownerAuthenticated=false;ownerUI();
-        throw new Error(j.message||j.error||'登录已过期，请重新登录');
-      }
-      if(!r.ok)throw new Error(j.detail||j.message||j.error||`发布失败（HTTP ${r.status} · ${API_BASE}）`);
+      slug=QEARL_MANAGED_TARGET_SLUG[target]||null;
+    }
+
+    if(slug){
+      await qearlManagedPublish(slug,title,text,imageFiles);
       document.getElementById('nt').value='';
       document.getElementById('nx').value='';
       document.getElementById('ni').value='';
       admin.close();qearlCloudAddMode(false);
-      toast('已发布 ♡');
-      setTimeout(loadPublishedData,450);
+      toast('已发布到当前档案 ♡');
+      if(currentCloudPage)await qearlOpenCloudSlug(slug,{replace:true});
+      else setTimeout(loadPublishedData,350);
+      return;
     }
-  }catch(e){alert(e.message||'发布失败')}
-  finally{btn.disabled=false;btn.textContent='发布到网站'}
+
+    if(target==='custom'){
+      throw new Error('Custom Keys 使用专属排版，请在 Admin 中编辑对应页面；这里暂不直接追加，避免破坏版式。');
+    }
+    if(target==='new'){
+      throw new Error('请先在 Admin 创建新页面，再向页面中新增内容。');
+    }
+
+    throw new Error('当前栏目尚未接入新的发布结构');
+  }catch(e){
+    alert(e.message||'发布失败');
+  }finally{
+    btn.disabled=false;btn.textContent='发布到网站';
+  }
 };
 function renderUsers(){let g=document.getElementById('usergrid');g.innerHTML='';data.cards.forEach(c=>{let e=document.createElement('article');e.className='usercard';e.innerHTML=`${ownerOn()?'<button class="del">×</button>':''}<h3>${esc(c.title)}</h3><p style="font-size:12px;color:#84899b">later added to Qearl atelier.</p>`;e.onclick=x=>{if(x.target.classList.contains('del'))return;openDoc(c.id)};if(ownerOn())e.querySelector('.del').onclick=x=>{x.stopPropagation();alert('线上删除功能下一步再接，先避免误删内容。')};g.appendChild(e)})}
 document.getElementById('logout').onclick=async()=>{

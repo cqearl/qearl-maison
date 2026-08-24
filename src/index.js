@@ -233,6 +233,11 @@ async function ensureAdminSchema(env){
       url TEXT NOT NULL, public_id TEXT DEFAULT '', width INTEGER DEFAULT 0, height INTEGER DEFAULT 0,
       media_type TEXT DEFAULT 'image', alt TEXT DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS site_meta (
+      key TEXT PRIMARY KEY,
+      value TEXT DEFAULT '',
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`
   ];
   for(const q of sqls) await env.DB.prepare(q).run();
@@ -316,8 +321,19 @@ async function adminImportLegacy(request,env){
       }
     }
   }
+  await env.DB.prepare(
+    "INSERT INTO site_meta(key,value,updated_at) VALUES('legacy_seed_version','V64.2',CURRENT_TIMESTAMP) ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=CURRENT_TIMESTAMP"
+  ).run();
   return json({ok:true,imported,updated,itemsAdded,mediaAdded},200,{},request);
 }
+
+async function adminMigrationStatus(request,env){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  await ensureAdminSchema(env);
+  const row=await env.DB.prepare("SELECT value FROM site_meta WHERE key='legacy_seed_version'").first();
+  return json({ok:true,version:row?.value||null},200,{},request);
+}
+
 async function adminBootstrap(request,env){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
   await ensureAdminSchema(env);
@@ -462,11 +478,110 @@ async function adminReorder(request,env){
   if(stmts.length)await env.DB.batch(stmts);
   return json({ok:true},200,{},request);
 }
+
+const LEGACY_TARGET_SLUG={
+  typebook:"typebook",
+  case:"theme-case",
+  mist:"mist",
+  island:"insomnia",
+  moss:"moss",
+  jasmine:"jasmine",
+  others:"miscellany"
+};
+
+async function adminSystemStatus(request,env){
+  const a=await readSession(request,env);
+  if(!a)return json({error:"Unauthorized"},401,{},request);
+  await ensureAdminSchema(env);
+  return json({
+    ok:true,
+    cloudinary:{
+      configured:!!(env.CLOUDINARY_CLOUD_NAME&&env.CLOUDINARY_API_KEY&&env.CLOUDINARY_API_SECRET),
+      cloudName:!!env.CLOUDINARY_CLOUD_NAME,
+      apiKey:!!env.CLOUDINARY_API_KEY,
+      apiSecret:!!env.CLOUDINARY_API_SECRET
+    },
+    auth:{
+      username:!!env.ADMIN_USERNAME,
+      password:!!env.ADMIN_PASSWORD,
+      session:!!env.SESSION_SECRET
+    }
+  },200,{},request);
+}
+
+async function quickPublish(request,env){
+  const a=await readSession(request,env);
+  if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  await ensureAdminSchema(env);
+
+  const b=await readJson(request);
+  const rawTarget=String(b.slug||b.target||"").trim();
+  const slug=LEGACY_TARGET_SLUG[rawTarget]||rawTarget;
+  const title=String(b.title||"").trim();
+  const content=String(b.content||b.text||"").trim();
+  const media=Array.isArray(b.media)?b.media:[];
+
+  if(!slug)return json({error:"Target page required"},400,{},request);
+  if(!title)return json({error:"Title required"},400,{},request);
+
+  const page=await env.DB.prepare(
+    "SELECT id,slug,title FROM site_pages WHERE slug=? LIMIT 1"
+  ).bind(slug).first();
+  if(!page)return json({error:`Page not found: ${slug}`},404,{},request);
+
+  let section=await env.DB.prepare(
+    "SELECT id FROM site_sections WHERE page_id=? ORDER BY sort_order,id LIMIT 1"
+  ).bind(page.id).first();
+
+  if(!section){
+    section=await env.DB.prepare(
+      "INSERT INTO site_sections(page_id,title,subtitle,layout_json,is_visible,sort_order) VALUES(?,?,?,?,?,1) RETURNING id"
+    ).bind(
+      page.id,"","",
+      JSON.stringify({desktop:{type:"list",columns:1},mobile:{type:"stack",visible:1}}),
+      1
+    ).first();
+  }
+
+  const io=await env.DB.prepare(
+    "SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_items WHERE section_id=?"
+  ).bind(section.id).first();
+
+  const item=await env.DB.prepare(
+    "INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id"
+  ).bind(section.id,title,"","","",content,1,io?.n||1).first();
+
+  let mo=1;
+  const stmts=[];
+  for(const m of media){
+    const url=String(m?.url||"").trim();
+    if(!url)continue;
+    stmts.push(
+      env.DB.prepare(
+        "INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,sort_order) VALUES(?,?,?,?,?,?,?,?)"
+      ).bind(
+        item.id,url,String(m.publicId||""),Number(m.width||0),Number(m.height||0),
+        "image",String(m.alt||""),mo++
+      )
+    );
+  }
+  if(stmts.length)await env.DB.batch(stmts);
+
+  return json({ok:true,page:{id:page.id,slug:page.slug,title:page.title},itemId:item.id,mediaCount:stmts.length},200,{},request);
+}
+
 async function uploadSignature(request,env){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
   if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
-  if(!env.CLOUDINARY_CLOUD_NAME||!env.CLOUDINARY_API_KEY||!env.CLOUDINARY_API_SECRET)
-    return json({error:"Cloudinary secrets are not configured"},500,{},request);
+  if(!env.CLOUDINARY_CLOUD_NAME||!env.CLOUDINARY_API_KEY||!env.CLOUDINARY_API_SECRET){
+    const missing=[
+      !env.CLOUDINARY_CLOUD_NAME&&"CLOUDINARY_CLOUD_NAME",
+      !env.CLOUDINARY_API_KEY&&"CLOUDINARY_API_KEY",
+      !env.CLOUDINARY_API_SECRET&&"CLOUDINARY_API_SECRET"
+    ].filter(Boolean);
+    return json({error:"Image upload is not configured",missing},503,{},request);
+  }
   const timestamp=Math.floor(Date.now()/1000),folder="qearl-maison";
   const payload=`folder=${folder}&timestamp=${timestamp}${env.CLOUDINARY_API_SECRET}`;
   const digest=await crypto.subtle.digest("SHA-1",enc.encode(payload));
@@ -513,8 +628,11 @@ export default {
         }});
       }
       if(p==="/api/admin/bootstrap"&&request.method==="GET") return await adminBootstrap(request,env);
+      if(p==="/api/admin/migration-status"&&request.method==="GET") return await adminMigrationStatus(request,env);
       if(p==="/api/admin/import-legacy"&&request.method==="POST") return await adminImportLegacy(request,env);
       if(p==="/api/public/site"&&request.method==="GET") return await publicSite(request,env);
+      if(p==="/api/admin/system-status"&&request.method==="GET") return await adminSystemStatus(request,env);
+      if(p==="/api/admin/quick-publish"&&request.method==="POST") return await quickPublish(request,env);
       if(p==="/api/admin/upload-signature"&&request.method==="POST") return await uploadSignature(request,env);
       if(p==="/api/admin/reorder"&&request.method==="POST") return await adminReorder(request,env);
       if(p==="/api/admin/pages"||p.startsWith("/api/admin/pages/")) return await adminPages(request,env,p);

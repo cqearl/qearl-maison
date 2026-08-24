@@ -273,8 +273,73 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
 @media(max-width:720px){.v69mini{width:100%}.v69mini .btn{flex:1;min-width:0}}
 </style>
 
+
+<style id="qearl-v693-modal-fix">
+/* Modal must keep its footer reachable at every viewport size, including DevTools device emulation. */
+#itemDialog,#pageDialog,#sectionDialog{
+  max-height:calc(100dvh - 24px);
+}
+#itemDialog .modal,#pageDialog .modal,#sectionDialog .modal{
+  display:flex;
+  flex-direction:column;
+  max-height:calc(100dvh - 24px);
+  min-height:0;
+}
+#itemDialog .modalHead,#pageDialog .modalHead,#sectionDialog .modalHead,
+#itemDialog .modalFooter,#pageDialog .modalFooter,#sectionDialog .modalFooter{
+  flex:0 0 auto;
+}
+#itemDialog .modalBody,#pageDialog .modalBody,#sectionDialog .modalBody{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+#itemDialog .modalFooter{
+  position:relative;
+  z-index:2;
+  background:linear-gradient(to bottom,rgba(241,243,248,.72),rgba(241,243,248,.96) 30%);
+  border-top:1px solid rgba(255,255,255,.62);
+}
+#itemDialog .footerActions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+#itemDialog .v69mini{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+@media(max-width:720px){
+  #itemDialog .modal,#pageDialog .modal,#sectionDialog .modal{
+    max-height:88dvh!important;
+  }
+  #itemDialog .modalBody,#pageDialog .modalBody,#sectionDialog .modalBody{
+    overflow-y:auto!important;
+  }
+  #itemDialog .modalFooter{
+    position:sticky;
+    bottom:0;
+  }
+  #itemDialog .footerActions{
+    width:100%!important;
+  }
+  #itemDialog .v69mini{
+    flex:1 1 100%;
+    width:100%;
+  }
+  #itemDialog .v69mini .btn{
+    flex:1 1 0;
+    min-width:0;
+  }
+}
+</style>
+
 </head>
-<body data-admin-version="V69.2">
+<body data-admin-version="V69.3">
 <nav class="topbar glass">
   <div class="topin">
     <span class="brand">QEARL MAISON · ADMIN</span>
@@ -764,28 +829,51 @@ function v69ItemPayload(media=[]){
     isVisible:$('#itemVisible').checked,media
   };
 }
-async function v69SaveItemDraft(){
+async function v69SaveItemDraft({silent=false}={}){
   const btn=$('#saveItemBtn'),id=$('#itemId').value,sectionId=$('#itemSectionId').value;
   btn.disabled=true;btn.textContent='saving…';
   try{
     const media=await v69DraftMedia([...$('#itemImages').files]);
-    const j=await api('/api/admin/drafts/item',jsonOpts('POST',{itemId:id||null,sectionId,payload:v69ItemPayload(media)}));
+    const j=await api('/api/admin/drafts/item',jsonOpts('POST',{
+      itemId:id||null,
+      sectionId,
+      payload:v69ItemPayload(media)
+    }));
     $('#itemDialog').dataset.draftId=j.draftId||'';
-    toast('draft saved');
-  }catch(e){alert(`保存草稿失败：${e.message}`)}
-  finally{btn.disabled=false;btn.textContent='保存草稿'}
+    if(!silent)toast('draft saved');
+    return j;
+  }catch(e){
+    if(!silent)alert(`保存草稿失败：${e.message}`);
+    throw e;
+  }finally{
+    btn.disabled=false;btn.textContent='保存草稿';
+  }
 }
 const __v692SaveItemBtn=$('#saveItemBtn'); if(__v692SaveItemBtn)__v692SaveItemBtn.onclick=v69SaveItemDraft;
 const __v69PublishItemBtn=$('#publishItemDraftBtn'); if(__v69PublishItemBtn)__v69PublishItemBtn.onclick=async()=>{
   const btn=$('#publishItemDraftBtn'),id=$('#itemId').value;
   btn.disabled=true;btn.textContent='publishing…';
   try{
-    await v69SaveItemDraft();
-    const draftId=$('#itemDialog').dataset.draftId||null;
-    await api('/api/admin/drafts/publish-item',jsonOpts('POST',{itemId:id||null,draftId}));
-    closeDialog('itemDialog');toast('published');await load();
-  }catch(e){alert(`发布失败：${e.message}`)}
-  finally{btn.disabled=false;btn.textContent='发布'}
+    const saved=await v69SaveItemDraft({silent:true});
+    /*
+      Existing items publish by itemId.
+      New, not-yet-created items publish by draftId.
+      Never send an existing item's draftId as a "new_item" draft.
+    */
+    const payload=id
+      ? {itemId:id}
+      : {draftId:saved?.draftId||$('#itemDialog').dataset.draftId||null};
+
+    if(!payload.itemId && !payload.draftId)throw new Error('草稿保存成功，但未取得草稿编号');
+    await api('/api/admin/drafts/publish-item',jsonOpts('POST',payload));
+    closeDialog('itemDialog');
+    toast('published');
+    await load();
+  }catch(e){
+    alert(`发布失败：${e.message}`);
+  }finally{
+    btn.disabled=false;btn.textContent='发布';
+  }
 };
 
 async function uploadImage(itemId,file){
@@ -838,13 +926,13 @@ async function moveItem(sectionId,id,delta){const a=currentPage()?.sections?.fin
 
 (async()=>{
   try{
-    console.info('[Qearl Admin] V69.2 boot');
+    console.info('[Qearl Admin] V69.3 boot');
     await checkLogin();
   }catch(e){
     console.error('[Qearl Admin] boot failed',e);
     const gate=document.getElementById('gate');
     if(gate){
-      gate.innerHTML='<div style="max-width:520px;margin:18vh auto;padding:22px;border-radius:22px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.82);font:13px/1.75 system-ui;color:#6f7488">Admin 启动失败：'+String(e&&e.message||e)+'<br><small>V69.2</small></div>';
+      gate.innerHTML='<div style="max-width:520px;margin:18vh auto;padding:22px;border-radius:22px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.82);font:13px/1.75 system-ui;color:#6f7488">Admin 启动失败：'+String(e&&e.message||e)+'<br><small>V69.3</small></div>';
       gate.classList.remove('hidden');
     }
   }

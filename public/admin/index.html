@@ -258,6 +258,13 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
 }
 </style>
 
+
+<style id="qearl-v642-subpages">
+.pageBtn.childPage{margin-left:14px;width:calc(100% - 14px);padding-left:27px!important;position:relative}
+.pageBtn.childPage:before{content:"↳";position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.42;font-size:11px}
+@media(max-width:720px){.pageBtn.childPage{margin-left:10px;width:calc(100% - 10px)}}
+</style>
+
 </head>
 <body>
 <nav class="topbar glass">
@@ -308,6 +315,7 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
         <div class="field titleField"><label>TITLE</label><input id="pageTitle" placeholder="例如：Home / Keyboard archive"><div class="hint" aria-hidden="true">占位</div></div>
         <div class="field slugField"><label>SLUG</label><input id="pageSlug" placeholder="home"><div class="hint">分享网址标识；例如 customkeys → qearlune.xyz/customkeys。留空时自动生成。</div></div>
         <div class="field full"><label>SUBTITLE</label><input id="pageSubtitle" placeholder="可留空"></div>
+        <div class="field full"><label>PARENT PAGE</label><select id="pageParent"><option value="">无 · 作为一级页面</option></select><div class="hint">选择父页面后，会成为它的子页面，并生成 /父页面/子页面 的独立分享网址。</div></div>
         <label class="switchline full"><input type="checkbox" id="pageVisible" checked> visible on site</label>
       </div>
       <div id="pageError" class="inlineError"></div>
@@ -402,18 +410,19 @@ const esc=(v='')=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'
 const attr=esc;
 
 async function ensureLegacyArchive(){
-  if(sessionStorage.getItem('qearl_legacy_checked_v64'))return false;
-  sessionStorage.setItem('qearl_legacy_checked_v64','1');
-  const wanted=['typebook','theme-case','mist','insomnia','moss','jasmine','miscellany'];
-  const existing=new Set((site.pages||[]).map(p=>p.slug));
-  if(wanted.every(x=>existing.has(x)))return false;
+  if(sessionStorage.getItem('qearl_legacy_checked_v642'))return false;
+  sessionStorage.setItem('qearl_legacy_checked_v642','1');
   try{
-    const r=await fetch('/data/legacy-seed.json?v=64',{cache:'no-store'});
+    const r=await fetch('/data/legacy-seed.json?v=642',{cache:'no-store'});
     if(!r.ok)return false;
     const seed=await r.json();
     const j=await api('/api/admin/import-legacy',jsonOpts('POST',seed));
-    if(j.imported>0){toast(`imported ${j.imported} archive pages`);return true}
-  }catch(e){console.warn('legacy import skipped',e)}
+    const changed=(j.imported||0)+(j.itemsAdded||0)+(j.mediaAdded||0);
+    if(changed>0){
+      toast(`archive synced · +${j.itemsAdded||0} items`);
+      return true;
+    }
+  }catch(e){console.warn('legacy sync skipped',e)}
   return false;
 }
 async function adminCompressImage(file){
@@ -468,9 +477,18 @@ function render(){renderPages();renderPage();renderSections()}
 function renderPages(){
   const box=$('#pageList');box.innerHTML='';
   if(!site.pages.length){box.innerHTML='<div class="emptyText" style="padding:10px 5px 2px">No pages yet.</div>';return}
-  site.pages.forEach(p=>{
+  const byId=new Map(site.pages.map(p=>[String(p.id),p]));
+  const roots=site.pages.filter(p=>!p.parent_id||!byId.has(String(p.parent_id)));
+  const ordered=[];
+  const walk=(p,depth=0)=>{
+    ordered.push([p,depth]);
+    site.pages.filter(x=>String(x.parent_id||'')===String(p.id)).forEach(c=>walk(c,depth+1));
+  };
+  roots.forEach(p=>walk(p,0));
+  site.pages.filter(p=>!ordered.some(([x])=>x.id===p.id)).forEach(p=>ordered.push([p,0]));
+  ordered.forEach(([p,depth])=>{
     const b=document.createElement('button');
-    b.type='button';b.className='pageBtn'+(p.id===currentPageId?' active':'');
+    b.type='button';b.className='pageBtn'+(p.id===currentPageId?' active':'')+(depth?' childPage':'');
     b.innerHTML=`${esc(p.title||'Untitled page')}<small>${esc(p.slug||'—')} · ${p.is_visible?'visible':'hidden'}</small>`;
     b.onclick=()=>{currentPageId=p.id;render()};
     box.appendChild(b);
@@ -582,14 +600,20 @@ function itemNode(section,it,index){
 }
 
 $('#newPageBtn').onclick=()=>openPage();
-function openPage(id=''){
+function openPage(id='',presetParent=''){
   const p=site.pages.find(x=>x.id===id);
   $('#pageId').value=p?.id||'';
   $('#pageTitle').value=p?.title||'';
   $('#pageSlug').value=p?.slug||(!site.pages.length?'home':'');
   $('#pageSubtitle').value=p?.subtitle||'';
+  const parent=$('#pageParent');
+  parent.innerHTML='<option value="">无 · 作为一级页面</option>';
+  site.pages.filter(x=>String(x.id)!==String(id)).forEach(x=>{
+    const o=document.createElement('option');o.value=x.id;o.textContent=x.title+' · /'+x.slug;parent.appendChild(o);
+  });
+  parent.value=p?.parent_id||presetParent||'';
   $('#pageVisible').checked=p?!!p.is_visible:true;
-  $('#pageDialogTitle').textContent=p?'Edit page':'New page';
+  $('#pageDialogTitle').textContent=p?'Edit page':(presetParent?'New subpage':'New page');
   $('#pageError').classList.remove('show');$('#pageError').textContent='';
   $('#pageDanger').classList.toggle('hidden',!p);
   $('#pageDialog').showModal();
@@ -598,7 +622,14 @@ function openPage(id=''){
 $('#savePageBtn').onclick=async()=>{
   const btn=$('#savePageBtn'),id=$('#pageId').value;
   const title=$('#pageTitle').value.trim()||'Untitled page';
-  const data={title,slug:$('#pageSlug').value.trim(),subtitle:$('#pageSubtitle').value.trim(),isVisible:$('#pageVisible').checked};
+  const parentId=$('#pageParent').value||null;
+  let slug=$('#pageSlug').value.trim().replace(/^\/+|\/+$/g,'');
+  if(parentId){
+    const parent=site.pages.find(x=>String(x.id)===String(parentId));
+    const leaf=(slug.split('/').filter(Boolean).pop()||'page');
+    if(parent?.slug)slug=`${String(parent.slug).replace(/\/+$/,'')}/${leaf}`;
+  }
+  const data={title,slug,subtitle:$('#pageSubtitle').value.trim(),parentId,isVisible:$('#pageVisible').checked};
   btn.disabled=true;btn.textContent='saving…';
   try{
     if(id)await api('/api/admin/pages/'+encodeURIComponent(id),jsonOpts('PATCH',data));

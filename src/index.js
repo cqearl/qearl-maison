@@ -212,6 +212,7 @@ async function ensureAdminSchema(env){
     `CREATE TABLE IF NOT EXISTS site_pages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL, slug TEXT NOT NULL UNIQUE, subtitle TEXT DEFAULT '',
+      parent_id INTEGER DEFAULT NULL,
       is_visible INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`,
@@ -235,6 +236,12 @@ async function ensureAdminSchema(env){
     )`
   ];
   for(const q of sqls) await env.DB.prepare(q).run();
+  try{
+    const cols=await env.DB.prepare("PRAGMA table_info(site_pages)").all();
+    if(!(cols.results||[]).some(c=>c.name==="parent_id")){
+      await env.DB.prepare("ALTER TABLE site_pages ADD COLUMN parent_id INTEGER DEFAULT NULL").run();
+    }
+  }catch(e){console.warn("site_pages parent migration",e)}
 }
 const toBool=v=>v?1:0;
 const parseLayout=x=>{try{return JSON.parse(x||"{}")}catch{return {}}};
@@ -244,33 +251,73 @@ async function adminImportLegacy(request,env){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
   if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
   await ensureAdminSchema(env);
-  const payload=await readJson(request); let imported=0,skipped=0;
+  const payload=await readJson(request);
+  let imported=0,updated=0,itemsAdded=0,mediaAdded=0;
+
   for(const page of payload.pages||[]){
-    const exists=await env.DB.prepare("SELECT id FROM site_pages WHERE slug=?").bind(page.slug).first();
-    if(exists){skipped++;continue}
-    const po=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_pages").first();
-    const pr=await env.DB.prepare("INSERT INTO site_pages(title,slug,subtitle,is_visible,sort_order) VALUES(?,?,?,?,?) RETURNING id")
-      .bind(page.title||page.slug,page.slug,page.subtitle||"",page.isVisible===false?0:1,po?.n||1).first();
-    let so=1;
-    for(const sec of page.sections||[]){
-      const sr=await env.DB.prepare("INSERT INTO site_sections(page_id,title,subtitle,layout_json,is_visible,sort_order) VALUES(?,?,?,?,?,?) RETURNING id")
-        .bind(pr.id,sec.title||"",sec.subtitle||"",JSON.stringify(sec.layout||{}),1,so++).first();
-      let io=1;
-      for(const item of sec.items||[]){
-        const ir=await env.DB.prepare("INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id")
-          .bind(sr.id,item.title||"",item.subtitle||"",item.badge||"",item.href||"",item.content||"",1,io++).first();
-        let mo=1;
-        for(const media of item.media||[]){
-          await env.DB.prepare("INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,sort_order) VALUES(?,?,?,?,?,?,?,?)")
-            .bind(ir.id,media.url||"",media.publicId||"",media.width||0,media.height||0,media.mediaType||"image",media.alt||"",mo++).run();
-        }
+    let dbPage=await env.DB.prepare("SELECT * FROM site_pages WHERE slug=?").bind(page.slug).first();
+    if(!dbPage){
+      const po=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_pages").first();
+      dbPage=await env.DB.prepare(
+        "INSERT INTO site_pages(title,slug,subtitle,parent_id,is_visible,sort_order) VALUES(?,?,?,?,?,?) RETURNING *"
+      ).bind(page.title||page.slug,page.slug,page.subtitle||"",null,page.isVisible===false?0:1,po?.n||1).first();
+      imported++;
+    }else updated++;
+
+    let dbSection=await env.DB.prepare(
+      "SELECT * FROM site_sections WHERE page_id=? ORDER BY sort_order,id LIMIT 1"
+    ).bind(dbPage.id).first();
+    if(!dbSection){
+      const sec=(page.sections||[])[0]||{};
+      dbSection=await env.DB.prepare(
+        "INSERT INTO site_sections(page_id,title,subtitle,layout_json,is_visible,sort_order) VALUES(?,?,?,?,?,1) RETURNING *"
+      ).bind(dbPage.id,sec.title||"",sec.subtitle||"",JSON.stringify(sec.layout||{}),1).first();
+    }
+
+    const seedItems=((page.sections||[])[0]?.items)||[];
+    for(const item of seedItems){
+      const title=String(item.title||"").trim();
+      const content=String(item.content||"").trim();
+      let dbItem=null;
+
+      if(title){
+        dbItem=await env.DB.prepare(
+          "SELECT * FROM site_items WHERE section_id=? AND title=? ORDER BY id LIMIT 1"
+        ).bind(dbSection.id,title).first();
+      }else if(content){
+        dbItem=await env.DB.prepare(
+          "SELECT * FROM site_items WHERE section_id=? AND substr(content_text,1,80)=? ORDER BY id LIMIT 1"
+        ).bind(dbSection.id,content.slice(0,80)).first();
+      }
+
+      if(!dbItem){
+        const io=await env.DB.prepare(
+          "SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_items WHERE section_id=?"
+        ).bind(dbSection.id).first();
+        dbItem=await env.DB.prepare(
+          "INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING *"
+        ).bind(dbSection.id,title,item.subtitle||"",item.badge||"",item.href||"",content,1,io?.n||1).first();
+        itemsAdded++;
+      }
+
+      for(const media of item.media||[]){
+        if(!media.url)continue;
+        const exists=await env.DB.prepare(
+          "SELECT id FROM site_media WHERE item_id=? AND url=? LIMIT 1"
+        ).bind(dbItem.id,media.url).first();
+        if(exists)continue;
+        const mo=await env.DB.prepare(
+          "SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_media WHERE item_id=?"
+        ).bind(dbItem.id).first();
+        await env.DB.prepare(
+          "INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,sort_order) VALUES(?,?,?,?,?,?,?,?)"
+        ).bind(dbItem.id,media.url,media.publicId||"",media.width||0,media.height||0,media.mediaType||"image",media.alt||"",mo?.n||1).run();
+        mediaAdded++;
       }
     }
-    imported++;
   }
-  return json({ok:true,imported,skipped},200,{},request);
+  return json({ok:true,imported,updated,itemsAdded,mediaAdded},200,{},request);
 }
-
 async function adminBootstrap(request,env){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
   await ensureAdminSchema(env);
@@ -320,13 +367,14 @@ async function adminPages(request,env,p){
   const m=p.match(/^\/api\/admin\/pages\/(\d+)$/),id=m?.[1];
   if(p==="/api/admin/pages"&&request.method==="POST"){
     const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_pages").first();
-    const r=await env.DB.prepare("INSERT INTO site_pages(title,slug,subtitle,is_visible,sort_order) VALUES(?,?,?,?,?) RETURNING id")
-      .bind(b.title||"Untitled page",b.slug||("page-"+Date.now()),b.subtitle||"",toBool(b.isVisible),row?.n||1).first();
+    const r=await env.DB.prepare("INSERT INTO site_pages(title,slug,subtitle,parent_id,is_visible,sort_order) VALUES(?,?,?,?,?,?) RETURNING id")
+      .bind(b.title||"Untitled page",b.slug||("page-"+Date.now()),b.subtitle||"",b.parentId||null,toBool(b.isVisible),row?.n||1).first();
     return json({ok:true,id:r.id},200,{},request);
   }
   if(id&&request.method==="PATCH"){
-    await env.DB.prepare("UPDATE site_pages SET title=?,slug=?,subtitle=?,is_visible=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")
-      .bind(b.title||"Untitled page",b.slug||("page-"+id),b.subtitle||"",toBool(b.isVisible),id).run();
+    const parentId=(b.parentId && String(b.parentId)!==String(id))?b.parentId:null;
+    await env.DB.prepare("UPDATE site_pages SET title=?,slug=?,subtitle=?,parent_id=?,is_visible=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")
+      .bind(b.title||"Untitled page",b.slug||("page-"+id),b.subtitle||"",parentId,toBool(b.isVisible),id).run();
     return json({ok:true},200,{},request);
   }
   if(id&&request.method==="DELETE"){

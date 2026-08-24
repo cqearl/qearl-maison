@@ -132,6 +132,65 @@ async function handleBlock(request,env){
   return json({error:"Method not allowed"},405);
 }
 
+
+async function handlePublish(request,env){
+  const a=await readSession(request,env);
+  if(!a)return json({error:"Unauthorized"},401);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403);
+
+  const form=await request.formData();
+  const page=String(form.get("target")||"").trim();
+  const title=String(form.get("title")||"").trim();
+  const text=String(form.get("text")||"").trim();
+  if(!validPage(page))return json({error:"Invalid page"},400);
+  if(!title)return json({error:"Title required"},400);
+
+  let next=(await env.DB.prepare(
+    "SELECT COALESCE(MAX(sort_order),0)+1 n FROM additions WHERE page=?"
+  ).bind(page).first())?.n||1;
+
+  const stmts=[];
+  stmts.push(
+    env.DB.prepare(
+      "INSERT INTO additions(page,sort_order,type,text_content,image_key,is_heading) VALUES(?,?,?,?,?,?)"
+    ).bind(page,next++,"text",title,null,1)
+  );
+
+  if(text){
+    for(const line of text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){
+      stmts.push(
+        env.DB.prepare(
+          "INSERT INTO additions(page,sort_order,type,text_content,image_key,is_heading) VALUES(?,?,?,?,?,?)"
+        ).bind(page,next++,"text",line,null,0)
+      );
+    }
+  }
+
+  const files=form.getAll("images").filter(x=>x && typeof x.arrayBuffer==="function" && x.size>0);
+  let total=0;
+  for(const file of files){
+    total+=file.size;
+    if(file.size>950000)return json({error:"单张图片压缩后仍超过 950KB"},413);
+    if(total>2800000)return json({error:"本次图片总大小超过 2.8MB"},413);
+
+    const buf=new Uint8Array(await file.arrayBuffer());
+    let binary="";
+    const chunk=0x8000;
+    for(let i=0;i<buf.length;i+=chunk){
+      binary+=String.fromCharCode(...buf.subarray(i,i+chunk));
+    }
+    const dataUrl=`data:${file.type||"image/webp"};base64,${btoa(binary)}`;
+    stmts.push(
+      env.DB.prepare(
+        "INSERT INTO additions(page,sort_order,type,text_content,image_key,is_heading) VALUES(?,?,?,?,?,?)"
+      ).bind(page,next++,"image",null,dataUrl,0)
+    );
+  }
+
+  if(stmts.length)await env.DB.batch(stmts);
+  return json({ok:true,count:stmts.length});
+}
+
 async function handlePage(request,env){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401);
   if(!sameOrigin(request))return json({error:"Invalid origin"},403);
@@ -159,21 +218,22 @@ export default {
   async fetch(request,env){
     const url=new URL(request.url), p=url.pathname;
     try{
-      if(p==="/api/session" && request.method==="GET"){
-        const s=await readSession(request,env); return json({authenticated:!!s});
+      if((p==="/api/session" || p==="/api/me") && request.method==="GET"){
+        const s=await readSession(request,env); return json({authenticated:!!s,ok:!!s},s?200:401);
       }
       if(p==="/api/login" && request.method==="POST"){
         if(!sameOrigin(request))return json({error:"Invalid origin"},403);
         const b=await readJson(request);
-        const ok=safeEqualString(b.username,env.ADMIN_USERNAME)&&safeEqualString(b.password,env.ADMIN_PASSWORD);
+        const loginName=b.username??b.id; const ok=safeEqualString(loginName,env.ADMIN_USERNAME)&&safeEqualString(b.password,env.ADMIN_PASSWORD);
         if(!ok)return json({error:"Invalid credentials"},401);
-        const token=await makeSession(b.username,env);
+        const token=await makeSession(loginName,env);
         return json({ok:true},200,{"Set-Cookie":sessionCookie(token)});
       }
       if(p==="/api/logout" && request.method==="POST"){
         return json({ok:true},200,{"Set-Cookie":clearCookie()});
       }
       if(p==="/api/state" && request.method==="GET") return await handleState(env);
+      if(p==="/api/publish" && request.method==="POST") return await handlePublish(request,env);
       if(p==="/api/block") return await handleBlock(request,env);
       if(p==="/api/page") return await handlePage(request,env);
       return env.ASSETS.fetch(request);

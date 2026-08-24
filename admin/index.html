@@ -265,6 +265,17 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
 @media(max-width:720px){.pageBtn.childPage{margin-left:10px;width:calc(100% - 10px)}}
 </style>
 
+
+<style id="qearl-v68-editorial">
+.v68state{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+border:1px solid rgba(118,123,148,.14);font-size:9px;letter-spacing:.1em;color:#858a9d;
+background:rgba(255,255,255,.38);margin-left:6px}
+.v68state.live{background:rgba(255,255,255,.64);color:#62687e}
+.v68Actions{display:flex;gap:8px;flex-wrap:wrap;width:100%}
+.v68Actions .btn{flex:1;min-width:110px}
+@media(max-width:720px){.v68Actions .btn{min-width:0;font-size:11px}}
+</style>
+
 </head>
 <body>
 <nav class="topbar glass">
@@ -506,7 +517,7 @@ function renderPages(){
   ordered.forEach(([p,depth])=>{
     const b=document.createElement('button');
     b.type='button';b.className='pageBtn'+(p.id===currentPageId?' active':'')+(depth?' childPage':'');
-    b.innerHTML=`${esc(p.title||'Untitled page')}<small>${esc(p.slug||'—')} · ${p.is_visible?'visible':'hidden'}</small>`;
+    b.innerHTML=`${esc(p.draft_title||p.title||'Untitled page')}<small>${esc(p.draft_slug||p.slug||'—')} · ${p.has_draft?'draft':(p.is_published?'published':'unpublished')}</small>`;
     b.onclick=()=>{currentPageId=p.id;render()};
     box.appendChild(b);
   });
@@ -530,7 +541,7 @@ function renderPage(){
       <div class="segment">
         <button class="iconBtn" id="pageUp" type="button" title="上移">↑</button>
         <button class="iconBtn" id="pageDown" type="button" title="下移">↓</button>
-        <button class="iconBtn" id="editPage" type="button">edit</button>
+        <button class="iconBtn" id="previewPage" type="button">preview</button><button class="iconBtn" id="editPage" type="button">edit</button>
         <button class="iconBtn" id="newSection" type="button">＋ section</button>
       </div>
     </div>
@@ -541,6 +552,10 @@ function renderPage(){
     </div>`;
   $('#pageUp').disabled=idx<=0;$('#pageDown').disabled=idx>=site.pages.length-1;
   $('#pageUp').onclick=()=>movePage(-1);$('#pageDown').onclick=()=>movePage(1);
+  $('#previewPage').onclick=()=>{
+    const previewSlug=p.draft_slug||p.slug;
+    window.open(`https://qearlune.xyz/${previewSlug}?preview=1`,'_blank');
+  };
   $('#editPage').onclick=()=>openPage(p.id);$('#newSection').onclick=()=>openSection();
   const copyBtn=$('#copyPageLink');
   if(copyBtn)copyBtn.onclick=async()=>{
@@ -620,41 +635,45 @@ $('#newPageBtn').onclick=()=>openPage();
 function openPage(id='',presetParent=''){
   const p=site.pages.find(x=>x.id===id);
   $('#pageId').value=p?.id||'';
-  $('#pageTitle').value=p?.title||'';
-  $('#pageSlug').value=p?.slug||(!site.pages.length?'home':'');
-  $('#pageSubtitle').value=p?.subtitle||'';
+  $('#pageTitle').value=p?.draft_title??p?.title??'';
+  $('#pageSlug').value=p?.draft_slug??p?.slug??(!site.pages.length?'home':'');
+  $('#pageSubtitle').value=p?.draft_subtitle??p?.subtitle??'';
   const parent=$('#pageParent');
   parent.innerHTML='<option value="">无 · 作为一级页面</option>';
   site.pages.filter(x=>String(x.id)!==String(id)).forEach(x=>{
     const o=document.createElement('option');o.value=x.id;o.textContent=x.title+' · /'+x.slug;parent.appendChild(o);
   });
-  parent.value=p?.parent_id||presetParent||'';
-  $('#pageVisible').checked=p?!!p.is_visible:true;
+  parent.value=p?.draft_parent_id??p?.parent_id??presetParent??'';
+  $('#pageVisible').checked=p?(p.draft_is_visible==null?!!p.is_visible:!!p.draft_is_visible):true;
   $('#pageDialogTitle').textContent=p?'Edit page':(presetParent?'New subpage':'New page');
   $('#pageError').classList.remove('show');$('#pageError').textContent='';
   $('#pageDanger').classList.toggle('hidden',!p);
   $('#pageDialog').showModal();
   setTimeout(()=>$('#pageTitle').focus(),50);
 }
-$('#savePageBtn').onclick=async()=>{
-  const btn=$('#savePageBtn'),id=$('#pageId').value;
+async function v68SavePage(mode){
+  const btn=mode==='publish'?$('#publishPageBtn'):$('#savePageBtn'),id=$('#pageId').value;
   const title=$('#pageTitle').value.trim()||'Untitled page';
   const parentId=$('#pageParent').value||null;
   let slug=$('#pageSlug').value.trim().replace(/^\/+|\/+$/g,'');
   if(parentId){
     const parent=site.pages.find(x=>String(x.id)===String(parentId));
+    const parentSlug=parent?.draft_slug||parent?.slug;
     const leaf=(slug.split('/').filter(Boolean).pop()||'page');
-    if(parent?.slug)slug=`${String(parent.slug).replace(/\/+$/,'')}/${leaf}`;
+    if(parentSlug)slug=`${String(parentSlug).replace(/\/+$/,'')}/${leaf}`;
   }
-  const data={title,slug,subtitle:$('#pageSubtitle').value.trim(),parentId,isVisible:$('#pageVisible').checked};
-  btn.disabled=true;btn.textContent='saving…';
+  const data={mode,title,slug,subtitle:$('#pageSubtitle').value.trim(),parentId,isVisible:$('#pageVisible').checked};
+  btn.disabled=true;btn.textContent=mode==='publish'?'publishing…':'saving…';
   try{
     if(id)await api('/api/admin/pages/'+encodeURIComponent(id),jsonOpts('PATCH',data));
     else{const j=await api('/api/admin/pages',jsonOpts('POST',data));currentPageId=j.id}
-    closeDialog('pageDialog');toast('page saved');await load();
+    closeDialog('pageDialog');toast(mode==='publish'?'page published':'draft saved');await load();
   }catch(e){$('#pageError').textContent=e.message;$('#pageError').classList.add('show')}
-  finally{btn.disabled=false;btn.textContent='save page'}
-};
+  finally{btn.disabled=false;btn.textContent=mode==='publish'?'发布页面':'保存草稿'}
+}
+$('#savePageBtn').onclick=()=>v68SavePage('draft');
+$('#publishPageBtn').onclick=()=>v68SavePage('publish');
+
 $('#deletePageBtn').onclick=async()=>{
   const id=$('#pageId').value;if(!id)return;
   if(!confirm('确定删除这个页面以及它下面的所有区块和内容吗？'))return;
@@ -690,9 +709,9 @@ $('#saveSectionBtn').onclick=async()=>{
 function findItem(sectionId,itemId){return currentPage()?.sections?.find(s=>s.id===sectionId)?.items?.find(i=>i.id===itemId)}
 function openItem(sectionId,itemId=''){
   const it=findItem(sectionId,itemId);
-  $('#itemId').value=it?.id||'';$('#itemSectionId').value=sectionId;$('#itemTitle').value=it?.title||'';
-  $('#itemSubtitle').value=it?.subtitle||'';$('#itemBadge').value=it?.badge||'';$('#itemHref').value=it?.href||'';
-  $('#itemContent').value=it?.content_text||'';$('#itemVisible').checked=it?!!it.is_visible:true;$('#itemImages').value='';
+  $('#itemId').value=it?.id||'';$('#itemSectionId').value=sectionId;$('#itemTitle').value=it?.draft_title??it?.title??'';
+  $('#itemSubtitle').value=it?.draft_subtitle??it?.subtitle??'';$('#itemBadge').value=it?.draft_badge??it?.badge??'';$('#itemHref').value=it?.draft_href??it?.href??'';
+  $('#itemContent').value=it?.draft_content_text??it?.content_text??'';$('#itemVisible').checked=it?(it.draft_is_visible==null?!!it.is_visible:!!it.draft_is_visible):true;$('#itemImages').value='';
   $('#itemDialogTitle').textContent=it?'Edit item':'New item';renderCurrentMedia(it);$('#itemDialog').showModal();
   setTimeout(()=>$('#itemTitle').focus(),50);
 }
@@ -718,11 +737,12 @@ function renderCurrentMedia(it){
     box.appendChild(d);
   });
 }
-$('#saveItemBtn').onclick=async()=>{
-  const btn=$('#saveItemBtn'),id=$('#itemId').value,sectionId=$('#itemSectionId').value;
+async function v68SaveItem(mode){
+  const btn=mode==='publish'?$('#publishItemBtn'):$('#saveItemBtn');
+  const id=$('#itemId').value,sectionId=$('#itemSectionId').value;
   const files=[...$('#itemImages').files];
   const data={
-    sectionId,
+    mode,sectionId,
     title:$('#itemTitle').value.trim()||'Untitled item',
     subtitle:$('#itemSubtitle').value.trim(),
     badge:$('#itemBadge').value.trim(),
@@ -730,42 +750,38 @@ $('#saveItemBtn').onclick=async()=>{
     content:$('#itemContent').value,
     isVisible:$('#itemVisible').checked
   };
-
-  btn.disabled=true;btn.textContent='saving…';
-  let itemId=id;
-  let textSaved=false;
+  btn.disabled=true;btn.textContent=mode==='publish'?'publishing…':'saving…';
+  let itemId=id,textSaved=false;
   try{
-    if(id){
-      await api('/api/admin/items/'+encodeURIComponent(id),jsonOpts('PATCH',data));
-    }else{
-      const j=await api('/api/admin/items',jsonOpts('POST',data));
-      itemId=j.id;
-    }
+    if(id)await api('/api/admin/items/'+encodeURIComponent(id),jsonOpts('PATCH',data));
+    else{const j=await api('/api/admin/items',jsonOpts('POST',data));itemId=j.id}
     textSaved=true;
 
     if(files.length){
-      btn.textContent=`uploading 0/${files.length}…`;
       for(let i=0;i<files.length;i++){
         btn.textContent=`uploading ${i+1}/${files.length}…`;
-        await uploadImage(itemId,files[i]);
+        await uploadImage(itemId,files[i],mode==='publish');
       }
     }
-
+    if(mode==='publish' && files.length && id){
+      await api('/api/admin/items/'+encodeURIComponent(itemId),jsonOpts('PATCH',{...data,mode:'publish'}));
+    }
     closeDialog('itemDialog');
-    toast(files.length?'item + images saved':'item saved');
+    toast(mode==='publish'?'published':'draft saved');
     await load();
   }catch(e){
     if(textSaved){
       await load().catch(()=>{});
-      alert(`文字内容已经保存，但图片上传没有完成：\n${e.message||'未知错误'}\n\n可以重新打开这条内容，只补传图片，不需要重新填写文字。`);
-    }else{
-      alert(`保存失败：${e.message||'未知错误'}`);
-    }
+      alert(`文字已经保存，但图片没有全部完成：\n${e.message||'未知错误'}`);
+    }else alert(`保存失败：${e.message||'未知错误'}`);
   }finally{
-    btn.disabled=false;btn.textContent='save item';
+    btn.disabled=false;btn.textContent=mode==='publish'?'发布':'保存草稿';
   }
-};
-async function uploadImage(itemId,file){
+}
+$('#saveItemBtn').onclick=()=>v68SaveItem('draft');
+$('#publishItemBtn').onclick=()=>v68SaveItem('publish');
+
+async function uploadImage(itemId,file,isPublished=false){
   const compressed=await adminCompressImage(file);
   let sig;
   try{
@@ -798,7 +814,7 @@ async function uploadImage(itemId,file){
   try{
     await api('/api/admin/media',jsonOpts('POST',{
       itemId,url:j.secure_url,publicId:j.public_id||'',
-      width:j.width||0,height:j.height||0,mediaType:'image',alt:file.name
+      width:j.width||0,height:j.height||0,mediaType:'image',alt:file.name,isPublished
     }));
   }catch(e){
     throw new Error(`图片已经上传，但保存图片记录失败：${e.message}`);

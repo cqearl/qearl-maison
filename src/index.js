@@ -213,7 +213,15 @@ async function ensureAdminSchema(env){
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL, slug TEXT NOT NULL UNIQUE, subtitle TEXT DEFAULT '',
       parent_id INTEGER DEFAULT NULL,
-      is_visible INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+      is_visible INTEGER NOT NULL DEFAULT 1,
+      is_published INTEGER NOT NULL DEFAULT 1,
+      draft_title TEXT DEFAULT NULL,
+      draft_slug TEXT DEFAULT NULL,
+      draft_subtitle TEXT DEFAULT NULL,
+      draft_parent_id INTEGER DEFAULT NULL,
+      draft_is_visible INTEGER DEFAULT NULL,
+      has_draft INTEGER NOT NULL DEFAULT 0,
+      sort_order INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS site_sections (
@@ -225,13 +233,25 @@ async function ensureAdminSchema(env){
     `CREATE TABLE IF NOT EXISTS site_items (
       id INTEGER PRIMARY KEY AUTOINCREMENT, section_id INTEGER NOT NULL,
       title TEXT NOT NULL, subtitle TEXT DEFAULT '', badge TEXT DEFAULT '', href TEXT DEFAULT '',
-      content_text TEXT DEFAULT '', is_visible INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+      content_text TEXT DEFAULT '',
+      is_visible INTEGER NOT NULL DEFAULT 1,
+      is_published INTEGER NOT NULL DEFAULT 1,
+      draft_title TEXT DEFAULT NULL,
+      draft_subtitle TEXT DEFAULT NULL,
+      draft_badge TEXT DEFAULT NULL,
+      draft_href TEXT DEFAULT NULL,
+      draft_content_text TEXT DEFAULT NULL,
+      draft_is_visible INTEGER DEFAULT NULL,
+      has_draft INTEGER NOT NULL DEFAULT 0,
+      sort_order INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS site_media (
       id INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER NOT NULL,
       url TEXT NOT NULL, public_id TEXT DEFAULT '', width INTEGER DEFAULT 0, height INTEGER DEFAULT 0,
-      media_type TEXT DEFAULT 'image', alt TEXT DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
+      media_type TEXT DEFAULT 'image', alt TEXT DEFAULT '',
+      is_published INTEGER NOT NULL DEFAULT 1,
+      sort_order INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`,
     `CREATE TABLE IF NOT EXISTS site_meta (
@@ -243,10 +263,42 @@ async function ensureAdminSchema(env){
   for(const q of sqls) await env.DB.prepare(q).run();
   try{
     const cols=await env.DB.prepare("PRAGMA table_info(site_pages)").all();
-    if(!(cols.results||[]).some(c=>c.name==="parent_id")){
+    if(!(cols.results||[]).some(c=>c.name==="parent_id"))
       await env.DB.prepare("ALTER TABLE site_pages ADD COLUMN parent_id INTEGER DEFAULT NULL").run();
+    const pageAdds=[
+      ["is_published","INTEGER NOT NULL DEFAULT 1"],
+      ["draft_title","TEXT DEFAULT NULL"],
+      ["draft_slug","TEXT DEFAULT NULL"],
+      ["draft_subtitle","TEXT DEFAULT NULL"],
+      ["draft_parent_id","INTEGER DEFAULT NULL"],
+      ["draft_is_visible","INTEGER DEFAULT NULL"],
+      ["has_draft","INTEGER NOT NULL DEFAULT 0"]
+    ];
+    for(const [name,type] of pageAdds){
+      if(!(cols.results||[]).some(c=>c.name===name))
+        await env.DB.prepare(`ALTER TABLE site_pages ADD COLUMN ${name} ${type}`).run();
     }
-  }catch(e){console.warn("site_pages parent migration",e)}
+
+    const itemCols=await env.DB.prepare("PRAGMA table_info(site_items)").all();
+    const itemAdds=[
+      ["is_published","INTEGER NOT NULL DEFAULT 1"],
+      ["draft_title","TEXT DEFAULT NULL"],
+      ["draft_subtitle","TEXT DEFAULT NULL"],
+      ["draft_badge","TEXT DEFAULT NULL"],
+      ["draft_href","TEXT DEFAULT NULL"],
+      ["draft_content_text","TEXT DEFAULT NULL"],
+      ["draft_is_visible","INTEGER DEFAULT NULL"],
+      ["has_draft","INTEGER NOT NULL DEFAULT 0"]
+    ];
+    for(const [name,type] of itemAdds){
+      if(!(itemCols.results||[]).some(c=>c.name===name))
+        await env.DB.prepare(`ALTER TABLE site_items ADD COLUMN ${name} ${type}`).run();
+    }
+
+    const mediaCols=await env.DB.prepare("PRAGMA table_info(site_media)").all();
+    if(!(mediaCols.results||[]).some(c=>c.name==="is_published"))
+      await env.DB.prepare("ALTER TABLE site_media ADD COLUMN is_published INTEGER NOT NULL DEFAULT 1").run();
+  }catch(e){console.warn("site draft/publish migration",e)}
 }
 const toBool=v=>v?1:0;
 const parseLayout=x=>{try{return JSON.parse(x||"{}")}catch{return {}}};
@@ -358,41 +410,135 @@ async function adminBootstrap(request,env){
   for(const r of mr.results||[]) imap.get(String(r.item_id))?.media.push(r);
   return json({ok:true,data:{pages}},200,{},request);
 }
+function previewPageRow(p){
+  if(!p||!p.has_draft)return p;
+  return {
+    ...p,
+    title:p.draft_title ?? p.title,
+    slug:p.draft_slug ?? p.slug,
+    subtitle:p.draft_subtitle ?? p.subtitle,
+    parent_id:p.draft_parent_id ?? p.parent_id,
+    is_visible:p.draft_is_visible==null?!!p.is_visible:!!p.draft_is_visible
+  };
+}
+function previewItemRow(it){
+  if(!it||!it.has_draft)return it;
+  return {
+    ...it,
+    title:it.draft_title ?? it.title,
+    subtitle:it.draft_subtitle ?? it.subtitle,
+    badge:it.draft_badge ?? it.badge,
+    href:it.draft_href ?? it.href,
+    content_text:it.draft_content_text ?? it.content_text,
+    is_visible:it.draft_is_visible==null?!!it.is_visible:!!it.draft_is_visible
+  };
+}
 async function publicSite(request,env){
   await ensureAdminSchema(env);
-  const url=new URL(request.url),slug=url.searchParams.get("page")||"";
-  const p=await env.DB.prepare("SELECT * FROM site_pages WHERE slug=? AND is_visible=1").bind(slug).first();
-  if(!p)return json({ok:true,page:null},200,{},request);
-  const sr=await env.DB.prepare("SELECT * FROM site_sections WHERE page_id=? AND is_visible=1 ORDER BY sort_order,id").bind(p.id).all();
-  const sections=[];
-  for(const r of sr.results||[]){
-    const ir=await env.DB.prepare("SELECT * FROM site_items WHERE section_id=? AND is_visible=1 ORDER BY sort_order,id").bind(r.id).all();
-    const items=[];
-    for(const it of ir.results||[]){
-      const mr=await env.DB.prepare("SELECT * FROM site_media WHERE item_id=? ORDER BY sort_order,id").bind(it.id).all();
-      items.push({...it,is_visible:!!it.is_visible,media:mr.results||[]});
-    }
-    sections.push({...r,is_visible:!!r.is_visible,layout:parseLayout(r.layout_json),items});
+  const url=new URL(request.url);
+  const slug=String(url.searchParams.get("page")||"").trim();
+  const wantsPreview=url.searchParams.get("preview")==="1";
+  const session=wantsPreview?await readSession(request,env):null;
+  const preview=!!session;
+
+  let p;
+  if(preview){
+    p=await env.DB.prepare(
+      "SELECT * FROM site_pages WHERE slug=? OR (has_draft=1 AND draft_slug=?) ORDER BY id LIMIT 1"
+    ).bind(slug,slug).first();
+  }else{
+    p=await env.DB.prepare(
+      "SELECT * FROM site_pages WHERE slug=? AND is_visible=1 AND is_published=1 LIMIT 1"
+    ).bind(slug).first();
   }
-  return json({ok:true,page:{...p,is_visible:true,sections}},200,{},request);
+  if(!p)return json({ok:true,page:null,preview},200,{},request);
+
+  const pageOut=preview?previewPageRow(p):p;
+  const sr=await env.DB.prepare(
+    "SELECT * FROM site_sections WHERE page_id=? AND is_visible=1 ORDER BY sort_order,id"
+  ).bind(p.id).all();
+
+  const sections=[];
+  for(const sec of sr.results||[]){
+    const ir=preview
+      ? await env.DB.prepare("SELECT * FROM site_items WHERE section_id=? ORDER BY sort_order,id").bind(sec.id).all()
+      : await env.DB.prepare("SELECT * FROM site_items WHERE section_id=? AND is_visible=1 AND is_published=1 ORDER BY sort_order,id").bind(sec.id).all();
+
+    const items=[];
+    for(const raw of ir.results||[]){
+      const it=preview?previewItemRow(raw):raw;
+      if(preview && !it.is_visible) continue;
+      const mr=preview
+        ? await env.DB.prepare("SELECT * FROM site_media WHERE item_id=? ORDER BY sort_order,id").bind(raw.id).all()
+        : await env.DB.prepare("SELECT * FROM site_media WHERE item_id=? AND is_published=1 ORDER BY sort_order,id").bind(raw.id).all();
+      items.push({...it,is_visible:!!it.is_visible,is_published:!!raw.is_published,media:mr.results||[]});
+    }
+    sections.push({...sec,is_visible:!!sec.is_visible,layout:parseLayout(sec.layout_json),items});
+  }
+
+  return json({
+    ok:true,preview,
+    page:{...pageOut,is_visible:!!pageOut.is_visible,is_published:!!p.is_published,sections}
+  },200,{},request);
 }
 async function adminPages(request,env,p){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
   if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
   await ensureAdminSchema(env); const b=await readJson(request);
   const m=p.match(/^\/api\/admin\/pages\/(\d+)$/),id=m?.[1];
+  const mode=b.mode==="publish"?"publish":"draft";
+
   if(p==="/api/admin/pages"&&request.method==="POST"){
     const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_pages").first();
-    const r=await env.DB.prepare("INSERT INTO site_pages(title,slug,subtitle,parent_id,is_visible,sort_order) VALUES(?,?,?,?,?,?) RETURNING id")
-      .bind(b.title||"Untitled page",b.slug||("page-"+Date.now()),b.subtitle||"",b.parentId||null,toBool(b.isVisible),row?.n||1).first();
-    return json({ok:true,id:r.id},200,{},request);
+    if(mode==="publish"){
+      const r=await env.DB.prepare(
+        "INSERT INTO site_pages(title,slug,subtitle,parent_id,is_visible,is_published,has_draft,sort_order) VALUES(?,?,?,?,?,1,0,?) RETURNING id"
+      ).bind(b.title||"Untitled page",b.slug||("page-"+Date.now()),b.subtitle||"",b.parentId||null,toBool(b.isVisible),row?.n||1).first();
+      return json({ok:true,id:r.id,published:true},200,{},request);
+    }
+    const placeholder="draft-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);
+    const r=await env.DB.prepare(
+      `INSERT INTO site_pages(
+        title,slug,subtitle,parent_id,is_visible,is_published,
+        draft_title,draft_slug,draft_subtitle,draft_parent_id,draft_is_visible,has_draft,sort_order
+      ) VALUES(?,?,?,?,?,0,?,?,?,?,?,1,?) RETURNING id`
+    ).bind(
+      b.title||"Untitled page",placeholder,b.subtitle||"",b.parentId||null,0,
+      b.title||"Untitled page",b.slug||placeholder,b.subtitle||"",b.parentId||null,toBool(b.isVisible),row?.n||1
+    ).first();
+    return json({ok:true,id:r.id,draft:true},200,{},request);
   }
+
   if(id&&request.method==="PATCH"){
+    const current=await env.DB.prepare("SELECT * FROM site_pages WHERE id=?").bind(id).first();
+    if(!current)return json({error:"Page not found"},404,{},request);
     const parentId=(b.parentId && String(b.parentId)!==String(id))?b.parentId:null;
-    await env.DB.prepare("UPDATE site_pages SET title=?,slug=?,subtitle=?,parent_id=?,is_visible=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")
-      .bind(b.title||"Untitled page",b.slug||("page-"+id),b.subtitle||"",parentId,toBool(b.isVisible),id).run();
-    return json({ok:true},200,{},request);
+
+    if(mode==="publish"){
+      const title=b.title ?? current.draft_title ?? current.title;
+      const slug=b.slug ?? current.draft_slug ?? current.slug;
+      const subtitle=b.subtitle ?? current.draft_subtitle ?? current.subtitle;
+      const visible=typeof b.isVisible==="boolean"?toBool(b.isVisible):(current.draft_is_visible??current.is_visible);
+      const parent=parentId ?? current.draft_parent_id ?? current.parent_id;
+      await env.DB.prepare(
+        `UPDATE site_pages SET
+          title=?,slug=?,subtitle=?,parent_id=?,is_visible=?,is_published=1,
+          draft_title=NULL,draft_slug=NULL,draft_subtitle=NULL,draft_parent_id=NULL,draft_is_visible=NULL,has_draft=0,
+          updated_at=CURRENT_TIMESTAMP WHERE id=?`
+      ).bind(title,slug,subtitle,parent,visible,id).run();
+      return json({ok:true,published:true},200,{},request);
+    }
+
+    await env.DB.prepare(
+      `UPDATE site_pages SET
+        draft_title=?,draft_slug=?,draft_subtitle=?,draft_parent_id=?,draft_is_visible=?,has_draft=1,
+        updated_at=CURRENT_TIMESTAMP WHERE id=?`
+    ).bind(
+      b.title??current.title,b.slug??current.slug,b.subtitle??current.subtitle,parentId,toBool(b.isVisible),id
+    ).run();
+    return json({ok:true,draft:true},200,{},request);
   }
+
   if(id&&request.method==="DELETE"){
     const secs=await env.DB.prepare("SELECT id FROM site_sections WHERE page_id=?").bind(id).all();
     for(const sec of secs.results||[]){
@@ -436,17 +582,61 @@ async function adminItems(request,env,p){
   if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
   await ensureAdminSchema(env); const b=await readJson(request);
   const m=p.match(/^\/api\/admin\/items\/(\d+)$/),id=m?.[1];
+  const mode=b.mode==="publish"?"publish":"draft";
+
   if(p==="/api/admin/items"&&request.method==="POST"){
     const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_items WHERE section_id=?").bind(b.sectionId).first();
-    const r=await env.DB.prepare("INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id")
-      .bind(b.sectionId,b.title||"Untitled item",b.subtitle||"",b.badge||"",b.href||"",b.content||"",toBool(b.isVisible),row?.n||1).first();
-    return json({ok:true,id:r.id},200,{},request);
+    if(mode==="publish"){
+      const r=await env.DB.prepare(
+        `INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,is_published,has_draft,sort_order)
+         VALUES(?,?,?,?,?,?,?,1,0,?) RETURNING id`
+      ).bind(b.sectionId,b.title||"Untitled item",b.subtitle||"",b.badge||"",b.href||"",b.content||"",toBool(b.isVisible),row?.n||1).first();
+      return json({ok:true,id:r.id,published:true},200,{},request);
+    }
+    const r=await env.DB.prepare(
+      `INSERT INTO site_items(
+        section_id,title,subtitle,badge,href,content_text,is_visible,is_published,
+        draft_title,draft_subtitle,draft_badge,draft_href,draft_content_text,draft_is_visible,has_draft,sort_order
+      ) VALUES(?,?,?,?,?,?,0,0,?,?,?,?,?,?,1,?) RETURNING id`
+    ).bind(
+      b.sectionId,b.title||"Untitled item","","","","",
+      b.title||"Untitled item",b.subtitle||"",b.badge||"",b.href||"",b.content||"",toBool(b.isVisible),row?.n||1
+    ).first();
+    return json({ok:true,id:r.id,draft:true},200,{},request);
   }
+
   if(id&&request.method==="PATCH"){
-    await env.DB.prepare("UPDATE site_items SET title=?,subtitle=?,badge=?,href=?,content_text=?,is_visible=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")
-      .bind(b.title||"Untitled item",b.subtitle||"",b.badge||"",b.href||"",b.content||"",toBool(b.isVisible),id).run();
-    return json({ok:true},200,{},request);
+    const current=await env.DB.prepare("SELECT * FROM site_items WHERE id=?").bind(id).first();
+    if(!current)return json({error:"Item not found"},404,{},request);
+
+    if(mode==="publish"){
+      const title=b.title ?? current.draft_title ?? current.title;
+      const subtitle=b.subtitle ?? current.draft_subtitle ?? current.subtitle;
+      const badge=b.badge ?? current.draft_badge ?? current.badge;
+      const href=b.href ?? current.draft_href ?? current.href;
+      const content=b.content ?? current.draft_content_text ?? current.content_text;
+      const visible=typeof b.isVisible==="boolean"?toBool(b.isVisible):(current.draft_is_visible??current.is_visible);
+      await env.DB.prepare(
+        `UPDATE site_items SET
+          title=?,subtitle=?,badge=?,href=?,content_text=?,is_visible=?,is_published=1,
+          draft_title=NULL,draft_subtitle=NULL,draft_badge=NULL,draft_href=NULL,draft_content_text=NULL,draft_is_visible=NULL,has_draft=0,
+          updated_at=CURRENT_TIMESTAMP WHERE id=?`
+      ).bind(title,subtitle,badge,href,content,visible,id).run();
+      await env.DB.prepare("UPDATE site_media SET is_published=1 WHERE item_id=?").bind(id).run();
+      return json({ok:true,published:true},200,{},request);
+    }
+
+    await env.DB.prepare(
+      `UPDATE site_items SET
+        draft_title=?,draft_subtitle=?,draft_badge=?,draft_href=?,draft_content_text=?,draft_is_visible=?,has_draft=1,
+        updated_at=CURRENT_TIMESTAMP WHERE id=?`
+    ).bind(
+      b.title??current.title,b.subtitle??current.subtitle,b.badge??current.badge,
+      b.href??current.href,b.content??current.content_text,toBool(b.isVisible),id
+    ).run();
+    return json({ok:true,draft:true},200,{},request);
   }
+
   if(id&&request.method==="DELETE"){
     await env.DB.prepare("DELETE FROM site_media WHERE item_id=?").bind(id).run();
     await env.DB.prepare("DELETE FROM site_items WHERE id=?").bind(id).run();
@@ -461,8 +651,8 @@ async function adminMedia(request,env,p){
   const m=p.match(/^\/api\/admin\/media\/(\d+)$/),id=m?.[1];
   if(p==="/api/admin/media"&&request.method==="POST"){
     const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_media WHERE item_id=?").bind(b.itemId).first();
-    const r=await env.DB.prepare("INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id")
-      .bind(b.itemId,b.url,b.publicId||"",b.width||0,b.height||0,b.mediaType||"image",b.alt||"",row?.n||1).first();
+    const r=await env.DB.prepare("INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,is_published,sort_order) VALUES(?,?,?,?,?,?,?,?,?) RETURNING id")
+      .bind(b.itemId,b.url,b.publicId||"",b.width||0,b.height||0,b.mediaType||"image",b.alt||"",b.isPublished===true?1:0,row?.n||1).first();
     return json({ok:true,id:r.id},200,{},request);
   }
   if(id&&request.method==="DELETE"){await env.DB.prepare("DELETE FROM site_media WHERE id=?").bind(id).run();return json({ok:true},200,{},request)}
@@ -549,7 +739,7 @@ async function quickPublish(request,env){
   ).bind(section.id).first();
 
   const item=await env.DB.prepare(
-    "INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id"
+    "INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,is_published,has_draft,sort_order) VALUES(?,?,?,?,?,?,?,1,0,?) RETURNING id"
   ).bind(section.id,title,"","","",content,1,io?.n||1).first();
 
   let mo=1;
@@ -559,10 +749,10 @@ async function quickPublish(request,env){
     if(!url)continue;
     stmts.push(
       env.DB.prepare(
-        "INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,sort_order) VALUES(?,?,?,?,?,?,?,?)"
+        "INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,is_published,sort_order) VALUES(?,?,?,?,?,?,?,?,?)"
       ).bind(
         item.id,url,String(m.publicId||""),Number(m.width||0),Number(m.height||0),
-        "image",String(m.alt||""),mo++
+        "image",String(m.alt||""),1,mo++
       )
     );
   }

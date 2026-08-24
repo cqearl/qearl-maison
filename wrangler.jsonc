@@ -6,13 +6,21 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": [
+      "/api/*"
+    ]
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "qearl-maison-db",
       "database_id": "b66f4dcb-edc8-4274-a76c-f7273344052c"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "api.qearlune.xyz/*",
+      "zone_name": "qearlune.xyz"
     }
   ]
 }

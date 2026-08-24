@@ -34,15 +34,30 @@ function parseCookies(request) {
   });
   return out;
 }
-function json(data,status=200,headers={}) {
+function corsHeaders(request){
+  const origin=request.headers.get("Origin")||"";
+  const allowed=["https://qearlune.xyz","https://www.qearlune.xyz","https://api.qearlune.xyz"];
+  return allowed.includes(origin)?{
+    "Access-Control-Allow-Origin":origin,
+    "Access-Control-Allow-Credentials":"true",
+    "Vary":"Origin"
+  }:{};
+}
+function json(data,status=200,headers={},request=null) {
   return new Response(JSON.stringify(data), {
     status,
-    headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",...headers}
+    headers:{
+      "Content-Type":"application/json; charset=utf-8",
+      "Cache-Control":"no-store",
+      ...(request?corsHeaders(request):{}),
+      ...headers
+    }
   });
 }
 function sameOrigin(request) {
   const origin=request.headers.get("Origin");
-  return !origin || origin===new URL(request.url).origin;
+  if(!origin)return true;
+  return ["https://qearlune.xyz","https://www.qearlune.xyz","https://api.qearlune.xyz",new URL(request.url).origin].includes(origin);
 }
 async function makeSession(username, env) {
   const payload={sub:username,exp:Date.now()+MAX_AGE*1000,nonce:crypto.randomUUID()};
@@ -71,10 +86,10 @@ async function requireOwner(context) {
   return {ok:true,session};
 }
 function sessionCookie(token) {
-  return `${COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${MAX_AGE}`;
+  return `${COOKIE}=${encodeURIComponent(token)}; Domain=.qearlune.xyz; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MAX_AGE}`;
 }
 function clearCookie() {
-  return `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`;
+  return `${COOKIE}=; Domain=.qearlune.xyz; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
 }
 
 
@@ -96,7 +111,7 @@ async function handleState(env){
 
 async function handleBlock(request,env){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401);
-  if(!sameOrigin(request))return json({error:"Invalid origin"},403);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
   const b=await readJson(request);
   if(request.method==="POST"){
     if(!validPage(b.page)||!["text","image"].includes(b.type))return json({error:"Invalid data"},400);
@@ -136,7 +151,7 @@ async function handleBlock(request,env){
 async function handlePublish(request,env){
   const a=await readSession(request,env);
   if(!a)return json({error:"Unauthorized"},401);
-  if(!sameOrigin(request))return json({error:"Invalid origin"},403);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
 
   const form=await request.formData();
   const page=String(form.get("target")||"").trim();
@@ -188,12 +203,235 @@ async function handlePublish(request,env){
   }
 
   if(stmts.length)await env.DB.batch(stmts);
-  return json({ok:true,count:stmts.length});
+  return json({ok:true,count:stmts.length},200,{},request);
+}
+
+
+async function ensureAdminSchema(env){
+  const sqls=[
+    `CREATE TABLE IF NOT EXISTS site_pages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL, slug TEXT NOT NULL UNIQUE, subtitle TEXT DEFAULT '',
+      is_visible INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS site_sections (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, page_id INTEGER NOT NULL,
+      title TEXT NOT NULL, subtitle TEXT DEFAULT '', layout_json TEXT DEFAULT '{}',
+      is_visible INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS site_items (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, section_id INTEGER NOT NULL,
+      title TEXT NOT NULL, subtitle TEXT DEFAULT '', badge TEXT DEFAULT '', href TEXT DEFAULT '',
+      content_text TEXT DEFAULT '', is_visible INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`,
+    `CREATE TABLE IF NOT EXISTS site_media (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER NOT NULL,
+      url TEXT NOT NULL, public_id TEXT DEFAULT '', width INTEGER DEFAULT 0, height INTEGER DEFAULT 0,
+      media_type TEXT DEFAULT 'image', alt TEXT DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`
+  ];
+  for(const q of sqls) await env.DB.prepare(q).run();
+}
+const toBool=v=>v?1:0;
+const parseLayout=x=>{try{return JSON.parse(x||"{}")}catch{return {}}};
+
+
+async function adminImportLegacy(request,env){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  await ensureAdminSchema(env);
+  const payload=await readJson(request); let imported=0,skipped=0;
+  for(const page of payload.pages||[]){
+    const exists=await env.DB.prepare("SELECT id FROM site_pages WHERE slug=?").bind(page.slug).first();
+    if(exists){skipped++;continue}
+    const po=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_pages").first();
+    const pr=await env.DB.prepare("INSERT INTO site_pages(title,slug,subtitle,is_visible,sort_order) VALUES(?,?,?,?,?) RETURNING id")
+      .bind(page.title||page.slug,page.slug,page.subtitle||"",page.isVisible===false?0:1,po?.n||1).first();
+    let so=1;
+    for(const sec of page.sections||[]){
+      const sr=await env.DB.prepare("INSERT INTO site_sections(page_id,title,subtitle,layout_json,is_visible,sort_order) VALUES(?,?,?,?,?,?) RETURNING id")
+        .bind(pr.id,sec.title||"",sec.subtitle||"",JSON.stringify(sec.layout||{}),1,so++).first();
+      let io=1;
+      for(const item of sec.items||[]){
+        const ir=await env.DB.prepare("INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id")
+          .bind(sr.id,item.title||"",item.subtitle||"",item.badge||"",item.href||"",item.content||"",1,io++).first();
+        let mo=1;
+        for(const media of item.media||[]){
+          await env.DB.prepare("INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,sort_order) VALUES(?,?,?,?,?,?,?,?)")
+            .bind(ir.id,media.url||"",media.publicId||"",media.width||0,media.height||0,media.mediaType||"image",media.alt||"",mo++).run();
+        }
+      }
+    }
+    imported++;
+  }
+  return json({ok:true,imported,skipped},200,{},request);
+}
+
+async function adminBootstrap(request,env){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  await ensureAdminSchema(env);
+  const [pr,sr,ir,mr]=await Promise.all([
+    env.DB.prepare("SELECT * FROM site_pages ORDER BY sort_order,id").all(),
+    env.DB.prepare("SELECT * FROM site_sections ORDER BY sort_order,id").all(),
+    env.DB.prepare("SELECT * FROM site_items ORDER BY sort_order,id").all(),
+    env.DB.prepare("SELECT * FROM site_media ORDER BY sort_order,id").all()
+  ]);
+  const pages=(pr.results||[]).map(p=>({...p,is_visible:!!p.is_visible,sections:[]}));
+  const pmap=new Map(pages.map(p=>[String(p.id),p]));
+  const smap=new Map();
+  for(const r of sr.results||[]){
+    const sec={...r,is_visible:!!r.is_visible,layout:parseLayout(r.layout_json),items:[]};
+    smap.set(String(sec.id),sec); pmap.get(String(sec.page_id))?.sections.push(sec);
+  }
+  const imap=new Map();
+  for(const r of ir.results||[]){
+    const it={...r,is_visible:!!r.is_visible,media:[]}; imap.set(String(it.id),it);
+    smap.get(String(it.section_id))?.items.push(it);
+  }
+  for(const r of mr.results||[]) imap.get(String(r.item_id))?.media.push(r);
+  return json({ok:true,data:{pages}},200,{},request);
+}
+async function publicSite(request,env){
+  await ensureAdminSchema(env);
+  const url=new URL(request.url),slug=url.searchParams.get("page")||"";
+  const p=await env.DB.prepare("SELECT * FROM site_pages WHERE slug=? AND is_visible=1").bind(slug).first();
+  if(!p)return json({ok:true,page:null},200,{},request);
+  const sr=await env.DB.prepare("SELECT * FROM site_sections WHERE page_id=? AND is_visible=1 ORDER BY sort_order,id").bind(p.id).all();
+  const sections=[];
+  for(const r of sr.results||[]){
+    const ir=await env.DB.prepare("SELECT * FROM site_items WHERE section_id=? AND is_visible=1 ORDER BY sort_order,id").bind(r.id).all();
+    const items=[];
+    for(const it of ir.results||[]){
+      const mr=await env.DB.prepare("SELECT * FROM site_media WHERE item_id=? ORDER BY sort_order,id").bind(it.id).all();
+      items.push({...it,is_visible:!!it.is_visible,media:mr.results||[]});
+    }
+    sections.push({...r,is_visible:!!r.is_visible,layout:parseLayout(r.layout_json),items});
+  }
+  return json({ok:true,page:{...p,is_visible:true,sections}},200,{},request);
+}
+async function adminPages(request,env,p){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  await ensureAdminSchema(env); const b=await readJson(request);
+  const m=p.match(/^\/api\/admin\/pages\/(\d+)$/),id=m?.[1];
+  if(p==="/api/admin/pages"&&request.method==="POST"){
+    const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_pages").first();
+    const r=await env.DB.prepare("INSERT INTO site_pages(title,slug,subtitle,is_visible,sort_order) VALUES(?,?,?,?,?) RETURNING id")
+      .bind(b.title||"Untitled page",b.slug||("page-"+Date.now()),b.subtitle||"",toBool(b.isVisible),row?.n||1).first();
+    return json({ok:true,id:r.id},200,{},request);
+  }
+  if(id&&request.method==="PATCH"){
+    await env.DB.prepare("UPDATE site_pages SET title=?,slug=?,subtitle=?,is_visible=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")
+      .bind(b.title||"Untitled page",b.slug||("page-"+id),b.subtitle||"",toBool(b.isVisible),id).run();
+    return json({ok:true},200,{},request);
+  }
+  if(id&&request.method==="DELETE"){
+    const secs=await env.DB.prepare("SELECT id FROM site_sections WHERE page_id=?").bind(id).all();
+    for(const sec of secs.results||[]){
+      const its=await env.DB.prepare("SELECT id FROM site_items WHERE section_id=?").bind(sec.id).all();
+      for(const it of its.results||[]) await env.DB.prepare("DELETE FROM site_media WHERE item_id=?").bind(it.id).run();
+      await env.DB.prepare("DELETE FROM site_items WHERE section_id=?").bind(sec.id).run();
+    }
+    await env.DB.prepare("DELETE FROM site_sections WHERE page_id=?").bind(id).run();
+    await env.DB.prepare("DELETE FROM site_pages WHERE id=?").bind(id).run();
+    return json({ok:true},200,{},request);
+  }
+  return json({error:"Not Found"},404,{},request);
+}
+async function adminSections(request,env,p){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  await ensureAdminSchema(env); const b=await readJson(request);
+  const m=p.match(/^\/api\/admin\/sections\/(\d+)$/),id=m?.[1];
+  if(p==="/api/admin/sections"&&request.method==="POST"){
+    const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_sections WHERE page_id=?").bind(b.pageId).first();
+    const r=await env.DB.prepare("INSERT INTO site_sections(page_id,title,subtitle,layout_json,is_visible,sort_order) VALUES(?,?,?,?,?,?) RETURNING id")
+      .bind(b.pageId,b.title||"Untitled section",b.subtitle||"",JSON.stringify(b.layout||{}),toBool(b.isVisible),row?.n||1).first();
+    return json({ok:true,id:r.id},200,{},request);
+  }
+  if(id&&request.method==="PATCH"){
+    await env.DB.prepare("UPDATE site_sections SET title=?,subtitle=?,layout_json=?,is_visible=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")
+      .bind(b.title||"Untitled section",b.subtitle||"",JSON.stringify(b.layout||{}),toBool(b.isVisible),id).run();
+    return json({ok:true},200,{},request);
+  }
+  if(id&&request.method==="DELETE"){
+    const its=await env.DB.prepare("SELECT id FROM site_items WHERE section_id=?").bind(id).all();
+    for(const it of its.results||[]) await env.DB.prepare("DELETE FROM site_media WHERE item_id=?").bind(it.id).run();
+    await env.DB.prepare("DELETE FROM site_items WHERE section_id=?").bind(id).run();
+    await env.DB.prepare("DELETE FROM site_sections WHERE id=?").bind(id).run();
+    return json({ok:true},200,{},request);
+  }
+  return json({error:"Not Found"},404,{},request);
+}
+async function adminItems(request,env,p){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  await ensureAdminSchema(env); const b=await readJson(request);
+  const m=p.match(/^\/api\/admin\/items\/(\d+)$/),id=m?.[1];
+  if(p==="/api/admin/items"&&request.method==="POST"){
+    const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_items WHERE section_id=?").bind(b.sectionId).first();
+    const r=await env.DB.prepare("INSERT INTO site_items(section_id,title,subtitle,badge,href,content_text,is_visible,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id")
+      .bind(b.sectionId,b.title||"Untitled item",b.subtitle||"",b.badge||"",b.href||"",b.content||"",toBool(b.isVisible),row?.n||1).first();
+    return json({ok:true,id:r.id},200,{},request);
+  }
+  if(id&&request.method==="PATCH"){
+    await env.DB.prepare("UPDATE site_items SET title=?,subtitle=?,badge=?,href=?,content_text=?,is_visible=?,updated_at=CURRENT_TIMESTAMP WHERE id=?")
+      .bind(b.title||"Untitled item",b.subtitle||"",b.badge||"",b.href||"",b.content||"",toBool(b.isVisible),id).run();
+    return json({ok:true},200,{},request);
+  }
+  if(id&&request.method==="DELETE"){
+    await env.DB.prepare("DELETE FROM site_media WHERE item_id=?").bind(id).run();
+    await env.DB.prepare("DELETE FROM site_items WHERE id=?").bind(id).run();
+    return json({ok:true},200,{},request);
+  }
+  return json({error:"Not Found"},404,{},request);
+}
+async function adminMedia(request,env,p){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  await ensureAdminSchema(env); const b=await readJson(request);
+  const m=p.match(/^\/api\/admin\/media\/(\d+)$/),id=m?.[1];
+  if(p==="/api/admin/media"&&request.method==="POST"){
+    const row=await env.DB.prepare("SELECT COALESCE(MAX(sort_order),0)+1 n FROM site_media WHERE item_id=?").bind(b.itemId).first();
+    const r=await env.DB.prepare("INSERT INTO site_media(item_id,url,public_id,width,height,media_type,alt,sort_order) VALUES(?,?,?,?,?,?,?,?) RETURNING id")
+      .bind(b.itemId,b.url,b.publicId||"",b.width||0,b.height||0,b.mediaType||"image",b.alt||"",row?.n||1).first();
+    return json({ok:true,id:r.id},200,{},request);
+  }
+  if(id&&request.method==="DELETE"){await env.DB.prepare("DELETE FROM site_media WHERE id=?").bind(id).run();return json({ok:true},200,{},request)}
+  return json({error:"Not Found"},404,{},request);
+}
+async function adminReorder(request,env){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  await ensureAdminSchema(env); const b=await readJson(request),ids=(b.ids||[]).map(Number).filter(Boolean);
+  const table={pages:"site_pages",sections:"site_sections",items:"site_items",media:"site_media"}[b.entity];
+  if(!table)return json({error:"Invalid entity"},400,{},request);
+  const stmts=ids.map((id,i)=>env.DB.prepare(`UPDATE ${table} SET sort_order=? WHERE id=?`).bind(i+1,id));
+  if(stmts.length)await env.DB.batch(stmts);
+  return json({ok:true},200,{},request);
+}
+async function uploadSignature(request,env){
+  const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401,{},request);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
+  if(!env.CLOUDINARY_CLOUD_NAME||!env.CLOUDINARY_API_KEY||!env.CLOUDINARY_API_SECRET)
+    return json({error:"Cloudinary secrets are not configured"},500,{},request);
+  const timestamp=Math.floor(Date.now()/1000),folder="qearl-maison";
+  const payload=`folder=${folder}&timestamp=${timestamp}${env.CLOUDINARY_API_SECRET}`;
+  const digest=await crypto.subtle.digest("SHA-1",enc.encode(payload));
+  const signature=[...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  return json({
+    apiKey:env.CLOUDINARY_API_KEY,timestamp,signature,folder,
+    uploadPreset:"",uploadUrl:`https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`
+  },200,{},request);
 }
 
 async function handlePage(request,env){
   const a=await readSession(request,env); if(!a)return json({error:"Unauthorized"},401);
-  if(!sameOrigin(request))return json({error:"Invalid origin"},403);
+  if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
   const b=await readJson(request);
   if(request.method==="POST"){
     const title=String(b.title||"").trim();
@@ -218,11 +456,29 @@ export default {
   async fetch(request,env){
     const url=new URL(request.url), p=url.pathname;
     try{
+
+      if(request.method==="OPTIONS"){
+        return new Response(null,{status:204,headers:{
+          ...corsHeaders(request),
+          "Access-Control-Allow-Methods":"GET,POST,PATCH,PUT,DELETE,OPTIONS",
+          "Access-Control-Allow-Headers":"Content-Type"
+        }});
+      }
+      if(p==="/api/admin/bootstrap"&&request.method==="GET") return await adminBootstrap(request,env);
+      if(p==="/api/admin/import-legacy"&&request.method==="POST") return await adminImportLegacy(request,env);
+      if(p==="/api/public/site"&&request.method==="GET") return await publicSite(request,env);
+      if(p==="/api/admin/upload-signature"&&request.method==="POST") return await uploadSignature(request,env);
+      if(p==="/api/admin/reorder"&&request.method==="POST") return await adminReorder(request,env);
+      if(p==="/api/admin/pages"||p.startsWith("/api/admin/pages/")) return await adminPages(request,env,p);
+      if(p==="/api/admin/sections"||p.startsWith("/api/admin/sections/")) return await adminSections(request,env,p);
+      if(p==="/api/admin/items"||p.startsWith("/api/admin/items/")) return await adminItems(request,env,p);
+      if(p==="/api/admin/media"||p.startsWith("/api/admin/media/")) return await adminMedia(request,env,p);
+
       if((p==="/api/session" || p==="/api/me") && request.method==="GET"){
-        const s=await readSession(request,env); return json({authenticated:!!s,ok:!!s},s?200:401);
+        const s=await readSession(request,env); return json({authenticated:!!s,ok:!!s},s?200:401,{},request);
       }
       if(p==="/api/login" && request.method==="POST"){
-        if(!sameOrigin(request))return json({error:"Invalid origin"},403);
+        if(!sameOrigin(request))return json({error:"Invalid origin"},403,{},request);
         const b=await readJson(request);
         const loginName=b.username??b.id; const ok=safeEqualString(loginName,env.ADMIN_USERNAME)&&safeEqualString(b.password,env.ADMIN_PASSWORD);
         if(!ok)return json({error:"Invalid credentials"},401);

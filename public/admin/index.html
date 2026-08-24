@@ -193,6 +193,71 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
 .copyBtn{flex:0 0 auto;border:1px solid rgba(255,255,255,.82);background:rgba(255,255,255,.46);border-radius:12px;padding:7px 10px;color:#6c7188}
 
 </style>
+
+<style id="qearl-v63-admin-mobile">
+.currentMediaTools{margin-top:14px}
+.mediaHint{font-size:11px;color:#969bad;margin:0 0 8px}
+#currentMedia .thumb{width:92px;height:92px;position:relative;overflow:visible}
+#currentMedia .thumb img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+#currentMedia .mediaControls{
+  position:absolute;left:5px;right:5px;bottom:5px;display:flex;gap:4px;justify-content:center
+}
+#currentMedia .mediaControls button{
+  position:static;width:24px;height:24px;border:1px solid rgba(255,255,255,.8);
+  background:rgba(250,250,253,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-radius:999px;color:#62677e;font-size:12px;display:grid;place-items:center
+}
+#currentMedia .mediaControls button:disabled{opacity:.3}
+@media(max-width:720px){
+  body{font-size:14px}
+  .shell{width:calc(100% - 20px)!important;margin:0 auto!important}
+  .top{top:10px!important;margin-top:10px!important;border-radius:24px!important}
+  .topin{height:auto!important;min-height:58px!important;padding:9px 11px!important;gap:8px!important}
+  .brand{font-size:12px!important;letter-spacing:.18em!important;white-space:nowrap}
+  .topin>.eyebrow{display:none!important}
+  .toolbar{margin-left:auto!important;gap:5px!important;flex-wrap:nowrap!important}
+  .toolbar .btn{min-height:36px!important;padding:0 10px!important;font-size:11px!important;border-radius:13px!important;white-space:nowrap}
+  .hero{padding:42px 4px 28px!important}
+  .hero .eyebrow{font-size:10px!important}
+  .hero h1{font-size:clamp(48px,16vw,68px)!important;line-height:.92!important;margin:10px 0 22px!important}
+  .hero p{font-size:13px!important;line-height:1.75!important;max-width:none!important}
+  .workspace{grid-template-columns:1fr!important;gap:12px!important}
+  .sidebar,.panel,.sectionCard{border-radius:24px!important}
+  .sidebar{padding:18px!important}
+  .panel{padding:18px!important}
+  .panelHead,.sectionTop{gap:10px!important;flex-direction:column!important}
+  .panelHead .segment,.sectionTop .segment{width:100%!important;overflow-x:auto!important;justify-content:flex-start!important;padding-bottom:2px}
+  .pageBtn{min-width:0!important;width:100%!important}
+  .items{grid-template-columns:1fr!important}
+  .item{padding:15px!important}
+  dialog{padding:10px!important;align-items:flex-end!important}
+  dialog .modal{width:100%!important;max-height:88dvh!important;border-radius:28px 28px 20px 20px!important}
+  .modalHead{padding:20px 18px 14px!important}
+  .modalBody{padding:0 18px 18px!important}
+  .modalFooter{padding:12px 18px calc(12px + env(safe-area-inset-bottom))!important}
+  .formGrid{grid-template-columns:1fr!important}
+  .field.full{grid-column:auto!important}
+  input,textarea,select{font-size:16px!important}
+  .footerActions{width:100%!important}
+  .footerActions .btn{flex:1!important}
+  #currentMedia{gap:9px!important}
+  #currentMedia .thumb{width:84px;height:84px}
+}
+</style>
+
+
+<style id="qearl-v64-admin-stability">
+@media(max-width:720px){
+  .hero{min-height:0!important;padding-top:34px!important}
+  .hero h1{letter-spacing:-.04em!important}
+  .sideDesc{font-size:12px!important;line-height:1.65!important}
+  .pageBtn{padding:13px 14px!important}
+  .sectionCard{padding:15px!important}
+  .sectionMeta{font-size:10px!important;line-height:1.5!important}
+  .item h4{font-size:16px!important}.item p{font-size:11px!important;line-height:1.6!important}
+}
+</style>
+
 </head>
 <body>
 <nav class="topbar glass">
@@ -306,7 +371,7 @@ dialog::backdrop{background:rgba(42,46,67,.25);backdrop-filter:blur(10px)}
         <label class="switchline full"><input type="checkbox" id="itemVisible" checked> visible on site</label>
         <div class="field full"><label>UPLOAD IMAGES</label><input id="itemImages" type="file" accept="image/*" multiple><div class="hint">可一次选择多张；保存时上传到 Cloudinary。</div></div>
       </div>
-      <div id="currentMedia" class="mediaRow"></div>
+      <div class="currentMediaTools"><div class="mediaHint">已有图片可调整顺序；也可以继续追加新图片。</div><div id="currentMedia" class="mediaRow"></div></div>
     </div>
     <div class="modalFooter">
       <div class="footerNote">已有图片可单独移除；新图片会在保存时上传。</div>
@@ -336,6 +401,39 @@ const jsonOpts=(method,data)=>({method,headers:{'Content-Type':'application/json
 const esc=(v='')=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const attr=esc;
 
+async function ensureLegacyArchive(){
+  if(sessionStorage.getItem('qearl_legacy_checked_v64'))return false;
+  sessionStorage.setItem('qearl_legacy_checked_v64','1');
+  const wanted=['typebook','theme-case','mist','insomnia','moss','jasmine','miscellany'];
+  const existing=new Set((site.pages||[]).map(p=>p.slug));
+  if(wanted.every(x=>existing.has(x)))return false;
+  try{
+    const r=await fetch('/data/legacy-seed.json?v=64',{cache:'no-store'});
+    if(!r.ok)return false;
+    const seed=await r.json();
+    const j=await api('/api/admin/import-legacy',jsonOpts('POST',seed));
+    if(j.imported>0){toast(`imported ${j.imported} archive pages`);return true}
+  }catch(e){console.warn('legacy import skipped',e)}
+  return false;
+}
+async function adminCompressImage(file){
+  if(!file?.type?.startsWith('image/'))return file;
+  try{
+    const u=URL.createObjectURL(file),img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u});
+    URL.revokeObjectURL(u);
+    const max=2200,scale=Math.min(1,max/Math.max(img.naturalWidth||img.width,img.naturalHeight||img.height));
+    const w=Math.max(1,Math.round((img.naturalWidth||img.width)*scale)),h=Math.max(1,Math.round((img.naturalHeight||img.height)*scale));
+    const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d',{alpha:false}).drawImage(img,0,0,w,h);
+    const blob=await new Promise(r=>c.toBlob(r,'image/webp',.84));
+    return blob?new File([blob],(file.name||'image').replace(/\.[^.]+$/,'')+'.webp',{type:'image/webp',lastModified:Date.now()}):file;
+  }catch(e){return file}
+}
+function cloudinaryDisplayUrl(url,w=480){
+  const s=String(url||'');
+  return /^https:\/\/res\.cloudinary\.com\//i.test(s)&&s.includes('/upload/')?s.replace('/upload/',`/upload/f_auto,q_auto:eco,c_limit,w_${w}/`):s;
+}
+
+
 function closeDialog(id){const d=document.getElementById(id);if(d?.open)d.close()}
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeDialog(b.dataset.close)));
 document.querySelectorAll('dialog').forEach(d=>{
@@ -359,6 +457,8 @@ $('#backSite').onclick=()=>location.href='https://qearlune.xyz';
 async function load(){
   const j=await api('/api/admin/bootstrap');
   site=j.data||{pages:[]};
+  const imported=await ensureLegacyArchive();
+  if(imported){const again=await api('/api/admin/bootstrap');site=again.data||{pages:[]}}
   if(!currentPageId||!site.pages.some(p=>p.id===currentPageId))currentPageId=site.pages[0]?.id||null;
   render();
 }
@@ -464,7 +564,7 @@ function itemNode(section,it,index){
   d.innerHTML=`
     <h4>${esc(it.title||'Untitled item')}</h4>
     <p>${esc(it.subtitle||it.content_text||'暂无正文')}</p>
-    ${(it.media||[]).length?`<div class="mediaRow">${it.media.map(m=>`<div class="thumb"><img src="${attr(m.url)}" alt=""></div>`).join('')}</div>`:''}
+    ${(it.media||[]).length?`<div class="mediaRow">${it.media.map(m=>`<div class="thumb"><img src="${attr(cloudinaryDisplayUrl(m.url,480))}" alt="" loading="lazy" decoding="async"></div>`).join('')}</div>`:''}
     <div class="itemFoot">
       <span class="badge">${esc(it.badge||(it.is_visible?'VISIBLE':'HIDDEN'))}</span>
       <div class="segment">
@@ -550,12 +650,22 @@ function openItem(sectionId,itemId=''){
 }
 function renderCurrentMedia(it){
   const box=$('#currentMedia');box.innerHTML='';
-  (it?.media||[]).forEach(m=>{
+  const media=it?.media||[];
+  media.forEach((m,index)=>{
     const d=document.createElement('div');d.className='thumb';
-    d.innerHTML=`<img src="${attr(m.url)}" alt=""><button type="button">×</button>`;
-    d.querySelector('button').onclick=async()=>{
+    d.innerHTML=`<img src="${attr(cloudinaryDisplayUrl(m.url,480))}" alt="" loading="lazy" decoding="async">
+      <div class="mediaControls">
+        <button type="button" class="mLeft" title="向前">←</button>
+        <button type="button" class="mRight" title="向后">→</button>
+        <button type="button" class="mDelete" title="删除">×</button>
+      </div>`;
+    const left=d.querySelector('.mLeft'),right=d.querySelector('.mRight');
+    left.disabled=index===0;right.disabled=index===media.length-1;
+    left.onclick=async()=>{const ids=swap(media,index,index-1);if(ids){await reorder('media',ids);await load();openItem($('#itemSectionId').value,$('#itemId').value)}};
+    right.onclick=async()=>{const ids=swap(media,index,index+1);if(ids){await reorder('media',ids);await load();openItem($('#itemSectionId').value,$('#itemId').value)}};
+    d.querySelector('.mDelete').onclick=async()=>{
       if(!confirm('删除这张图片记录？'))return;
-      try{await api('/api/admin/media/'+encodeURIComponent(m.id),{method:'DELETE'});toast('image removed');closeDialog('itemDialog');await load();openItem($('#itemSectionId').value,$('#itemId').value)}catch(e){alert(e.message)}
+      try{await api('/api/admin/media/'+encodeURIComponent(m.id),{method:'DELETE'});toast('image removed');await load();openItem($('#itemSectionId').value,$('#itemId').value)}catch(e){alert(e.message)}
     };
     box.appendChild(d);
   });
@@ -574,10 +684,12 @@ $('#saveItemBtn').onclick=async()=>{
   finally{btn.disabled=false;btn.textContent='save item'}
 };
 async function uploadImage(itemId,file){
+  const compressed=await adminCompressImage(file);
   const sig=await api('/api/admin/upload-signature',{method:'POST'}),fd=new FormData();
-  fd.append('file',file);fd.append('api_key',sig.apiKey);fd.append('timestamp',sig.timestamp);fd.append('signature',sig.signature);fd.append('folder',sig.folder);fd.append('upload_preset',sig.uploadPreset);
+  fd.append('file',compressed);fd.append('api_key',sig.apiKey);fd.append('timestamp',sig.timestamp);fd.append('signature',sig.signature);fd.append('folder',sig.folder);
+  if(sig.uploadPreset)fd.append('upload_preset',sig.uploadPreset);
   const r=await fetch(sig.uploadUrl,{method:'POST',body:fd}),j=await r.json();
-  if(!r.ok)throw new Error(j.error?.message||'图片上传失败');
+  if(!r.ok)throw new Error(j.error?.message||`图片上传失败（HTTP ${r.status}）`);
   await api('/api/admin/media',jsonOpts('POST',{itemId,url:j.secure_url,publicId:j.public_id,width:j.width,height:j.height,mediaType:'image',alt:file.name}));
 }
 

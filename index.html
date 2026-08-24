@@ -3547,6 +3547,16 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
+
+<style id="qearl-v64-performance">
+.blockImg{
+  background:linear-gradient(145deg,rgba(239,241,248,.72),rgba(252,252,254,.46));
+  content-visibility:auto;
+  contain-intrinsic-size:700px 700px;
+}
+@media(max-width:820px){.blockImg{contain-intrinsic-size:360px 360px}}
+</style>
+
 </head>
 <body>
 <nav>
@@ -3915,8 +3925,29 @@ function renderCustomPage(bs){
   </div>`;
 }
 
+
+function qearlImageSources(src){
+  const s=String(src||'');
+  const local=s.match(/^(?:https:\/\/qearlune\.xyz\/)?assets\/(qearl-[^/?#]+\.webp)$/i);
+  if(local){
+    const n=local[1],prefix=s.startsWith('https://')?'https://qearlune.xyz/':'';
+    return {src:`${prefix}assets/display/960/${n}`,srcset:`${prefix}assets/display/480/${n} 480w, ${prefix}assets/display/960/${n} 960w, ${prefix}assets/${n} 1400w`};
+  }
+  if(/^https:\/\/res\.cloudinary\.com\//i.test(s)&&s.includes('/upload/')){
+    const make=w=>s.replace('/upload/',`/upload/f_auto,q_auto:eco,c_limit,w_${w}/`);
+    return {src:make(960),srcset:`${make(480)} 480w, ${make(960)} 960w, ${make(1440)} 1440w`};
+  }
+  return {src:s,srcset:''};
+}
+function qearlImgTag(block,index=0){
+  const q=qearlImageSources(block.src);
+  const wh=(block.w&&block.h)?` width="${block.w}" height="${block.h}" style="aspect-ratio:${block.w}/${block.h}"`:'';
+  const eager=index===0;
+  return `<img class="blockImg" src="${esc(q.src)}" ${q.srcset?`srcset="${esc(q.srcset)}" sizes="(max-width:820px) calc(100vw - 28px), min(760px,72vw)"`:''} alt="Qearl preview"${wh} loading="${eager?'eager':'lazy'}" decoding="async" fetchpriority="${eager?'high':'low'}">`;
+}
+
 function renderSequential(bs,page){
-  let o='',toc=[];
+  let o='',toc=[],imageCount=0;
   (bs||[]).forEach((b,bi)=>{
     /* The source docs repeat their page title as block 0; the hero already owns that title. */
     if(bi===0 && ['typebook','custom','case','mist','island','moss','jasmine','others'].includes(page)) return;
@@ -3928,8 +3959,7 @@ function renderSequential(bs,page){
       if(heading)toc.push({id,text:b.text,blockIndex:bi});
       o+=`<p ${id?`id="${id}"`:''} class="blockText ${heading?'heading':''}" data-block="${bi}">${t}</p>`;
     }else if(b.type==='image'){
-      const wh=(b.w&&b.h)?` width="${b.w}" height="${b.h}" style="aspect-ratio:${b.w}/${b.h}"`:'';
-      o+=`<img class="blockImg" src="${b.src}" alt="Qearl preview"${wh}>`;
+      o+=qearlImgTag(b,imageCount++);
     }else if(b.type==='table'){
       o+='<table class="blockTable">'+b.rows.map(r=>'<tr>'+r.map(c=>`<td>${linkify(c)}</td>`).join('')+'</tr>').join('')+'</table>';
     }
@@ -3994,9 +4024,9 @@ function qearlCloudBlocks(page){
 }
 async function qearlOpenCloudSlug(slug,{replace=false}={}){
   try{
-    const r=await fetch(`${API_BASE}/api/public/site?page=${encodeURIComponent(slug)}`,{credentials:'include'});
+    const r=await fetch(`${API_BASE}/api/public/site?page=${encodeURIComponent(slug)}`,{credentials:'include',cache:'no-store'});
     const j=await r.json().catch(()=>({}));
-    const page=j?.data;
+    const page=j?.page||j?.data;
     if(!r.ok||!page)return false;
     current=`cloud:${slug}`;
     reader.dataset.page='cloud';
@@ -4015,10 +4045,19 @@ async function qearlOpenRoute(rawPath,{replace=false}={}){
   const slug=qearlCleanSlug(rawPath);
   if(!slug)return false;
   const docId=QEARL_ROUTE_DOC[slug];
-  if(docId&&DOCS[docId]){
-    openDoc(docId,{updateUrl:false});
+  if(docId==='custom'&&DOCS.custom){
+    openDoc('custom',{updateUrl:false});
     qearlSetPath(`/${slug}`,replace);
     return true;
+  }
+  if(docId){
+    const managed=await qearlOpenCloudSlug(slug,{replace});
+    if(managed)return true;
+    if(DOCS[docId]){
+      openDoc(docId,{updateUrl:false});
+      qearlSetPath(`/${slug}`,replace);
+      return true;
+    }
   }
   return await qearlOpenCloudSlug(slug,{replace});
 }
@@ -4210,7 +4249,7 @@ document.getElementById('save').onclick=async()=>{
     });
     const j=await r.json().catch(()=>({}));
     if(r.status===401){ownerAuthenticated=false;ownerUI();throw new Error(j.message||j.error||'登录已过期，请重新登录')}
-    if(!r.ok)throw new Error(j.detail||j.message||j.error||`发布失败（HTTP ${r.status}）`);
+    if(!r.ok)throw new Error(j.detail||j.message||j.error||`发布失败（HTTP ${r.status} · ${API_BASE}）`);
     document.getElementById('nt').value='';
     document.getElementById('nx').value='';
     document.getElementById('ni').value='';

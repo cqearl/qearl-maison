@@ -3590,14 +3590,12 @@ body.owner-mode .ownerOnly{display:block!important}
 }
 </style>
 
-<style id="qearl-v68-preview">
-.previewRibbon{display:none;position:fixed;left:50%;top:78px;transform:translateX(-50%);
-z-index:10070;padding:7px 12px;border-radius:999px;background:rgba(250,250,253,.78);
-border:1px solid rgba(255,255,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-font-size:9px;letter-spacing:.14em;color:#73798f;box-shadow:0 8px 22px rgba(60,64,90,.06)}
+<style id="qearl-v69-preview">
+.previewRibbon{display:none;position:fixed;left:50%;top:78px;transform:translateX(-50%);z-index:10070;
+padding:7px 12px;border-radius:999px;background:rgba(250,250,253,.8);border:1px solid rgba(255,255,255,.86);
+backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:9px;letter-spacing:.12em;color:#747a91}
 body.qearlPreview .previewRibbon{display:block}
-.cloudError{max-width:680px;margin:100px auto;padding:24px;border-radius:24px;background:rgba(255,255,255,.42);
-border:1px solid rgba(255,255,255,.7);color:#73798f;font-size:13px;line-height:1.75}
+.cloudError{max-width:680px;margin:100px auto;padding:22px;border-radius:22px;background:rgba(255,255,255,.44);color:#747a91}
 </style>
 
 </head>
@@ -4068,68 +4066,42 @@ function qearlCloudBlocks(page){
 async function qearlOpenCloudSlug(slug,{replace=false,strict=false}={}){
   const preview=new URLSearchParams(location.search).get('preview')==='1';
   try{
-    const r=await fetch(`${API_BASE}/api/public/site?page=${encodeURIComponent(slug)}${preview?'&preview=1':''}`,{
-      credentials:'include',cache:'no-store'
-    });
-    const j=await r.json().catch(()=>({}));
-    const page=j?.page||j?.data;
-
-    if(!r.ok){
+    const r=await fetch(`${API_BASE}/api/public/site?page=${encodeURIComponent(slug)}${preview?'&preview=1':''}`,{credentials:'include',cache:'no-store'});
+    const j=await r.json().catch(()=>({})),page=j?.page||j?.data;
+    if(!r.ok||!page){
       if(strict){
-        reader.dataset.page='cloud';rt.textContent='Archive unavailable';rk.textContent='QEARL ARCHIVE';
-        rb.innerHTML=`<div class="cloudError">后台数据读取失败：${esc(j.error||j.message||('HTTP '+r.status))}</div>`;
+        rt.textContent='Archive unavailable';rk.textContent='QEARL ARCHIVE';
+        rb.innerHTML=`<div class="cloudError">${preview?'草稿预览读取失败或登录已失效。':'当前页面暂无可展示内容。'}</div>`;
         reader.classList.add('open');document.body.style.overflow='hidden';
       }
       return false;
     }
-    if(!page){
-      if(strict){
-        reader.dataset.page='cloud';rt.textContent='Not published';rk.textContent='QEARL ARCHIVE';
-        rb.innerHTML=`<div class="cloudError">${preview?'当前草稿页面不存在或登录状态已失效。':'当前页面尚未发布。'}</div>`;
-        reader.classList.add('open');document.body.style.overflow='hidden';
-      }
-      return false;
-    }
-
-    currentCloudPage=page;
-    current=`cloud:${slug}`;
-    reader.dataset.page='cloud';
-    rt.textContent=page.title||'Archive';
-    rk.textContent=(page.subtitle||'QEARL ARCHIVE').toUpperCase();
+    currentCloudPage=page;current=`cloud:${slug}`;reader.dataset.page='cloud';
+    rt.textContent=page.title||'Archive';rk.textContent=(page.subtitle||'QEARL ARCHIVE').toUpperCase();
     rb.innerHTML=renderSequential(qearlCloudBlocks(page),'cloud');
     renderTOC(window.__currentTOC||[]);
-    reader.classList.add('open');
-    reader.scrollTop=0;
-    document.body.style.overflow='hidden';
+    reader.classList.add('open');reader.scrollTop=0;document.body.style.overflow='hidden';
     if(preview)document.body.classList.add('qearlPreview');else document.body.classList.remove('qearlPreview');
     if(!preview)qearlSetPath(`/${slug}`,replace);
     return true;
   }catch(e){
     if(strict){
-      reader.dataset.page='cloud';rt.textContent='Archive unavailable';rk.textContent='QEARL ARCHIVE';
-      rb.innerHTML=`<div class="cloudError">无法读取后台数据：${esc(e.message||String(e))}</div>`;
+      rt.textContent='Archive unavailable';rk.textContent='QEARL ARCHIVE';
+      rb.innerHTML=`<div class="cloudError">后台数据读取失败：${esc(e.message||String(e))}</div>`;
       reader.classList.add('open');document.body.style.overflow='hidden';
     }
     return false;
   }
 }
 async function qearlOpenRoute(rawPath,{replace=false}={}){
-  const slug=qearlCleanSlug(rawPath);
-  if(!slug)return false;
+  const slug=qearlCleanSlug(rawPath);if(!slug)return false;
   const docId=QEARL_ROUTE_DOC[slug];
-
-  // Custom Keys keeps its bespoke static renderer.
   if(docId==='custom'&&DOCS.custom){
     openDoc('custom',{updateUrl:false});
     if(new URLSearchParams(location.search).get('preview')!=='1')qearlSetPath(`/${slug}`,replace);
     return true;
   }
-
-  // Every migrated archive page is D1-authoritative.
-  const managedKnown=!!docId || slug.includes('/');
-  if(managedKnown){
-    return await qearlOpenCloudSlug(slug,{replace,strict:true});
-  }
+  if(docId||slug.includes('/'))return await qearlOpenCloudSlug(slug,{replace,strict:true});
   return await qearlOpenCloudSlug(slug,{replace,strict:false});
 }
 function qearlCloseReader({updateUrl=true}={}){
